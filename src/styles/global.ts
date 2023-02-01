@@ -22,8 +22,13 @@ export const GlobalStyle = createGlobalStyle`
         font-size: 1rem;
     }
 
-    h1 {
-        font-family: 'Montserrat'
+    button, a {
+        cursor: pointer;
     }
 
+    a {
+       text-decoration: none;
+       color: black;
+       
+    }
 `
