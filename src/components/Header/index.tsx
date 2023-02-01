@@ -7,7 +7,7 @@ import {
   Bag,
   CaretDown,
 } from 'phosphor-react'
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import FeaturedImage from '../../assets/pretty-woman.png'
 import FeaturedImage2 from '../../assets/pretty-woman-2.png'
 import LinksNavigation, { IHeaderContent } from './Components/LinksNavigation'
@@ -21,27 +21,63 @@ export default function Header() {
         name: 'Pretty woman 1',
       },
       subnavigation: [
-        {
-          name: 'Swinwear',
-        },
-        {
-          name: 'Swin Top',
-        },
-        {
-          name: 'Swin Bottom',
-        },
-        {
-          name: 'Swin Middle',
-        },
-        {
-          name: 'Swin Top 2',
-        },
-        {
-          name: 'Swin Bottom2',
-        },
-        {
-          name: 'Swin Middle2',
-        },
+        [
+          {
+            name: 'Swinwear 1',
+          },
+          {
+            name: 'Swin Top',
+          },
+          {
+            name: 'Swin 2',
+          },
+          {
+            name: 'Swin Middle',
+          },
+          {
+            name: 'Swin Top 2',
+          },
+        ],
+        [
+          {
+            name: 'Swinwear 2',
+          },
+          {
+            name: 'Swin Top',
+          },
+          {
+            name: 'bbbbbbbbbbb',
+          },
+          {
+            name: 'Swin Middle',
+          },
+          {
+            name: 'Swin Bottom2',
+          },
+          {
+            name: 'Swin Middle2',
+          },
+        ],
+        [
+          {
+            name: 'Swinwear 3',
+          },
+          {
+            name: 'Swin Top',
+          },
+          {
+            name: 'Swin Bottom',
+          },
+          {
+            name: 'Swin Middle',
+          },
+          {
+            name: 'aaaaaa',
+          },
+          {
+            name: 'Swin Middle2',
+          },
+        ],
       ],
     },
     {
@@ -51,27 +87,29 @@ export default function Header() {
         name: 'Suach a Pretty woman 2',
       },
       subnavigation: [
-        {
-          name: 'SWIMSWIM1',
-        },
-        {
-          name: 'SWIMSWIM2',
-        },
-        {
-          name: 'SWIMSWIM3',
-        },
-        {
-          name: 'SWIMSWIM4',
-        },
-        {
-          name: 'SWIMSWIM5',
-        },
-        {
-          name: 'SWIMSWIM6',
-        },
-        {
-          name: 'SWIMSWIM7',
-        },
+        [
+          {
+            name: 'SWIMSWIM1',
+          },
+          {
+            name: 'SWIMSWIM2',
+          },
+          {
+            name: 'SWIMSWIM3',
+          },
+          {
+            name: 'SWIMSWIM4',
+          },
+          {
+            name: 'SWIMSWIM5',
+          },
+          {
+            name: 'SWIMSWIM6',
+          },
+          {
+            name: 'SWIMSWIM7',
+          },
+        ],
       ],
     },
     {
