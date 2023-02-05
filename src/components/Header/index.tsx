@@ -6,13 +6,16 @@ import {
   User,
   Bag,
   CaretDown,
+  List,
 } from 'phosphor-react'
 import Image from 'next/image'
 import FeaturedImage from '../../assets/pretty-woman.png'
 import FeaturedImage2 from '../../assets/pretty-woman-2.png'
 import LinksNavigation, { IHeaderContent } from './Components/LinksNavigation'
+import { useState } from 'react'
 
 export default function Header() {
+  const [mobileHeaderActive, setMobileHeaderActive] = useState(false)
   const headerContents: IHeaderContent[] = [
     {
       name: 'NEW',
@@ -129,13 +132,24 @@ export default function Header() {
     },
   ]
 
+  function toggleMobileHeaderActive() {
+    setMobileHeaderActive(!mobileHeaderActive)
+  }
+
   return (
     <Container>
       {/* <ShipContent>
         </ShipContent> */}
       <MainContent>
+        <button onClick={() => toggleMobileHeaderActive()}>
+          <List size={32} color="#160e14" />
+        </button>
         <Image src={LogoImg} alt="" width={206} height={52} />
-        <LinksNavigation headerContents={headerContents} />
+        <LinksNavigation
+          headerContents={headerContents}
+          mobileHeaderActive={mobileHeaderActive}
+          toggleMobileHeader={toggleMobileHeaderActive}
+        />
         <GeneralOptions>
           <a>AJUDA</a>
           <GeneralContent>

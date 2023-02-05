@@ -12,10 +12,16 @@ export const MainContent = styled.div`
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   height: 100%;
   img {
     margin: auto 0;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
   }
 `
 
