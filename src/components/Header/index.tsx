@@ -1,13 +1,6 @@
 import { Container, GeneralContent, GeneralOptions, MainContent } from './style'
 import LogoImg from '../../assets/logo2.png'
-import {
-  MagnifyingGlass,
-  HeartStraight,
-  User,
-  Bag,
-  CaretDown,
-  List,
-} from 'phosphor-react'
+import { MagnifyingGlass, HeartStraight, User, Bag, List } from 'phosphor-react'
 import Image from 'next/image'
 import FeaturedImage from '../../assets/pretty-woman.png'
 import FeaturedImage2 from '../../assets/pretty-woman-2.png'
@@ -153,9 +146,6 @@ export default function Header() {
         <GeneralOptions>
           <a>AJUDA</a>
           <GeneralContent>
-            <a>
-              BR R$ <CaretDown size={15} />
-            </a>
             <a href="">
               <MagnifyingGlass size={18} />
             </a>

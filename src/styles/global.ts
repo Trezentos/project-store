@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
+import { CarrouselStyles } from './CarrouselStyles'
 
 export const GlobalStyle = createGlobalStyle`
 
@@ -6,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        outline: 0;
     }
 
     :focus {
@@ -31,4 +33,9 @@ export const GlobalStyle = createGlobalStyle`
        color: black;
        
     }
+
+   
+
+    ${CarrouselStyles}
+
 `

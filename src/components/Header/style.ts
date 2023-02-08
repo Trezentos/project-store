@@ -22,6 +22,14 @@ export const MainContent = styled.div`
   button {
     background-color: transparent;
     border: none;
+
+    @media (min-width: 1200px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0 0.5rem;
   }
 `
 

@@ -17,23 +17,56 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     font-size: 0.9rem;
 
     > a {
-      display: inline-block;
       height: 80px;
-      padding: 0 0.3rem;
       line-height: 80px;
+      padding: 0 0.3rem;
       transition: 0.3s color, 0.3s border-bottom;
       font-weight: 500;
       border-bottom: 3px transparent solid;
 
-      &:hover {
-        border-bottom: 3px ${(props) => props.theme['black-800']} solid;
-        color: ${(props) => props.theme['pink-400']};
+      &.desktop {
+        display: none;
+      }
+
+      @media (min-width: 1200px) {
+        &:hover {
+          border-bottom: 3px ${(props) => props.theme['black-800']} solid;
+          color: ${(props) => props.theme['pink-400']};
+        }
+
+        display: inline-block !important;
       }
     }
 
-    &:hover {
-      div {
-        display: flex;
+    > button {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      outline: none;
+      height: 50px;
+      border: none;
+      font-size: 0.9rem;
+      transition: 0.3s;
+      padding-left: 1rem;
+      font-family: 'Montserrat';
+      font-weight: 500;
+      border-bottom: 1px solid ${(props) => props.theme['gray-100']};
+
+      svg {
+        margin-left: auto;
+      }
+
+      @media (min-width: 1200px) {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      &:hover {
+        > div {
+          display: flex;
+        }
       }
     }
   }
@@ -43,8 +76,9 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     background-color: white;
     flex-direction: column;
     width: 100%;
+    z-index: 99999;
     height: 100vh;
-    transition: 0.3s;
+    transition: 0.5s;
     right: ${(props) => (props.mobileHeaderActive ? '0%' : '100%')};
 
     gap: 0;
@@ -67,7 +101,7 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
         display: flex;
         text-align: right;
         padding-left: 1rem;
-        border-bottom: 1px solid #eeeeee;
+        border-bottom: 1px solid ${(props) => props.theme['gray-100']};
       }
     }
   }
@@ -90,7 +124,7 @@ export const ImageContainer = styled.a`
 
 export const SubUlsNavigationsContainer = styled.div`
   position: absolute;
-  left: 0px;
+  left: 0;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -100,23 +134,46 @@ export const SubUlsNavigationsContainer = styled.div`
   display: none;
   padding: 2rem 0;
   border-bottom: 1px solid black;
+  z-index: 9999;
 
   @media (max-width: 1200px) {
+    overflow-y: scroll;
     height: 100%;
     top: 0;
+    left: 100%;
+    transition: 0.2s;
+    right: 50px;
     flex-direction: column;
     gap: 0;
+    display: flex; // simula o active
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    text-align: center;
+
+    h2 {
+      font-weight: 400;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+    }
+    /* gap: 2rem; */
+
+    &.active {
+      display: flex;
+      left: 0%;
+    }
   }
 `
 
 export const SubULNavigation = styled.ul`
   li {
     list-style: none;
-    margin-bottom: 0.6rem;
 
     a {
       font-weight: 400;
-      transition: 0.3s;
+      transition: 0.5s;
 
       &:hover {
         color: ${(props) => props.theme['pink-400']};
@@ -131,6 +188,33 @@ export const SubULNavigation = styled.ul`
   }
 
   @media (max-width: 1200px) {
+    margin-top: 2rem;
+    text-align: left;
+    width: 100%;
+
+    li {
+      border-bottom: 1px solid ${(props) => props.theme['gray-100']};
+      width: 100%;
+      font-size: 0.9rem;
+
+      /* padding-left: 2rem; */
+      padding: 1.2rem 0;
+      a {
+        padding-left: 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+
+        /* &:first-child {
+          padding-left: 0.5rem;
+        } */
+      }
+
+      &:first-child {
+        a {
+          padding-left: 1rem;
+        }
+      }
+    }
   }
 `
 
@@ -157,4 +241,29 @@ export const MobileContent = styled.div`
       border: none;
     }
   }
+`
+export const SubMobileContent = styled.div`
+  @media (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+
+    svg {
+      margin: 5px;
+    }
+
+    img {
+      margin: 0 auto;
+    }
+
+    button {
+      margin-right: auto;
+      background-color: transparent;
+      border: none;
+      display: flex;
+      width: 100%;
+    }
+  }
+  display: none;
 `

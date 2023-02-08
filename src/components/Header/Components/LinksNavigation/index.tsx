@@ -2,12 +2,14 @@ import Image, { StaticImageData } from 'next/image'
 import {
   ImageContainer,
   MobileContent,
+  SubMobileContent as SubMobileOptions,
   SubULNavigation,
   SubUlsNavigationsContainer,
   ULNavigation,
 } from './styles'
 import LogoImg from '../../../../assets/logo2.png'
-import { X } from 'phosphor-react'
+import { CaretLeft, CaretRight, X } from 'phosphor-react'
+
 export interface IHeaderContent {
   name: string
   featuredImg?: {
@@ -30,6 +32,13 @@ export default function LinksNavigation({
   mobileHeaderActive,
   toggleMobileHeader,
 }: LinksNavigationProps) {
+  const openSubItems = function (e: HTMLElement | null) {
+    e?.parentElement?.lastElementChild?.classList.toggle('active')
+  }
+  const closeSubItems = function (e: HTMLElement | null) {
+    e?.parentElement?.classList.toggle('active')
+  }
+
   return (
     <ULNavigation mobileHeaderActive={mobileHeaderActive}>
       <MobileContent>
@@ -43,7 +52,17 @@ export default function LinksNavigation({
         const { featuredImg, subnavigation } = content
         return (
           <li key={content.name}>
-            <a>{content.name}</a>
+            {(subnavigation && (
+              <>
+                <button onClick={(e) => openSubItems(e.currentTarget)}>
+                  {content.name}
+                  <CaretRight size={24} />
+                </button>
+                <a href="" className="desktop">
+                  {content.name}
+                </a>
+              </>
+            )) || <a>{content.name}</a>}
             {subnavigation && (
               <SubUlsNavigationsContainer>
                 {featuredImg && (
@@ -58,6 +77,21 @@ export default function LinksNavigation({
                   </ImageContainer>
                 )}
 
+                <SubMobileOptions>
+                  <button type="submit" onClick={() => toggleMobileHeader()}>
+                    <X size={20} />
+                  </button>
+                  <h2>{content.name}</h2>
+                  <button
+                    type="submit"
+                    onClick={(e) =>
+                      closeSubItems(e.currentTarget.parentElement)
+                    }
+                  >
+                    <CaretLeft size={20} />
+                    Voltar
+                  </button>
+                </SubMobileOptions>
                 {subnavigation.map((ulItem) => (
                   <SubULNavigation key={ulItem[0].name}>
                     {ulItem.map((liItem) => (

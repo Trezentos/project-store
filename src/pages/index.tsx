@@ -1,7 +1,10 @@
+import { HomeContanier } from '@/styles/home'
+import Carrousel from '../components/Carrousel'
+
 export default function Home() {
   return (
-    <div>
-      <h1>SWIM</h1>
-    </div>
+    <HomeContanier>
+      <Carrousel />
+    </HomeContanier>
   )
 }
