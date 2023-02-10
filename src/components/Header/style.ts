@@ -6,7 +6,11 @@ export const Container = styled.header`
   border: 1px solid black;
   display: flex;
   align-items: center;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: ${(props) => props.theme.white};
+  z-index: 99999;
 `
 export const MainContent = styled.div`
   padding: 0 2rem;

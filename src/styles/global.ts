@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     body {
-       
+        padding-top: 80px;
     }
 
     body, input, textarea button {

@@ -35,12 +35,6 @@ const carrouselImages: ICarrousselItems[] = [
   },
 ]
 
-const images = [
-  { image: Image1, name: '1' },
-  { image: Image2, name: '2' },
-  { image: Image3, name: '3' },
-]
-
 function Arrow(props: {
   disabled: boolean
   left?: boolean
@@ -115,18 +109,12 @@ export default function Carrousel() {
 
   return (
     <>
-      <div className="navigation-wrapper">
+      <Container className="navigation-wrapper">
         <div ref={sliderRef} className="keen-slider">
-          {images.map((image) => (
+          {carrouselImages.map((image) => (
             <div key={image.name} className="keen-slider__slide">
-              <Image
-                src={image.image}
-                fill
-                style={{
-                  objectFit: 'cover',
-                }}
-                alt=""
-              />
+              <Image className="desktop" fill alt="" src={image.desktopSrc} />
+              <Image className="mobile" fill alt="" src={image.mobileSrc} />
             </div>
           ))}
         </div>
@@ -151,7 +139,7 @@ export default function Carrousel() {
             />
           </>
         )}
-      </div>
+      </Container>
       {loaded && instanceRef.current && (
         <div className="dots">
           {[

@@ -73,11 +73,11 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
 
   @media (max-width: 1200px) {
     position: absolute;
-    background-color: white;
+    background-color: ${(props) => props.theme.white};
     flex-direction: column;
     width: 100%;
     z-index: 99999;
-    height: 100vh;
+    height: 110vh;
     transition: 0.5s;
     right: ${(props) => (props.mobileHeaderActive ? '0%' : '100%')};
 
@@ -170,6 +170,7 @@ export const SubUlsNavigationsContainer = styled.div`
 export const SubULNavigation = styled.ul`
   li {
     list-style: none;
+    margin-top: 0.8rem;
 
     a {
       font-weight: 400;
