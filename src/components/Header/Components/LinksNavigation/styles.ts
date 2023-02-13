@@ -20,21 +20,25 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
       height: 80px;
       line-height: 80px;
       padding: 0 0.3rem;
-      transition: 0.3s color, 0.3s border-bottom;
+      transition: 0.3s color, 0.3s border-bottom, 0.3s background-color;
       font-weight: 500;
       border-bottom: 3px transparent solid;
-
+      outline: none;
       &.desktop {
         display: none;
       }
 
       @media (min-width: 1200px) {
+        display: inline-block !important;
+
         &:hover {
           border-bottom: 3px ${(props) => props.theme['black-800']} solid;
           color: ${(props) => props.theme['pink-400']};
         }
+      }
 
-        display: inline-block !important;
+      &:active {
+        background-color: ${(props) => props.theme['pink-400']};
       }
     }
 
@@ -52,6 +56,11 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
       font-family: 'Montserrat';
       font-weight: 500;
       border-bottom: 1px solid ${(props) => props.theme['gray-100']};
+      transition: 0.3s background-color;
+
+      &:active {
+        background-color: ${(props) => props.theme['pink-400']};
+      }
 
       svg {
         margin-left: auto;
@@ -197,23 +206,23 @@ export const SubULNavigation = styled.ul`
       border-bottom: 1px solid ${(props) => props.theme['gray-100']};
       width: 100%;
       font-size: 0.9rem;
-
-      /* padding-left: 2rem; */
       padding: 1.2rem 0;
+      transition: 0.3s background-color;
+
       a {
         padding-left: 1.5rem;
         font-size: 1rem;
         font-weight: 500;
-
-        /* &:first-child {
-          padding-left: 0.5rem;
-        } */
       }
 
       &:first-child {
         a {
           padding-left: 1rem;
         }
+      }
+
+      &:active {
+        background-color: ${(props) => props.theme['pink-400']};
       }
     }
   }

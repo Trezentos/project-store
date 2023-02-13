@@ -8,8 +8,19 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         outline: 0;
+
+        &::-moz-selection {
+            color: ${(props) => props.theme['black-800']};
+            background: ${(props) => props.theme['pink-400']};;
+        }
+
+        &::selection {
+            color: ${(props) => props.theme['black-800']};
+            background: ${(props) => props.theme['pink-400']};;
+        }
     }
 
+   
     :focus {
         outline: 0;
     }
@@ -26,12 +37,14 @@ export const GlobalStyle = createGlobalStyle`
 
     button, a {
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
     }
 
     a {
        text-decoration: none;
        color: black;
-       
+      -webkit-tap-highlight-color: transparent;
+
     }
 
    
