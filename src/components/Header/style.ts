@@ -3,10 +3,13 @@ import styled from 'styled-components'
 export const Container = styled.header`
   width: 100%;
   height: 80px;
-  border: 1px solid black;
   display: flex;
   align-items: center;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: ${(props) => props.theme.white};
+  z-index: 99999;
 `
 export const MainContent = styled.div`
   padding: 0 2rem;
@@ -22,6 +25,14 @@ export const MainContent = styled.div`
   button {
     background-color: transparent;
     border: none;
+
+    @media (min-width: 1200px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0 0.5rem;
   }
 `
 
