@@ -72,3 +72,40 @@ export const HighlightsProducts = styled.div`
   @media (min-width: 751px) and (max-width: 1200px) {
   }
 `
+
+export const HighlightImage = styled.div`
+  position: relative;
+  img {
+    /* position: relative !important; */
+    height: calc(100vh - 80px) !important;
+    object-fit: cover;
+    object-position: top;
+    position: relative !important;
+
+    &.mobile {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    img {
+      &.mobile {
+        display: block !important;
+      }
+
+      &.desktop {
+        display: none !important;
+      }
+    }
+  }
+`
+export const InstagramContainer = styled.div`
+  /* position: relative; */
+  height: 300px;
+  width: 100%;
+  display: block;
+
+  img {
+    position: relative;
+  }
+`

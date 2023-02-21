@@ -87,7 +87,7 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     width: 100%;
     z-index: 99999;
     height: 110vh;
-    transition: 0.5s;
+    transition: 0.3s;
     right: ${(props) => (props.mobileHeaderActive ? '0%' : '100%')};
 
     gap: 0;
@@ -111,6 +111,16 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
         text-align: right;
         padding-left: 1rem;
         border-bottom: 1px solid ${(props) => props.theme['gray-100']};
+      }
+    }
+  }
+
+  @media (min-width: 1200px) {
+    // @ts-ignore
+    li:has(div:hover) {
+      > a {
+        border-bottom: 3px ${(props) => props.theme['black-800']} solid;
+        color: ${(props) => props.theme['pink-400']};
       }
     }
   }
@@ -183,7 +193,7 @@ export const SubULNavigation = styled.ul`
 
     a {
       font-weight: 400;
-      transition: 0.5s;
+      transition: 0.3s;
 
       &:hover {
         color: ${(props) => props.theme['pink-400']};

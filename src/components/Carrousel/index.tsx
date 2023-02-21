@@ -113,8 +113,20 @@ export default function Carrousel() {
         <div ref={sliderRef} className="keen-slider">
           {carrouselImages.map((image) => (
             <div key={image.name} className="keen-slider__slide">
-              <Image className="desktop" fill alt="" src={image.desktopSrc} />
-              <Image className="mobile" fill alt="" src={image.mobileSrc} />
+              <Image
+                className="desktop"
+                fill
+                alt=""
+                sizes="100vw, 100vh"
+                src={image.desktopSrc}
+              />
+              <Image
+                className="mobile"
+                fill
+                alt=""
+                sizes="100vw, 100vh"
+                src={image.mobileSrc}
+              />
             </div>
           ))}
         </div>

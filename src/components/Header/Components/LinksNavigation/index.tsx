@@ -54,7 +54,11 @@ export default function LinksNavigation({
           <li key={content.name}>
             {(subnavigation && (
               <>
-                <button onClick={(e) => openSubItems(e.currentTarget)}>
+                <button
+                  onClick={(e) => {
+                    openSubItems(e.currentTarget)
+                  }}
+                >
                   {content.name}
                   <CaretRight size={24} />
                 </button>
