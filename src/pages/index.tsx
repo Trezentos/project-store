@@ -3,28 +3,34 @@ import {
   HomeContanier,
   HighlightImage,
   InstagramContainer,
+  AdvantagesContainer,
+  NewsletterContainer,
 } from '@/styles/home'
 import Image from 'next/image'
-import Carrousel from '../components/Carrousel'
+import Carrousel from '../components/Pages/Home/Carrousel'
 import FImage1 from '../assets/highlightsProducts/1.jpg'
 import FImage2 from '../assets/highlightsProducts/2.jpg'
 import FImage3 from '../assets/home/bikini-girl-desktop.jpg'
 import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
-import FeaturedProducts from '@/components/FeaturedProducts'
-import { useCallback, useEffect } from 'react'
+import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
+import { useCallback, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { GetStaticProps } from 'next'
-import InstagramSession from '@/components/Pages/Home/InstagramPhotos'
+import InstagramSession, {
+  InstagramPostProps,
+} from '@/components/Pages/Home/InstagramPhotos'
+import {
+  InstagramContext,
+  InstagramContextProvider,
+} from '@/context/instagramContext'
+import Newsletter from '@/components/Pages/Home/Newsletter'
 
 interface HomeProps {
-  instagramPhotos: {
-    imageSrc: string
-  }[]
+  instagramPhotos: InstagramPostProps[]
 }
 
 export default function Home(props: HomeProps) {
   const { instagramPhotos } = props
-  console.log(props)
 
   return (
     <HomeContanier>
@@ -57,15 +63,44 @@ export default function Home(props: HomeProps) {
           className="mobile"
         />
       </HighlightImage>
-
-      <InstagramSession instagramPhotos={instagramPhotos} />
+      <InstagramContextProvider>
+        <InstagramSession instagramMedias={instagramPhotos} />
+      </InstagramContextProvider>
+      <AdvantagesContainer>
+        <div>
+          <h2>Advantage of this 1</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+        <div>
+          <h2>Advantage of this 2</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+        <div>
+          <h2>Advantage of this 3</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+      </AdvantagesContainer>
+      <NewsletterContainer>
+        <h1>
+          Não perca nenhuma novidade de promoções semanais das nossas vendas
+        </h1>
+        <Newsletter />
+      </NewsletterContainer>
     </HomeContanier>
   )
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const fields = 'media_url, media_type'
-
+  const fields = 'media_url, media_type, caption, timestamp'
   const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
 
   const {
@@ -75,6 +110,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const instagramPhotos = data
     .map((item: any) => ({
       imageSrc: item.media_url,
+      description: item.caption,
+      id: item.id,
+      timestamp: item.timestamp,
     }))
     .filter((item: any) => !String(item.imageSrc).includes('video'))
 

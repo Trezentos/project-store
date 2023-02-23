@@ -5,7 +5,7 @@ export const InstagramContainer = styled.div`
   text-align: center;
 
   h1 {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     user-select: none;
     font-weight: 400;
   }

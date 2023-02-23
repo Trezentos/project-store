@@ -3,13 +3,13 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
-import Image1 from '../../assets/carroselimgs/carro1.jpg'
-import Image2 from '../../assets/carroselimgs/carro2.jpg'
-import Image3 from '../../assets/carroselimgs/carro3.jpg'
+import Image1 from '../../../../assets/carroselimgs/carro1.jpg'
+import Image2 from '../../../../assets/carroselimgs/carro2.jpg'
+import Image3 from '../../../../assets/carroselimgs/carro3.jpg'
 
-import Image1mbl from '../../assets/carroselimgs/carro-mbl-1.jpg'
-import Image2mbl from '../../assets/carroselimgs/carro-mbl-2.jpg'
-import Image3mbl from '../../assets/carroselimgs/carro-mbl-3.jpg'
+import Image1mbl from '../../../../assets/carroselimgs/carro-mbl-1.jpg'
+import Image2mbl from '../../../../assets/carroselimgs/carro-mbl-2.jpg'
+import Image3mbl from '../../../../assets/carroselimgs/carro-mbl-3.jpg'
 
 interface ICarrousselItems {
   name: string

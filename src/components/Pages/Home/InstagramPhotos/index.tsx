@@ -6,12 +6,13 @@ import {
 } from './styles'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { CaretLeft, CaretRight, InstagramLogo } from 'phosphor-react'
-import imageExp from '../../assets/featuredProducts/foto1.jpg'
-import image2Exp from '../../assets/featuredProducts/foto2.jpg'
-import image3Exp from '../../assets/featuredProducts/foto3.jpg'
 import Image from 'next/image'
+import InstaModal from './Modal'
+import { InstagramContext } from '@/context/instagramContext'
+import { GetStaticProps } from 'next'
+import axios from 'axios'
 
 function Arrow(props: {
   disabled: boolean
@@ -34,18 +35,22 @@ function Arrow(props: {
   )
 }
 
+export interface InstagramPostProps {
+  imageSrc: string
+  id: string
+  description: string
+  timestamp: string
+}
+
 interface HomeProps {
-  instagramPhotos: {
-    imageSrc: string
-  }[]
+  instagramMedias: InstagramPostProps[]
 }
 
 export default function InstagramSession(props: HomeProps) {
-  const { instagramPhotos } = props
+  const { instagramMedias } = props
   const [currentSlide, setCurrentSlide] = useState(0)
-
   const [loaded, setLoaded] = useState(false)
-
+  const [modalIsOpen, setIsOpen] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: {
       perView: 3,
@@ -71,20 +76,37 @@ export default function InstagramSession(props: HomeProps) {
     },
   })
 
+  const { updateSelectedModalMedia, updatesInstagramMedias } =
+    useContext(InstagramContext)
+
+  function openModal(instagramMediaItem: InstagramPostProps) {
+    setIsOpen(true)
+    updateSelectedModalMedia(instagramMediaItem)
+  }
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  useEffect(() => {
+    updatesInstagramMedias(instagramMedias)
+  }, [instagramMedias, updatesInstagramMedias])
+
   return (
     <InstagramContainer>
       <InstagramLogo size={48} />
       <h1>Instagram items</h1>
       <CarrouselWrapper>
         <div ref={sliderRef} className="keen-slider">
-          {instagramPhotos?.map((photoItem) => {
+          {instagramMedias.map((instagramMediaItem) => {
             return (
               <ImageContainer
-                key={photoItem.imageSrc}
+                key={instagramMediaItem.imageSrc}
                 className="keen-slider__slide"
+                onClick={() => openModal(instagramMediaItem)}
               >
                 <Image
-                  src={photoItem.imageSrc}
+                  src={instagramMediaItem.imageSrc}
                   alt=""
                   width={240}
                   height={240}
@@ -110,6 +132,7 @@ export default function InstagramSession(props: HomeProps) {
           </ArrowContainer>
         )}
       </CarrouselWrapper>
+      <InstaModal isOpen={modalIsOpen} closeModal={closeModal} />
     </InstagramContainer>
   )
 }

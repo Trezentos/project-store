@@ -5,6 +5,8 @@ import { ReactElement, ReactNode } from 'react'
 import { GlobalStyle } from '../styles/global'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/styles/themes/default'
+import { InstagramContextProvider } from '@/context/instagramContext'
+import Footer from '@/components/Footer'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -24,6 +26,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <ThemeProvider theme={defaultTheme}>
         <Header />
         <Component {...pageProps} />
+        <Footer />
         <GlobalStyle />
       </ThemeProvider>
     </>

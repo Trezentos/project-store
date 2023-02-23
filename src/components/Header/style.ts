@@ -9,7 +9,7 @@ export const Container = styled.header`
   top: 0;
   right: 0;
   background-color: ${(props) => props.theme.white};
-  z-index: 99999;
+  z-index: 9999;
 `
 export const MainContent = styled.div`
   padding: 0 2rem;

@@ -35,14 +35,20 @@ export default function LinksNavigation({
   const openSubItems = function (e: HTMLElement | null) {
     e?.parentElement?.lastElementChild?.classList.toggle('active')
   }
-  const closeSubItems = function (e: HTMLElement | null) {
-    e?.parentElement?.classList.toggle('active')
+  const closeSubItems = function () {
+    const allSubItems = document.querySelectorAll('.sub-header')
+    allSubItems.forEach((item) => item.classList.remove('active'))
   }
 
   return (
     <ULNavigation mobileHeaderActive={mobileHeaderActive}>
       <MobileContent>
-        <button type="submit" onClick={() => toggleMobileHeader()}>
+        <button
+          type="submit"
+          onClick={() => {
+            toggleMobileHeader()
+          }}
+        >
           <X size={20} />
         </button>
         <Image src={LogoImg} alt="" width={206} height={52} />
@@ -68,7 +74,7 @@ export default function LinksNavigation({
               </>
             )) || <a>{content.name}</a>}
             {subnavigation && (
-              <SubUlsNavigationsContainer>
+              <SubUlsNavigationsContainer className="sub-header">
                 {featuredImg && (
                   <ImageContainer>
                     <Image
@@ -82,16 +88,17 @@ export default function LinksNavigation({
                 )}
 
                 <SubMobileOptions>
-                  <button type="submit" onClick={() => toggleMobileHeader()}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleMobileHeader()
+                      closeSubItems()
+                    }}
+                  >
                     <X size={20} />
                   </button>
                   <h2>{content.name}</h2>
-                  <button
-                    type="submit"
-                    onClick={(e) =>
-                      closeSubItems(e.currentTarget.parentElement)
-                    }
-                  >
+                  <button type="button" onClick={(e) => closeSubItems()}>
                     <CaretLeft size={20} />
                     Voltar
                   </button>

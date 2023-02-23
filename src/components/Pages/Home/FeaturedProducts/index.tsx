@@ -3,9 +3,9 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import { useState } from 'react'
 import { CaretLeft, CaretRight } from 'phosphor-react'
-import imageExp from '../../assets/featuredProducts/foto1.jpg'
-import image2Exp from '../../assets/featuredProducts/foto2.jpg'
-import image3Exp from '../../assets/featuredProducts/foto3.jpg'
+import imageExp from '../../../../assets/featuredProducts/foto1.jpg'
+import image2Exp from '../../../../assets/featuredProducts/foto2.jpg'
+import image3Exp from '../../../../assets/featuredProducts/foto3.jpg'
 
 import Product, { IProducts } from './Product'
 
