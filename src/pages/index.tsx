@@ -1,25 +1,124 @@
-import { HighlightsProducts, HomeContanier } from '@/styles/home'
+import {
+  HighlightsProducts,
+  HomeContanier,
+  HighlightImage,
+  InstagramContainer,
+  AdvantagesContainer,
+  NewsletterContainer,
+} from '@/styles/home'
 import Image from 'next/image'
-import Carrousel from '../components/Carrousel'
-import FImage1 from '../assets/featuredProdutcs/1.jpg'
-import FImage2 from '../assets/featuredProdutcs/2.jpg'
-import FeaturedProducts from '@/components/FeaturedProducts'
+import Carrousel from '../components/Pages/Home/Carrousel'
+import FImage1 from '../assets/highlightsProducts/1.jpg'
+import FImage2 from '../assets/highlightsProducts/2.jpg'
+import FImage3 from '../assets/home/bikini-girl-desktop.jpg'
+import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
+import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
+import { useCallback, useContext, useEffect } from 'react'
+import axios from 'axios'
+import { GetStaticProps } from 'next'
+import InstagramSession, {
+  InstagramPostProps,
+} from '@/components/Pages/Home/InstagramPhotos'
+import {
+  InstagramContext,
+  InstagramContextProvider,
+} from '@/context/instagramContext'
+import Newsletter from '@/components/Pages/Home/Newsletter'
 
-export default function Home() {
+interface HomeProps {
+  instagramPhotos: InstagramPostProps[]
+}
+
+export default function Home(props: HomeProps) {
+  const { instagramPhotos } = props
+
   return (
     <HomeContanier>
       <Carrousel />
       <HighlightsProducts>
         <div>
-          <Image src={FImage1} alt="" fill />
+          <Image src={FImage1} alt="" fill sizes="100%, 100%" />
           <button>Shop This</button>
         </div>
         <div>
-          <Image src={FImage2} alt="" fill />
+          <Image src={FImage2} alt="" fill sizes="100%, 100%" />
           <button>Shop This</button>
         </div>
       </HighlightsProducts>
       <FeaturedProducts />
+      <HighlightImage>
+        <Image
+          src={FImage3}
+          alt=""
+          className="desktop"
+          fill
+          sizes="100vw, 100vh"
+        />
+        <Image
+          src={FImage4}
+          loading="lazy"
+          alt=""
+          fill
+          sizes="100vw, 100vh"
+          className="mobile"
+        />
+      </HighlightImage>
+      <InstagramContextProvider>
+        <InstagramSession instagramMedias={instagramPhotos} />
+      </InstagramContextProvider>
+      <AdvantagesContainer>
+        <div>
+          <h2>Advantage of this 1</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+        <div>
+          <h2>Advantage of this 2</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+        <div>
+          <h2>Advantage of this 3</h2>
+          <h3>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            animi aliquam minima!
+          </h3>
+        </div>
+      </AdvantagesContainer>
+      <NewsletterContainer>
+        <h1>
+          Não perca nenhuma novidade de promoções semanais das nossas vendas
+        </h1>
+        <Newsletter />
+      </NewsletterContainer>
     </HomeContanier>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const fields = 'media_url, media_type, caption, timestamp'
+  const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
+
+  const {
+    data: { data },
+  } = await axios.get(url)
+
+  const instagramPhotos = data
+    .map((item: any) => ({
+      imageSrc: item.media_url,
+      description: item.caption,
+      id: item.id,
+      timestamp: item.timestamp,
+    }))
+    .filter((item: any) => !String(item.imageSrc).includes('video'))
+
+  return {
+    props: {
+      instagramPhotos,
+    },
+  }
 }

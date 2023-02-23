@@ -51,4 +51,14 @@ export const GlobalStyle = createGlobalStyle`
 
     ${CarrouselStyles}
 
+    .ReactModal__Overlay{
+        z-index: 99999 !important;
+    }
+    @media (max-width: 768px){
+        .ReactModal__Content.ReactModal__Content--after-open {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+
 `

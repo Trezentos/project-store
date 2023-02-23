@@ -1,3 +1,9 @@
+import { InstagramContext } from '@/context/instagramContext'
+import { useContext } from 'react'
+
 export default function Products() {
-  return <h1>Products</h1>
+  const { instagramMedias: instainsta } = useContext(InstagramContext)
+  console.log(instainsta)
+
+  return <pre>{JSON.stringify(instainsta)}</pre>
 }
