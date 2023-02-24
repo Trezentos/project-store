@@ -10,6 +10,7 @@ export const Container = styled.header`
   right: 0;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;
+  border-bottom: ${(props) => props.theme['gray-100']} solid 1px;
 `
 export const MainContent = styled.div`
   padding: 0 2rem;
@@ -18,7 +19,9 @@ export const MainContent = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  img {
+  img,
+  a {
+    display: block;
     margin: auto 0;
   }
 

@@ -13,7 +13,6 @@ import FImage2 from '../assets/highlightsProducts/2.jpg'
 import FImage3 from '../assets/home/bikini-girl-desktop.jpg'
 import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
 import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
-import { useCallback, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { GetStaticProps } from 'next'
 import InstagramSession, {
@@ -22,7 +21,7 @@ import InstagramSession, {
 import {
   InstagramContext,
   InstagramContextProvider,
-} from '@/context/instagramContext'
+} from '@/context/InstagramContext'
 import Newsletter from '@/components/Pages/Home/Newsletter'
 
 interface HomeProps {

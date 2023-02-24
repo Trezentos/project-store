@@ -4,145 +4,146 @@ import { MagnifyingGlass, HeartStraight, User, Bag, List } from 'phosphor-react'
 import Image from 'next/image'
 import FeaturedImage from '../../assets/pretty-woman.png'
 import FeaturedImage2 from '../../assets/pretty-woman-2.png'
-import LinksNavigation, { IHeaderContent } from './Components/LinksNavigation'
-import { useState } from 'react'
+import LinksNavigation from './Components/LinksNavigation'
+import { useContext, useEffect, useState } from 'react'
+import { HeaderContext, IHeaderContent } from '@/context/HeaderContext'
+import Link from 'next/link'
 
 export default function Header() {
-  const [mobileHeaderActive, setMobileHeaderActive] = useState(false)
-  const headerContents: IHeaderContent[] = [
-    {
-      name: 'NEW',
-      featuredImg: {
-        imageUrl: FeaturedImage,
-        name: 'Pretty woman 1',
-      },
-      subnavigation: [
-        [
-          {
-            name: 'Swinwear 1',
-          },
-          {
-            name: 'Swin Top',
-          },
-          {
-            name: 'Swin 2',
-          },
-          {
-            name: 'Swin Middle',
-          },
-          {
-            name: 'Swin Top 2',
-          },
-        ],
-        [
-          {
-            name: 'Swinwear 2',
-          },
-          {
-            name: 'Swin Top',
-          },
-          {
-            name: 'bbbbbbbbbbb',
-          },
-          {
-            name: 'Swin Middle',
-          },
-          {
-            name: 'Swin Bottom2',
-          },
-          {
-            name: 'Swin Middle2',
-          },
-        ],
-        [
-          {
-            name: 'Swinwear 3',
-          },
-          {
-            name: 'Swin Top',
-          },
-          {
-            name: 'Swin Bottom',
-          },
-          {
-            name: 'Swin Middle',
-          },
-          {
-            name: 'aaaaaa',
-          },
-          {
-            name: 'Swin Middle2',
-          },
-        ],
-      ],
-    },
-    {
-      name: 'SWIN',
-      featuredImg: {
-        imageUrl: FeaturedImage2,
-        name: 'Suach a Pretty woman 2',
-      },
-      subnavigation: [
-        [
-          {
-            name: 'SWIMSWIM1',
-          },
-          {
-            name: 'SWIMSWIM2',
-          },
-          {
-            name: 'SWIMSWIM3',
-          },
-          {
-            name: 'SWIMSWIM4',
-          },
-          {
-            name: 'SWIMSWIM5',
-          },
-          {
-            name: 'SWIMSWIM6',
-          },
-          {
-            name: 'SWIMSWIM7',
-          },
-        ],
-      ],
-    },
-    {
-      name: 'CLOTHING',
-    },
-    {
-      name: 'ACESSORIES',
-    },
-    {
-      name: 'LOOKBOOK',
-    },
-    {
-      name: 'INSTASHOP',
-    },
-    {
-      name: 'SALE',
-    },
-  ]
+  const { toggleMobileHeader, updateHeaderContents } = useContext(HeaderContext)
 
-  function toggleMobileHeaderActive() {
-    setMobileHeaderActive(!mobileHeaderActive)
-  }
+  useEffect(() => {
+    const headerContents: IHeaderContent[] = [
+      {
+        name: 'NEW',
+        featuredImg: {
+          imageUrl: FeaturedImage,
+          name: 'Pretty woman 1',
+        },
+        subnavigation: [
+          [
+            {
+              name: 'Swinwear 1',
+            },
+            {
+              name: 'Swin Top',
+            },
+            {
+              name: 'Swin 2',
+            },
+            {
+              name: 'Swin Middle',
+            },
+            {
+              name: 'Swin Top 2',
+            },
+          ],
+          [
+            {
+              name: 'Swinwear 2',
+            },
+            {
+              name: 'Swin Top',
+            },
+            {
+              name: 'bbbbbbbbbbb',
+            },
+            {
+              name: 'Swin Middle',
+            },
+            {
+              name: 'Swin Bottom2',
+            },
+            {
+              name: 'Swin Middle2',
+            },
+          ],
+          [
+            {
+              name: 'Swinwear 3',
+            },
+            {
+              name: 'Swin Top',
+            },
+            {
+              name: 'Swin Bottom',
+            },
+            {
+              name: 'Swin Middle',
+            },
+            {
+              name: 'aaaaaa',
+            },
+            {
+              name: 'Swin Middle2',
+            },
+          ],
+        ],
+      },
+      {
+        name: 'SWIN',
+        featuredImg: {
+          imageUrl: FeaturedImage2,
+          name: 'Suach a Pretty woman 2',
+        },
+        subnavigation: [
+          [
+            {
+              name: 'SWIMSWIM1',
+            },
+            {
+              name: 'SWIMSWIM2',
+            },
+            {
+              name: 'SWIMSWIM3',
+            },
+            {
+              name: 'SWIMSWIM4',
+            },
+            {
+              name: 'SWIMSWIM5',
+            },
+            {
+              name: 'SWIMSWIM6',
+            },
+            {
+              name: 'SWIMSWIM7',
+            },
+          ],
+        ],
+      },
+      {
+        name: 'CLOTHING',
+      },
+      {
+        name: 'ACESSORIES',
+      },
+      {
+        name: 'LOOKBOOK',
+      },
+      {
+        name: 'INSTASHOP',
+      },
+      {
+        name: 'SALE',
+      },
+    ]
+
+    updateHeaderContents(headerContents)
+  }, [])
 
   return (
     <Container>
       {/* <ShipContent>
         </ShipContent> */}
       <MainContent>
-        <button onClick={() => toggleMobileHeaderActive()}>
+        <button onClick={() => toggleMobileHeader()}>
           <List size={32} color="#160e14" />
         </button>
-        <Image src={LogoImg} alt="" width={206} height={52} />
-        <LinksNavigation
-          headerContents={headerContents}
-          mobileHeaderActive={mobileHeaderActive}
-          toggleMobileHeader={toggleMobileHeaderActive}
-        />
+        <Link href={'/'}>
+          <Image src={LogoImg} alt="" width={206} height={52} />
+        </Link>
+        <LinksNavigation />
         <GeneralOptions>
           <a>AJUDA</a>
           <GeneralContent>

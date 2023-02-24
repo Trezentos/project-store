@@ -262,7 +262,7 @@ export const MobileContent = styled.div`
     }
   }
 `
-export const SubMobileContent = styled.div`
+export const SubMobileOptions = styled.div`
   @media (max-width: 1200px) {
     display: flex;
     flex-direction: column;

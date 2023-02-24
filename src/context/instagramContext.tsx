@@ -8,7 +8,6 @@ export interface InstagramPostProps {
 }
 
 interface InstagramContextType {
-  closeInstaModal: () => void
   goNextSelectedMediaInsta: () => void
   goPreviousSelectedMediaInsta: () => void
   updatesInstagramMedias: (instaMedias: InstagramPostProps[]) => void
@@ -66,17 +65,12 @@ export function InstagramContextProvider({
     setSelectedIntaMedia(instagramMedias[indexMedia - 1])
   }
 
-  function closeInstaModal() {
-    console.log('fechou!')
-  }
-
   return (
     <InstagramContext.Provider
       value={{
         goNextSelectedMediaInsta,
         goPreviousSelectedMediaInsta,
         selectedIntaMedia,
-        closeInstaModal,
         updatesInstagramMedias,
         instagramMedias,
         updateSelectedModalMedia,

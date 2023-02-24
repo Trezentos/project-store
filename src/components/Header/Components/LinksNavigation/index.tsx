@@ -2,36 +2,21 @@ import Image, { StaticImageData } from 'next/image'
 import {
   ImageContainer,
   MobileContent,
-  SubMobileContent as SubMobileOptions,
+  SubMobileOptions,
   SubULNavigation,
   SubUlsNavigationsContainer,
   ULNavigation,
 } from './styles'
 import LogoImg from '../../../../assets/logo2.png'
 import { CaretLeft, CaretRight, X } from 'phosphor-react'
+import { useContext } from 'react'
+import { HeaderContext } from '@/context/HeaderContext'
+import Link from 'next/link'
 
-export interface IHeaderContent {
-  name: string
-  featuredImg?: {
-    name: string
-    imageUrl: StaticImageData
-  }
-  subnavigation?: {
-    name: string
-  }[][]
-}
+export default function LinksNavigation() {
+  const { toggleMobileHeader, mobileHeaderActive, headerContents } =
+    useContext(HeaderContext)
 
-interface LinksNavigationProps {
-  headerContents: IHeaderContent[]
-  mobileHeaderActive: boolean
-  toggleMobileHeader: () => void
-}
-
-export default function LinksNavigation({
-  headerContents,
-  mobileHeaderActive,
-  toggleMobileHeader,
-}: LinksNavigationProps) {
   const openSubItems = function (e: HTMLElement | null) {
     e?.parentElement?.lastElementChild?.classList.toggle('active')
   }
@@ -68,11 +53,11 @@ export default function LinksNavigation({
                   {content.name}
                   <CaretRight size={24} />
                 </button>
-                <a href="" className="desktop">
+                <Link href="/products" className="desktop">
                   {content.name}
-                </a>
+                </Link>
               </>
-            )) || <a>{content.name}</a>}
+            )) || <Link href="/products">{content.name}</Link>}
             {subnavigation && (
               <SubUlsNavigationsContainer className="sub-header">
                 {featuredImg && (
