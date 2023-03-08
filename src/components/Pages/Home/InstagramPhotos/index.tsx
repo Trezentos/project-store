@@ -10,7 +10,7 @@ import { useState, useContext, useEffect } from 'react'
 import { CaretLeft, CaretRight, InstagramLogo } from 'phosphor-react'
 import Image from 'next/image'
 import InstaModal from './Modal'
-import { InstagramContext } from '@/context/InstagramContext'
+import { InstagramContext } from '@/contexts/pages/home/InstagramContext'
 import { GetStaticProps } from 'next'
 import axios from 'axios'
 

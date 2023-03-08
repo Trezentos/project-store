@@ -6,7 +6,7 @@ import FeaturedImage from '../../assets/pretty-woman.png'
 import FeaturedImage2 from '../../assets/pretty-woman-2.png'
 import LinksNavigation from './Components/LinksNavigation'
 import { useContext, useEffect, useState } from 'react'
-import { HeaderContext, IHeaderContent } from '@/context/HeaderContext'
+import { HeaderContext, IHeaderContent } from '@/contexts/HeaderContext'
 import Link from 'next/link'
 
 export default function Header() {

@@ -21,7 +21,7 @@ import InstagramSession, {
 import {
   InstagramContext,
   InstagramContextProvider,
-} from '@/context/InstagramContext'
+} from '@/contexts/pages/home/InstagramContext'
 import Newsletter from '@/components/Pages/Home/Newsletter'
 
 interface HomeProps {

@@ -1,6 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const Container = styled.div``
+export const Container = styled.div`
+  position: relative;
+`
 
 export const Banner = styled.div`
   max-width: 100vw;
@@ -37,13 +39,17 @@ export const FilterLayout = styled.div`
 
 export const Header = styled.header`
   display: flex;
+  position: sticky;
+  top: 80px;
+  background-color: ${(props) => props.theme.white};
+  z-index: 999;
 
   div {
     border: 1px solid ${(props) => props.theme['gray-200']};
   }
 
   div:nth-child(1) {
-    width: 18%;
+    width: 16%;
 
     button {
       border: none;
@@ -65,6 +71,10 @@ export const Header = styled.header`
         color: ${(props) => props.theme['pink-400']};
       }
     }
+
+    @media (max-width: 768px) {
+      width: 40%;
+    }
   }
 
   div:nth-child(2) {
@@ -77,6 +87,12 @@ export const Header = styled.header`
 
     p {
       font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      p {
+        display: none;
+      }
     }
   }
 
@@ -100,6 +116,10 @@ export const Header = styled.header`
         }
       }
     }
+
+    @media (max-width: 768px) {
+      width: 40%;
+    }
   }
 `
 
@@ -107,79 +127,71 @@ export const BodyContent = styled.div`
   width: 100%;
   display: flex;
 `
-export const AsideFilter = styled.div`
-  height: 500px;
-  width: 18%;
-  border: 1px solid black;
-`
-export const ProductsContainer = styled.div`
-  border: 1px solid black;
-  flex: 1;
-`
 
-export const AccordionAsideFilter = styled.div``
+export const AsideFilterContainer = styled.div`
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+  width: 0;
 
-export const AsideHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  /* border: 1px solid black; */
+  &.open {
+    width: 18%;
+    max-width: 275px;
+  }
 
-  button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  @media (max-width: 768px) {
+    overflow: visible;
+    position: fixed;
     height: 100%;
-    border: none;
-    background-color: transparent;
-    padding: 1rem 1.2rem;
-    text-transform: uppercase;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    visibility: hidden;
+    right: -50px;
 
-    h3 {
-      font-weight: 400;
-      font-size: 0.85rem;
-      letter-spacing: 0.1rem;
+    &.open {
+      visibility: visible;
+      background-color: white;
+      width: 45% !important;
+      right: 0;
     }
   }
 `
 
-export const AsideOptions = styled.div`
-  padding: 0.2rem 1.4rem;
-  transition: 0.5s ease;
+export const AsideFilterContainerBGMobile = styled.div`
   display: none;
 
-  transform: scaleY(0);
-  /* height: 0; */
-
-  ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(29px, 1fr));
-    grid-column-gap: 6%;
-    grid-row-gap: 0.6rem;
-    padding: 0.3rem;
-
-    li {
-      list-style: none;
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  &.active {
+  @media (max-width: 768px) {
     display: block;
-    transform: scaleY(1);
-    transform-origin: top;
+    width: 55%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: black;
+    z-index: 99999;
+    opacity: 0;
+    transition: 0.3s;
+    visibility: hidden;
+
+    &.active {
+      opacity: 0.5;
+      visibility: visible;
+    }
   }
 `
 
-interface CircleOptionProps {
-  color?: string
-}
+export const ProductsContainer = styled.div`
+  flex: 1;
 
-export const CircleOption = styled.div<CircleOptionProps>`
-  background-color: ${(props) => props.color || 'gray'};
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
+  div {
+    width: 200px;
+    background-color: red;
+    height: 200px;
+    margin: 1rem;
+  }
 `

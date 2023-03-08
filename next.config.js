@@ -8,6 +8,8 @@ const nextConfig = {
       'example.com',
       'scontent-gru1-2.cdninstagram.com',
       'scontent-gru1-1.cdninstagram.com',
+      'scontent-gru2-2.cdninstagram.com',
+      'scontent-gru2-1.cdninstagram.com',
     ],
   },
 }

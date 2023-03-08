@@ -137,7 +137,7 @@ export const ImageContainer = styled.a`
   }
 
   @media (max-width: 1200px) {
-    display: none;
+    display: none !important;
   }
 `
 

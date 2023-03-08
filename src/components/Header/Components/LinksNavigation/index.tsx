@@ -10,7 +10,7 @@ import {
 import LogoImg from '../../../../assets/logo2.png'
 import { CaretLeft, CaretRight, X } from 'phosphor-react'
 import { useContext } from 'react'
-import { HeaderContext } from '@/context/HeaderContext'
+import { HeaderContext } from '@/contexts/HeaderContext'
 import Link from 'next/link'
 
 export default function LinksNavigation() {

@@ -5,7 +5,7 @@ import { ReactElement, ReactNode } from 'react'
 import { GlobalStyle } from '../styles/global'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/styles/themes/default'
-import { HeaderContextProvider } from '@/context/HeaderContext'
+import { HeaderContextProvider } from '@/contexts/HeaderContext'
 import Footer from '@/components/Footer'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {

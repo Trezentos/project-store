@@ -4,7 +4,7 @@ import Modal from 'react-modal'
 import { InstagramPostProps } from '..'
 import { Container, ModalContent, HeaderContainer, BodyContent } from './styles'
 import { CaretLeft, CaretRight, X, InstagramLogo } from 'phosphor-react'
-import { InstagramContext } from '@/context/InstagramContext'
+import { InstagramContext } from '@/contexts/pages/home/InstagramContext'
 import dateFormatter from '@/utils/dateFormatter'
 
 interface InstaModalProps {
