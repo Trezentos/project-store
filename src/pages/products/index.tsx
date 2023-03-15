@@ -17,6 +17,8 @@ import Link from 'next/link'
 import { List } from 'phosphor-react'
 import { Filter } from '@/components/Pages/Products/Filter'
 import { GetStaticProps } from 'next'
+import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
+import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
 
 interface ProductsProps {
   colorContent: {
@@ -27,52 +29,18 @@ interface ProductsProps {
 
 export default function Products({ colorContent }: ProductsProps) {
   const [showFiltersContainer, setShowFilters] = useState(true)
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+
   const toggleShowFilters = useCallback(() => {
     setShowFilters(!showFiltersContainer)
   }, [showFiltersContainer])
-
-  const updateFilters = useCallback(
-    (selectedFilter: string, childElement?: any) => {
-      const IndexFoundFilter = selectedFilters.indexOf(selectedFilter)
-
-      if (IndexFoundFilter !== -1) {
-        setSelectedFilters(
-          selectedFilters.filter((item) => selectedFilter !== item),
-        )
-
-        if (childElement) childElement.classList.remove('selected')
-
-        return
-      }
-
-      setSelectedFilters((state) => [...state, selectedFilter])
-      if (childElement) childElement.classList.add('selected')
-    },
-    [selectedFilters],
-  )
-
-  const clearFilters = useCallback(
-    (options: string[]) => {
-      console.log(
-        selectedFilters.filter((selectedF) => !options.includes(selectedF)),
-      )
-
-      setSelectedFilters(
-        selectedFilters.filter((selectedF) => !options.includes(selectedF)),
-      )
-    },
-    [selectedFilters],
-  )
 
   const closeFilterContainer = useCallback(() => {
     setShowFilters(false)
   }, [])
 
   useEffect(() => {
-    console.log(selectedFilters)
     if (window.innerWidth < 768) setShowFilters(false)
-  }, [selectedFilters])
+  }, [])
 
   return (
     <Container>
@@ -110,22 +78,12 @@ export default function Products({ colorContent }: ProductsProps) {
             className={showFiltersContainer ? 'active' : ''}
           />
           <AsideFilterContainer className={showFiltersContainer ? 'open' : ''}>
-            <Filter
-              updateFilters={updateFilters}
-              clearFilters={clearFilters}
-              colorContent={colorContent}
-              type="colors"
-            />
-            <Filter
-              updateFilters={updateFilters}
-              clearFilters={clearFilters}
-              type="sizes"
-            />
-            <Filter
-              updateFilters={updateFilters}
-              clearFilters={clearFilters}
-              type="prices"
-            />
+            <FilterContextProvider>
+              <SelectedFilters />
+              <Filter colorContent={colorContent} type="colors" />
+              <Filter type="sizes" />
+              <Filter type="prices" />
+            </FilterContextProvider>
           </AsideFilterContainer>
 
           <ProductsContainer>
@@ -194,6 +152,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       colorContent,
     },
-    revalidate: 60 * 60 * 24, // 1 day
+    revalidate: 60 * 60 * 24 * 1, // 1 day
   }
 }

@@ -1,5 +1,13 @@
+import { FilterContext } from '@/contexts/pages/products/FilterContext'
 import { Minus, Plus } from 'phosphor-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   AsideHeader,
   AsideOptions,
@@ -14,19 +22,13 @@ interface FilterProps {
     id: number
     color: string
   }[]
-  updateFilters: (filter: string, child?: any) => void
-  clearFilters: (options: string[]) => void
 }
 
-export function Filter({
-  type,
-  colorContent,
-  updateFilters,
-  clearFilters,
-}: FilterProps) {
+export function Filter({ type, colorContent }: FilterProps) {
   const asideOptionRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const { updateLocalFilter, selectedFilters, clearLocalFilters, mainTitle } =
+    useContext(FilterContext)
 
   const expandAccordion = useCallback(() => {
     if (!asideOptionRef || !asideOptionRef.current) return
@@ -43,33 +45,6 @@ export function Filter({
       asideOptionRef.current.style.maxHeight = 0 + 'px'
     }
   }, [])
-
-  const updateLocalFilter = useCallback(
-    (filterOption: string) => {
-      if (selectedOptions.includes(filterOption)) {
-        setSelectedOptions(
-          selectedOptions.filter((option) => option !== filterOption),
-        )
-        return
-      }
-
-      setSelectedOptions((prev) => [...prev, filterOption])
-    },
-    [selectedOptions],
-  )
-
-  const clearLocalFilters = useCallback(() => {
-    const selectedsDivs = document.querySelectorAll<HTMLDivElement>(
-      `ul.${type} li.${type} div.selected `,
-    )
-
-    if (!selectedsDivs) return
-
-    selectedsDivs.forEach((div) => div.classList.remove('selected'))
-
-    clearFilters(selectedOptions)
-    setSelectedOptions([])
-  }, [clearFilters, selectedOptions, type])
 
   const sizesContent = [
     {
@@ -116,23 +91,22 @@ export function Filter({
     },
   ]
 
-  const MainTitle = () => {
-    if (type === 'colors') return 'Cores'
-    if (type === 'prices') return 'Preços'
-    if (type === 'sizes') return 'Tamanhos'
-  }
+  const selectedLocalOptions = useMemo(
+    () => selectedFilters.filter((item) => item.type === type),
+    [selectedFilters, type],
+  )
 
   return (
     <div>
       <AsideHeader>
         <button onClick={() => expandAccordion()}>
-          <h3>{MainTitle()}</h3>
+          <h3>{mainTitle(type)}</h3>
           <div>
-            {selectedOptions.length > 0 && (
+            {selectedLocalOptions.length > 0 && (
               <small
                 onClick={(e) => {
                   e.stopPropagation()
-                  clearLocalFilters()
+                  clearLocalFilters(type)
                 }}
               >
                 limpar
@@ -147,15 +121,14 @@ export function Filter({
           {type === 'colors' &&
             colorContent?.map((filter) => {
               return (
-                <li key={filter.id} className={type}>
+                <li key={filter.id} className={type} value={filter.color}>
                   <button
                     type="button"
                     onClick={(e) => {
-                      updateLocalFilter(filter.color)
-                      updateFilters(
-                        filter.color,
-                        e.currentTarget.firstElementChild,
-                      )
+                      updateLocalFilter({
+                        value: filter.color,
+                        type: 'colors',
+                      })
                     }}
                   >
                     <CircleColorOption color={filter.color} />
@@ -166,15 +139,14 @@ export function Filter({
           {type === 'sizes' &&
             sizesContent?.map((filter) => {
               return (
-                <li key={filter.id} className={type}>
+                <li key={filter.id} className={type} value={filter.size}>
                   <button
                     type="button"
                     onClick={(e) => {
-                      updateLocalFilter(filter.size)
-                      updateFilters(
-                        filter.size,
-                        e.currentTarget.firstElementChild,
-                      )
+                      updateLocalFilter({
+                        value: filter.size,
+                        type: 'sizes',
+                      })
                     }}
                   >
                     <CircleSizeOption>
@@ -187,15 +159,14 @@ export function Filter({
           {type === 'prices' &&
             pricesContent?.map((filter) => {
               return (
-                <li key={filter.id} className={type}>
+                <li key={filter.id} className={type} value={filter.price}>
                   <button
                     type="button"
                     onClick={(e) => {
-                      updateLocalFilter(filter.price)
-                      updateFilters(
-                        filter.price,
-                        e.currentTarget.lastElementChild,
-                      )
+                      updateLocalFilter({
+                        value: filter.price,
+                        type: 'prices',
+                      })
                     }}
                   >
                     <small>{filter.price}</small>

@@ -1,7 +1,8 @@
 import Image, { StaticImageData } from 'next/image'
 import { Container, Description, Colors, Dot, ContentWrapper } from './styles'
 import imageExp from '../../../assets/featuredProducts/foto1.jpg'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import realFormatter from '@/utils/realFormatter'
 
 interface IProduct {
   id: string
@@ -12,34 +13,26 @@ interface IProduct {
 interface IProductsPerColor {
   id: string
   color: string
+  price: number
   product: IProduct
 }
 
 export interface IProducts {
   productId: string
+  productName: string
   productsByColor: IProductsPerColor[]
+  className?: string
 }
 
-export default function Product({ productsByColor, productId }: IProducts) {
-  useEffect(() => {
-    const wrapperDiv = document.querySelector<HTMLDivElement>(
-      `.wrapper-${productId}`,
-    )
-
-    wrapperDiv?.addEventListener('mouseover', async (e) => {
-      try {
-        const videoToPlay = document.querySelector<HTMLVideoElement>(
-          `.wrapper-${productId} .active video`,
-        )
-
-        if (!videoToPlay) return
-        videoToPlay.currentTime = 0
-        await videoToPlay.play()
-      } catch (error: any) {
-        console.error(error.message)
-      }
-    })
-  }, [productId])
+export default function Product({
+  productsByColor,
+  productId,
+  className,
+  productName,
+}: IProducts) {
+  const [selectedPrice, setSelectedPrice] = useState<number>(
+    productsByColor[0].price,
+  )
 
   const handleActiveProduct = useCallback(
     (id: string, currentElement: HTMLElement | null) => {
@@ -66,8 +59,28 @@ export default function Product({ productsByColor, productId }: IProducts) {
     [productId],
   )
 
+  useEffect(() => {
+    const wrapperDiv = document.querySelector<HTMLDivElement>(
+      `.wrapper-${productId}`,
+    )
+
+    wrapperDiv?.addEventListener('mouseover', async (e) => {
+      try {
+        const videoToPlay = document.querySelector<HTMLVideoElement>(
+          `.wrapper-${productId} .active video`,
+        )
+
+        if (!videoToPlay) return
+        videoToPlay.currentTime = 0
+        await videoToPlay.play()
+      } catch (error: any) {
+        console.error(error.message)
+      }
+    })
+  }, [productId, productsByColor])
+
   return (
-    <Container className="keen-slider__slide">
+    <Container className={className}>
       <ContentWrapper className={`wrapper-${productId}`}>
         {productsByColor.map((productByColor, index) => {
           const { product } = productByColor
@@ -113,15 +126,16 @@ export default function Product({ productsByColor, productId }: IProducts) {
                 className={`product-color-id-${productColor.id} ${
                   index === 0 ? 'active' : ''
                 }`}
-                onClick={(e) =>
+                onClick={(e) => {
                   handleActiveProduct(productColor.product.id, e.currentTarget)
-                }
+                  setSelectedPrice(productColor.price)
+                }}
               />
             )
           })}
         </Colors>
-        <strong>LISA PUSH UP TOP</strong>
-        <h5>R$ 1.050</h5>
+        <strong>{productName}</strong>
+        <h5>{realFormatter(selectedPrice)}</h5>
       </Description>
     </Container>
   )

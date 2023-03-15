@@ -6,6 +6,9 @@ import { CaretLeft, CaretRight } from 'phosphor-react'
 import imageExp from '../../../../assets/featuredProducts/foto1.jpg'
 import image2Exp from '../../../../assets/featuredProducts/foto2.jpg'
 import image3Exp from '../../../../assets/featuredProducts/foto3.jpg'
+import gifImage from '../../../../assets/giphy.gif'
+import curolProductEx from '../../../../assets/product-ex.avif'
+import watchProducEx from '../../../../assets/product-ex2.avif'
 
 import Product, { IProducts } from './Product'
 
@@ -30,116 +33,126 @@ function Arrow(props: {
   )
 }
 
+const videoProductEx =
+  'https://assets.mixkit.co/videos/preview/mixkit-young-photographer-setting-up-his-camera-outdoors-34408-large.mp4'
+
 const products: IProducts[] = [
   {
     productId: '302',
+    productName: 'Saia Estilosa',
     productsByColor: [
       {
         id: '1',
         color: 'purple',
+        price: 920,
         product: {
           id: '12',
-          firstImage: imageExp,
-          secondImage: image3Exp,
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
       {
         id: '2',
+        price: 120,
         color: 'crimson',
         product: {
           id: '13',
-          firstImage: image3Exp,
-          secondImage:
-            'https://cdn.accentuate.io/6731703976067/9304816484467/PAISLEY_TRIANGLE_TOP_KINSLEY_TIE_SIDE_BOTTOM_PINK_VIDEO_1-v1646637643760.mp4',
+          firstImage: curolProductEx,
+          secondImage: watchProducEx,
         },
       },
     ],
   },
   {
     productId: '36',
+    productName: 'Saia Estilosa',
     productsByColor: [
       {
         id: '1',
         color: 'green',
+        price: 120,
         product: {
           id: '12',
-          firstImage: imageExp,
-          secondImage: image3Exp,
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
       {
         id: '2',
         color: 'orange',
+        price: 580,
         product: {
           id: '13',
-          firstImage: image3Exp,
-          secondImage:
-            'https://cdn.accentuate.io/6731703976067/9304816484467/PAISLEY_TRIANGLE_TOP_KINSLEY_TIE_SIDE_BOTTOM_PINK_VIDEO_1-v1646637643760.mp4',
+          firstImage: curolProductEx,
+          secondImage: watchProducEx,
         },
       },
     ],
   },
   {
     productId: '43',
+    productName: 'Saia Estilosa',
     productsByColor: [
       {
         id: '1',
         color: 'deepskyblue',
+        price: 820,
         product: {
           id: '12',
-          firstImage: imageExp,
-          secondImage:
-            'https://cdn.accentuate.io/7750966804611/9304816484467/SERENA_TRIANGLE_TOP_SERENA_TANGO_BOTTOM_PINK-v1666397583733.mp4',
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
       {
         id: '2',
         color: 'crimson',
+        price: 120,
         product: {
           id: '13',
-          firstImage: image3Exp,
-          secondImage:
-            'https://cdn.accentuate.io/6731703976067/9304816484467/PAISLEY_TRIANGLE_TOP_KINSLEY_TIE_SIDE_BOTTOM_PINK_VIDEO_1-v1646637643760.mp4',
+          firstImage: curolProductEx,
+          secondImage: watchProducEx,
         },
       },
     ],
   },
   {
     productId: '1',
+    productName: 'Saia Estilosa',
     productsByColor: [
       {
         id: '1',
         color: 'pink',
+        price: 520,
         product: {
           id: '12',
-          firstImage: imageExp,
-          secondImage:
-            'https://cdn.accentuate.io/7750966804611/9304816484467/SERENA_TRIANGLE_TOP_SERENA_TANGO_BOTTOM_PINK-v1666397583733.mp4',
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
       {
         id: '2',
         color: 'crimson',
+        price: 320,
         product: {
           id: '13',
-          firstImage: image3Exp,
-          secondImage:
-            'https://cdn.accentuate.io/6731703976067/9304816484467/PAISLEY_TRIANGLE_TOP_KINSLEY_TIE_SIDE_BOTTOM_PINK_VIDEO_1-v1646637643760.mp4',
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
     ],
   },
   {
     productId: '2',
+    productName: 'Saia Estilosa',
     productsByColor: [
       {
         color: 'white',
         id: '1',
+        price: 580,
         product: {
           id: '3',
-          firstImage: image2Exp,
-          secondImage:
-            'https://cdn.accentuate.io/5192940748931/9304816484467/GLITZY_GIRL_MESH_PEARL_TOP__SKIRT_SET_NUDE-v1666823886592.mp4',
+          firstImage: curolProductEx,
+          secondImage: videoProductEx,
         },
       },
     ],
@@ -188,6 +201,8 @@ export default function FeaturedProducts() {
                 key={product.productId}
                 productId={product.productId}
                 productsByColor={product.productsByColor}
+                className="keen-slider__slide"
+                productName={product.productName}
               />
             )
           })}

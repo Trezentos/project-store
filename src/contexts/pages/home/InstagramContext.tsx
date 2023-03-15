@@ -16,7 +16,7 @@ interface InstagramContextType {
   updateSelectedModalMedia: (instaMedia: InstagramPostProps) => void
 }
 
-interface HomeContextProviderProps {
+interface InstagramContextProviderProps {
   children: ReactNode
 }
 
@@ -24,7 +24,7 @@ export const InstagramContext = createContext({} as InstagramContextType)
 
 export function InstagramContextProvider({
   children,
-}: HomeContextProviderProps) {
+}: InstagramContextProviderProps) {
   const [selectedIntaMedia, setSelectedIntaMedia] = useState(
     {} as InstagramPostProps,
   )
