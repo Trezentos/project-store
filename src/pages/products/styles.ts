@@ -126,6 +126,7 @@ export const Header = styled.header`
 export const BodyContent = styled.div`
   width: 100%;
   display: flex;
+  margin-bottom: 100px;
 `
 
 export const AsideFilterContainer = styled.div`
@@ -186,12 +187,72 @@ export const AsideFilterContainerBGMobile = styled.div`
 `
 
 export const ProductsContainer = styled.div`
-  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  width: calc(100% - 16rem);
+  width: 98%;
+  overflow: hidden;
+
+  > div {
+    width: 100%;
+    margin: 1rem;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+
+    > div {
+      margin: 0.2rem;
+    }
+  }
+`
+
+export const PaginationContainer = styled.div`
+  width: 100%;
+  padding: 2rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px gray solid;
+  transition: 0.3s color;
+
+  > button {
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+  }
 
   div {
-    width: 200px;
-    background-color: red;
-    height: 200px;
-    margin: 1rem;
+    button {
+      margin: 0.4rem;
+      padding: 0.6rem;
+      border-radius: 50%;
+      border: 1px solid black;
+      line-height: 0.5rem;
+      background-color: transparent;
+      font-size: 1rem;
+
+      &:hover {
+        border: 1px solid ${(props) => props.theme['pink-400']};
+      }
+    }
+  }
+
+  button:hover {
+    transition: 0.3s;
+    color: ${(props) => props.theme['pink-400']};
+  }
+
+  button.active-page {
+    color: ${(props) => props.theme['pink-400']};
+    border: 1px solid ${(props) => props.theme['pink-400']};
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
   }
 `

@@ -10,6 +10,7 @@ const nextConfig = {
       'scontent-gru1-1.cdninstagram.com',
       'scontent-gru2-2.cdninstagram.com',
       'scontent-gru2-1.cdninstagram.com',
+      'store-project-commerce.s3.amazonaws.com',
     ],
   },
 }

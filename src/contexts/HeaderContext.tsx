@@ -3,6 +3,7 @@ import { createContext, ReactNode, useState, useEffect } from 'react'
 
 export interface IHeaderContent {
   name: string
+  link?: string
   featuredImg?: {
     name: string
     imageUrl: StaticImageData

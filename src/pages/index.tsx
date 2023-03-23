@@ -2,8 +2,6 @@ import {
   HighlightsProducts,
   HomeContanier,
   HighlightImage,
-  InstagramContainer,
-  AdvantagesContainer,
   NewsletterContainer,
 } from '@/styles/home'
 import Image from 'next/image'
@@ -23,6 +21,7 @@ import {
   InstagramContextProvider,
 } from '@/contexts/pages/home/InstagramContext'
 import Newsletter from '@/components/Pages/Home/Newsletter'
+import SiteAdvantageBlock from '@/components/Pages/Home/SiteAdvantagesBlock'
 
 interface HomeProps {
   instagramPhotos: InstagramPostProps[]
@@ -65,29 +64,8 @@ export default function Home(props: HomeProps) {
       <InstagramContextProvider>
         <InstagramSession instagramMedias={instagramPhotos} />
       </InstagramContextProvider>
-      <AdvantagesContainer>
-        <div>
-          <h2>Advantage of this 1</h2>
-          <h3>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            animi aliquam minima!
-          </h3>
-        </div>
-        <div>
-          <h2>Advantage of this 2</h2>
-          <h3>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            animi aliquam minima!
-          </h3>
-        </div>
-        <div>
-          <h2>Advantage of this 3</h2>
-          <h3>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            animi aliquam minima!
-          </h3>
-        </div>
-      </AdvantagesContainer>
+
+      <SiteAdvantageBlock />
       <NewsletterContainer>
         <h1>
           Não perca nenhuma novidade de promoções semanais das nossas vendas

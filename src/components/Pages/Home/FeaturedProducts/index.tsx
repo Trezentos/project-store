@@ -3,14 +3,11 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import { useState } from 'react'
 import { CaretLeft, CaretRight } from 'phosphor-react'
-import imageExp from '../../../../assets/featuredProducts/foto1.jpg'
-import image2Exp from '../../../../assets/featuredProducts/foto2.jpg'
-import image3Exp from '../../../../assets/featuredProducts/foto3.jpg'
-import gifImage from '../../../../assets/giphy.gif'
 import curolProductEx from '../../../../assets/product-ex.avif'
 import watchProducEx from '../../../../assets/product-ex2.avif'
+import curol2ProducEx from '../../../../assets/product-ex3.avif'
 
-import Product, { IProducts } from './Product'
+import Product, { IProducts } from '../../../Product'
 
 function Arrow(props: {
   disabled: boolean
@@ -39,7 +36,7 @@ const videoProductEx =
 const products: IProducts[] = [
   {
     productId: '302',
-    productName: 'Saia Estilosa',
+    productName: 'Creme Curology',
     productsByColor: [
       {
         id: '1',
@@ -57,7 +54,7 @@ const products: IProducts[] = [
         color: 'crimson',
         product: {
           id: '13',
-          firstImage: curolProductEx,
+          firstImage: curol2ProducEx,
           secondImage: watchProducEx,
         },
       },
@@ -65,7 +62,7 @@ const products: IProducts[] = [
   },
   {
     productId: '36',
-    productName: 'Saia Estilosa',
+    productName: 'Creme Curology 1',
     productsByColor: [
       {
         id: '1',
@@ -83,7 +80,7 @@ const products: IProducts[] = [
         price: 580,
         product: {
           id: '13',
-          firstImage: curolProductEx,
+          firstImage: curol2ProducEx,
           secondImage: watchProducEx,
         },
       },
@@ -91,7 +88,7 @@ const products: IProducts[] = [
   },
   {
     productId: '43',
-    productName: 'Saia Estilosa',
+    productName: 'Creme Curology 2',
     productsByColor: [
       {
         id: '1',
@@ -109,7 +106,7 @@ const products: IProducts[] = [
         price: 120,
         product: {
           id: '13',
-          firstImage: curolProductEx,
+          firstImage: curol2ProducEx,
           secondImage: watchProducEx,
         },
       },
@@ -117,7 +114,7 @@ const products: IProducts[] = [
   },
   {
     productId: '1',
-    productName: 'Saia Estilosa',
+    productName: 'Creme Curology 3',
     productsByColor: [
       {
         id: '1',
@@ -135,7 +132,7 @@ const products: IProducts[] = [
         price: 320,
         product: {
           id: '13',
-          firstImage: curolProductEx,
+          firstImage: curol2ProducEx,
           secondImage: videoProductEx,
         },
       },
@@ -143,7 +140,7 @@ const products: IProducts[] = [
   },
   {
     productId: '2',
-    productName: 'Saia Estilosa',
+    productName: 'Creme Curology 4',
     productsByColor: [
       {
         color: 'white',
@@ -151,7 +148,7 @@ const products: IProducts[] = [
         price: 580,
         product: {
           id: '3',
-          firstImage: curolProductEx,
+          firstImage: curol2ProducEx,
           secondImage: videoProductEx,
         },
       },

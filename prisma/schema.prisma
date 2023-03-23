@@ -1,0 +1,28 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Product {
+    id          String   @id @default(uuid())
+    name        String
+    description String?  @db.Text
+    price       Float
+    color       String?
+    size        String
+    imageSrc    String?
+    createdAt   DateTime @default(now())
+    Image       Image[]
+}
+
+model Image {
+    id         String   @id @default(uuid())
+    imageSrc   String?
+    product_id String
+    product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    createdAt  DateTime @default(now())
+}

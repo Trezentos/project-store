@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  height: 100%;
+  height: fit-content;
 `
 
 export const ContentWrapper = styled.div`
   position: relative;
-  height: 450px;
+  height: 400px;
+  overflow: hidden;
 
   .product-item-slider {
     display: none;
@@ -22,7 +23,8 @@ export const ContentWrapper = styled.div`
   }
 
   img {
-    object-fit: cover;
+    object-fit: contain;
+    /* object-fit: cover; */
     /* height: 440px !important; */
     transition: 0.2s;
   }
@@ -32,11 +34,15 @@ export const ContentWrapper = styled.div`
     position: absolute;
     left: 0;
     top: 0;
-    height: 450px;
+    /* height: 400px; */
     opacity: 0;
     width: 100%;
     object-fit: cover;
     border: none;
+  }
+
+  img:nth-child(2) {
+    opacity: 0;
   }
 
   &:hover {
@@ -45,20 +51,23 @@ export const ContentWrapper = styled.div`
     }
 
     img:nth-child(2) {
-      opacity: 0;
+      opacity: 1;
     }
   }
 
   @media (min-width: 1500px) {
-    height: 530px;
-
-    img {
-    }
+    height: 600px;
 
     video {
-      height: 530px;
       width: 100%;
+      height: 600px;
+      max-height: 600px;
+      /* overflow: hidden; */
     }
+  }
+
+  @media (max-width: 768px) {
+    height: 300px;
   }
 `
 
@@ -75,6 +84,10 @@ export const Description = styled.div`
 
   h5 {
     font-weight: 500;
+  }
+
+  a {
+    text-align: center;
   }
 `
 

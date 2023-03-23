@@ -123,6 +123,7 @@ export default function Header() {
       },
       {
         name: 'INSTASHOP',
+        link: '/instashop',
       },
       {
         name: 'SALE',

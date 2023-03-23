@@ -53,11 +53,22 @@ export default function LinksNavigation() {
                   {content.name}
                   <CaretRight size={24} />
                 </button>
-                <Link href="/products" className="desktop">
+                <Link
+                  onClick={() => toggleMobileHeader()}
+                  href="/products"
+                  className="desktop"
+                >
                   {content.name}
                 </Link>
               </>
-            )) || <Link href="/products">{content.name}</Link>}
+            )) || (
+              <Link
+                onClick={() => toggleMobileHeader()}
+                href={content.link ?? '/products'}
+              >
+                {content.name}
+              </Link>
+            )}
             {subnavigation && (
               <SubUlsNavigationsContainer className="sub-header">
                 {featuredImg && (
@@ -92,7 +103,12 @@ export default function LinksNavigation() {
                   <SubULNavigation key={ulItem[0].name}>
                     {ulItem.map((liItem) => (
                       <li key={liItem.name}>
-                        <a>{liItem.name}</a>
+                        <Link
+                          href="/products"
+                          onClick={() => toggleMobileHeader()}
+                        >
+                          {liItem.name}
+                        </Link>
                       </li>
                     ))}
                   </SubULNavigation>
