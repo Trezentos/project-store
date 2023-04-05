@@ -43,7 +43,7 @@ export default function Home(props: HomeProps) {
           <button>Shop This</button>
         </div>
       </HighlightsProducts>
-      <FeaturedProducts />
+      {/* <FeaturedProducts /> */}
       <HighlightImage>
         <Image
           src={FImage3}

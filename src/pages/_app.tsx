@@ -7,6 +7,8 @@ import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/styles/themes/default'
 import { HeaderContextProvider } from '@/contexts/HeaderContext'
 import Footer from '@/components/Footer'
+import { CartContextProvider } from '@/contexts/CartContext'
+import Cartside from '@/components/CartSide'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -24,10 +26,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
-        <HeaderContextProvider>
-          <Header />
-        </HeaderContextProvider>
-        <Component {...pageProps} />
+        <CartContextProvider>
+          <HeaderContextProvider>
+            <Header />
+          </HeaderContextProvider>
+          <Component {...pageProps} />
+          <Cartside />
+        </CartContextProvider>
         <Footer />
         <GlobalStyle />
       </ThemeProvider>

@@ -13,6 +13,8 @@ import InstaModal from './Modal'
 import { InstagramContext } from '@/contexts/pages/home/InstagramContext'
 import { GetStaticProps } from 'next'
 import axios from 'axios'
+import { SkeletonImage } from './skeletonImage'
+import { useRouter } from 'next/router'
 
 function Arrow(props: {
   disabled: boolean
@@ -75,6 +77,8 @@ export default function InstagramSession(props: HomeProps) {
       },
     },
   })
+  const router = useRouter()
+  const isLoading = router.isFallback
 
   const { updateSelectedModalMedia, updatesInstagramMedias } =
     useContext(InstagramContext)
@@ -105,11 +109,18 @@ export default function InstagramSession(props: HomeProps) {
                 className="keen-slider__slide"
                 onClick={() => openModal(instagramMediaItem)}
               >
-                <Image
+                {/* <Image
                   src={instagramMediaItem.imageSrc}
                   alt=""
                   width={240}
                   height={240}
+                /> */}
+                <SkeletonImage
+                  alt=""
+                  width={240}
+                  height={240}
+                  src={instagramMediaItem.imageSrc}
+                  isLoading={isLoading}
                 />
                 <InstagramLogo size={24} />
               </ImageContainer>

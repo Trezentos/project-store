@@ -73,4 +73,17 @@ export const GeneralContent = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 0.4rem;
+
+  button {
+    all: unset;
+    cursor: pointer;
+
+    svg {
+      transition: 0.3s;
+
+      &:hover {
+        color: ${(props) => props.theme['pink-400']};
+      }
+    }
+  }
 `

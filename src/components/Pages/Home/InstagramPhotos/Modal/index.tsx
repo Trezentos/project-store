@@ -6,6 +6,7 @@ import { Container, ModalContent, HeaderContainer, BodyContent } from './styles'
 import { CaretLeft, CaretRight, X, InstagramLogo } from 'phosphor-react'
 import { InstagramContext } from '@/contexts/pages/home/InstagramContext'
 import dateFormatter from '@/utils/dateFormatter'
+import Skeleton from 'react-loading-skeleton'
 
 interface InstaModalProps {
   isOpen: boolean
@@ -42,7 +43,11 @@ export default function InstaModal({ isOpen, closeModal }: InstaModalProps) {
       contentLabel="Example Modal"
     >
       <Container>
-        <Image src={selectedIntaMedia.imageSrc} alt="" fill />
+        {/* <Image src={selectedIntaMedia.imageSrc} alt="" fill /> */}
+        <div>
+          <Skeleton width={240} height={240} />
+          <Image src={selectedIntaMedia.imageSrc} alt="" fill />
+        </div>
         <ModalContent>
           <HeaderContainer>
             <div>

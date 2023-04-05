@@ -34,7 +34,7 @@ export const MainContent = styled.main`
   height: 100%;
   align-items: flex-start;
   margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 5rem;
 
   @media (max-width: 768px) {
     flex-direction: column;

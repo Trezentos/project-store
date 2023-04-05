@@ -1,37 +1,48 @@
 import Image, { StaticImageData } from 'next/image'
-import { Container, Description, Colors, Dot, ContentWrapper } from './styles'
+import { Container, Description, ContentWrapper } from './styles'
 import imageExp from '../../../assets/featuredProducts/foto1.jpg'
 import { useCallback, useEffect, useState } from 'react'
 import realFormatter from '@/utils/realFormatter'
 import Link from 'next/link'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import HoverImage from './HoverImage'
+import ColorsSelection from './ColorList'
 
-interface IProduct {
+interface IProductImages {
   id: string
-  firstImage: StaticImageData
-  secondImage?: string | StaticImageData
+  imageSrc: string | StaticImageData
 }
 
-interface IProductsPerColor {
+export interface IProductsPerColor {
   id: string
-  color: string
+  colorName: string
+  colorHex: string
   price: number
-  product: IProduct
+  productImages: IProductImages[]
 }
 
-export interface IProducts {
-  productId: string
+export interface IProduct {
+  id: string
   productName: string
+  productDescription: string
+  productsByColor: IProductsPerColor[]
+  className?: string
+}
+
+interface ProductProps {
+  generalInfo: {
+    id: string
+    productName: string
+  }
   productsByColor: IProductsPerColor[]
   className?: string
 }
 
 export default function Product({
   productsByColor,
-  productId,
+  generalInfo,
   className,
-  productName,
-}: IProducts) {
+}: ProductProps) {
   const [selectedProduct, setSelectedProduct] = useState<IProductsPerColor>(
     productsByColor[0],
   )
@@ -40,12 +51,14 @@ export default function Product({
     (product: IProductsPerColor, currentElement: HTMLElement | null) => {
       setSelectedProduct(product)
 
+      if (!generalInfo.id) return
+
       const selectedProducts = document.querySelectorAll(
-        `.wrapper-${productId} .product-item-slider`,
+        `.wrapper-${generalInfo.id} .product-item-slider`,
       )
 
       const productElementToActive = document.querySelector(
-        `.wrapper-${productId} [id='${product.product.id}']`,
+        `.wrapper-${generalInfo.id} [id='${product.productImages[0].id}']`,
       )
       selectedProducts.forEach((productElement) => {
         productElement.classList.remove('active')
@@ -60,18 +73,18 @@ export default function Product({
 
       currentElement?.classList.add('active')
     },
-    [productId],
+    [generalInfo],
   )
 
   useEffect(() => {
     const wrapperDiv = document.querySelector<HTMLDivElement>(
-      `.wrapper-${productId}`,
+      `.wrapper-${generalInfo.id}`,
     )
 
     wrapperDiv?.addEventListener('mouseover', async (e) => {
       try {
         const videoToPlay = document.querySelector<HTMLVideoElement>(
-          `.wrapper-${productId} .active video`,
+          `.wrapper-${generalInfo.id} .active video`,
         )
 
         if (!videoToPlay) return
@@ -81,73 +94,49 @@ export default function Product({
         console.error(error.message)
       }
     })
-  }, [productId, productsByColor])
+  }, [productsByColor, generalInfo])
 
   return (
     <Container className={className}>
-      <ContentWrapper className={`wrapper-${productId}`}>
-        {productsByColor.map((productByColor, index) => {
-          const { product } = productByColor
-          console.log(product)
+      <ContentWrapper className={`wrapper-${generalInfo?.id}`}>
+        {productsByColor.map((colorProduct, index) => {
+          const { productImages } = colorProduct
+
+          // a1024a97-66f6-4d37-ad9e-6620b939d478
 
           return (
             <Link
-              href={`individualProduct/[id]/[color]`}
-              as={`individualProduct/${productByColor.id}/${selectedProduct.color}`}
-              key={product.id}
+              key={colorProduct.id}
+              as={`individualProduct/${selectedProduct?.id}`}
+              href={`individualProduct/[id]`}
             >
               <div
-                id={product.id}
+                id={colorProduct.productImages[0].id}
                 className={`product-item-slider ${index === 0 ? 'active' : ''}`}
               >
                 <Image
-                  src={product.firstImage}
+                  src={productImages[0].imageSrc}
                   alt=""
                   fill
                   sizes="(max-width: 1500px) 450px,
                     (min-width: 1500px) 530px,"
                 />
-                {typeof product.secondImage === 'string' ? (
-                  <video className={`video-${productId}`} muted>
-                    <source src={product.secondImage} type="video/mp4"></source>
-                  </video>
-                ) : (
-                  product.secondImage && (
-                    <Image
-                      src={product.secondImage}
-                      alt=""
-                      fill
-                      sizes="(max-width: 1500px) 420px,
-                  (min-width: 1500px) 500px,"
-                    />
-                  )
-                )}
+                <HoverImage
+                  secondImage={productImages[1].imageSrc}
+                  colorProductId={colorProduct.id}
+                />
               </div>
             </Link>
           )
         })}
       </ContentWrapper>
       <Description>
-        <Colors className="dots-selector">
-          {productsByColor.map((productColor, index) => {
-            return (
-              <Dot
-                key={productColor.id}
-                dotColor={productColor.color}
-                className={`product-color-id-${productColor.id} ${
-                  index === 0 ? 'active' : ''
-                }`}
-                onClick={(e) =>
-                  handleActiveProduct(productColor, e.currentTarget)
-                }
-              />
-            )
-          })}
-        </Colors>
-        <Link
-          href={`individualProduct/${selectedProduct.id}/${selectedProduct.color}`}
-        >
-          <strong>{productName}</strong>
+        <ColorsSelection
+          handleActiveProduct={handleActiveProduct}
+          productsColors={productsByColor}
+        />
+        <Link href={`individualProduct/${selectedProduct.id}`}>
+          <strong>{generalInfo.productName}</strong>
           <h5>{realFormatter(selectedProduct.price)}</h5>
         </Link>
       </Description>

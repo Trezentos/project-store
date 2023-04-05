@@ -1,3 +1,4 @@
+import { ColorOptionType } from '@/pages/individualProduct/[id]'
 import { useCallback, useState } from 'react'
 import { ColorDiv, ColorsOptionsContainer, Container, SizeDiv } from './styles'
 
@@ -13,47 +14,45 @@ interface SizeType {
 }
 
 interface PropertiesProductProps {
+  selectedColor: ColorOptionType
   type: 'color' | 'size'
-  content: string[]
+  colorOptions: ColorOptionType[]
+  changeColor: (colorOpt: ColorOptionType) => void
 }
 
-export default function PropertiesProduct({
+export default function PropertiesProductColor({
   type,
-  content,
+  colorOptions,
+  changeColor,
+  selectedColor,
 }: PropertiesProductProps) {
-  const [selectedOption, setSelectedOption] = useState<string>(content[0])
-
   const mainTitle = () => {
     if (type === 'color')
       return (
         <h4>
-          Cor: <span>{selectedOption}</span>
+          Cor: <span>{selectedColor.name}</span>
         </h4>
       )
     if (type === 'size') return <h4>Tamanho:</h4>
   }
-
-  const changeOption = useCallback((option: string) => {
-    setSelectedOption(option)
-  }, [])
 
   return (
     <Container>
       {mainTitle()}
       <ColorsOptionsContainer>
         {type === 'color' &&
-          content.map((item, index) => {
+          colorOptions.map((item, index) => {
             return (
               <ColorDiv
-                className={selectedOption === item ? 'active' : ''}
-                color={item}
-                key={item}
-                onClick={() => changeOption(item)}
+                className={selectedColor.name === item.name ? 'active' : ''}
+                color={item.hexName}
+                key={item.hexName}
+                onClick={() => changeColor(item)}
               />
             )
           })}
-        {type === 'size' &&
-          content.map((item, index) => {
+        {/* {type === 'size' &&
+          colorOptions.map((item, index) => {
             return (
               <SizeDiv
                 className={selectedOption === item ? 'active' : ''}
@@ -64,7 +63,7 @@ export default function PropertiesProduct({
                 <span>{item}</span>
               </SizeDiv>
             )
-          })}
+          })} */}
       </ColorsOptionsContainer>
     </Container>
   )

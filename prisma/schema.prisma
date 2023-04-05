@@ -8,21 +8,29 @@ generator client {
 }
 
 model Product {
-    id          String   @id @default(uuid())
-    name        String
-    description String?  @db.Text
-    price       Float
-    color       String?
-    size        String
-    imageSrc    String?
-    createdAt   DateTime @default(now())
-    Image       Image[]
+    id           String         @id @default(uuid())
+    name         String
+    description  String?        @db.Text
+    createdAt    DateTime       @default(now())
+    ProductColor ProductColor[]
+}
+
+model ProductColor {
+    id             String   @id @default(uuid())
+    price          Float
+    colorHex       String
+    colorName      String
+    product_id     String
+    Product        Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    Image          Image[]
+    createdAt      DateTime @default(now())
+    availableSizes String?
 }
 
 model Image {
-    id         String   @id @default(uuid())
-    imageSrc   String?
-    product_id String
-    product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    createdAt  DateTime @default(now())
+    id               String       @id @default(uuid())
+    imageSrc         String?
+    product_color_id String
+    productColor     ProductColor @relation(fields: [product_color_id], references: [id], onDelete: Cascade)
+    createdAt        DateTime     @default(now())
 }

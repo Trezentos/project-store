@@ -20,7 +20,7 @@ import { Filter } from '@/components/Pages/Products/Filter'
 import { GetStaticProps } from 'next'
 import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
 import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
-import Product, { IProducts } from '@/components/Product'
+import Product, { IProduct } from '@/components/Product'
 import curolProductEx from '../../assets/product-ex.avif'
 import watchProducEx from '../../assets/product-ex2.avif'
 import curolZoomedEx from '../../assets/product-ex3.avif'
@@ -32,14 +32,12 @@ interface ProductsProps {
     id: number
     color: string
   }[]
-  products: IProducts[]
+  products: IProduct[]
 }
 
 export default function Products({ colorContent, products }: ProductsProps) {
   const [showFiltersContainer, setShowFilters] = useState(true)
   const [selectedPage, setSelectedPage] = useState(1)
-
-  console.log(products)
 
   const toggleShowFilters = useCallback(() => {
     setShowFilters(!showFiltersContainer)
@@ -65,8 +63,6 @@ export default function Products({ colorContent, products }: ProductsProps) {
       }
 
       setSelectedPage(page)
-
-      console.log('send the selected page')
     },
     [selectedPage],
   )
@@ -78,8 +74,7 @@ export default function Products({ colorContent, products }: ProductsProps) {
   return (
     <Container>
       <Breadcrumb>
-        <Link href={'/'}>Compras</Link>
-        <p>Sapatos</p>
+        <Link href={'/products'}>Todos os produtos</Link>
       </Breadcrumb>
       <Banner>
         <Image src={BannerImage} alt="" fill />
@@ -120,16 +115,16 @@ export default function Products({ colorContent, products }: ProductsProps) {
           </AsideFilterContainer>
 
           <ProductsContainer>
-            {products.map((product) => {
-              return (
-                <Product
-                  key={product.productId}
-                  productId={product.productId}
-                  productsByColor={product.productsByColor}
-                  productName={product.productName}
-                />
-              )
-            })}
+            {products.map((product) => (
+              <Product
+                key={product.id}
+                productsByColor={product.productsByColor}
+                generalInfo={{
+                  id: product.id,
+                  productName: product.productName,
+                }}
+              />
+            ))}
           </ProductsContainer>
         </BodyContent>
         <PaginationContainer>
@@ -204,178 +199,46 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const videoProductEx =
     'https://assets.mixkit.co/videos/preview/mixkit-young-photographer-setting-up-his-camera-outdoors-34408-large.mp4'
 
-  const products: IProducts[] = [
-    {
-      productId: '302',
-      productName: 'Creme Curology',
-      productsByColor: [
-        {
-          id: '1',
-          color: 'purple',
-          price: 920,
-          product: {
-            id: '12',
-            firstImage: curolProductEx,
-            secondImage: blueProductEx,
-          },
-        },
-        {
-          id: '2',
-          price: 120,
-          color: 'crimson',
-          product: {
-            id: '13',
-            firstImage: curolZoomedEx,
-            secondImage: watchProducEx,
-          },
-        },
-      ],
-    },
-    {
-      productId: '36',
-      productName: 'Creme Curology 1',
-      productsByColor: [
-        {
-          id: '1',
-          color: 'green',
-          price: 120,
-          product: {
-            id: '12',
-            firstImage: curolProductEx,
-            secondImage: blueProductEx,
-          },
-        },
-        {
-          id: '2',
-          color: 'orange',
-          price: 580,
-          product: {
-            id: '13',
-            firstImage: curolZoomedEx,
-            secondImage: watchProducEx,
-          },
-        },
-      ],
-    },
-    {
-      productId: '43',
-      productName: 'Creme Curology 2',
-      productsByColor: [
-        {
-          id: '1',
-          color: 'deepskyblue',
-          price: 820,
-          product: {
-            id: '12',
-            firstImage: curolProductEx,
-            secondImage: blueProductEx,
-          },
-        },
-        {
-          id: '2',
-          color: 'crimson',
-          price: 120,
-          product: {
-            id: '13',
-            firstImage: curolZoomedEx,
-            secondImage: watchProducEx,
-          },
-        },
-      ],
-    },
-    {
-      productId: '1',
-      productName: 'Creme Curology 3',
-      productsByColor: [
-        {
-          id: '1',
-          color: 'pink',
-          price: 520,
-          product: {
-            id: '12',
-            firstImage: curolProductEx,
-            secondImage: blueProductEx,
-          },
-        },
-        {
-          id: '2',
-          color: 'crimson',
-          price: 320,
-          product: {
-            id: '13',
-            firstImage: curolZoomedEx,
-            secondImage: blueProductEx,
-          },
-        },
-      ],
-    },
-    {
-      productId: '2',
-      productName: 'Creme Curology 4',
-      productsByColor: [
-        {
-          color: 'white',
-          id: '1',
-          price: 580,
-          product: {
-            id: '3',
-            firstImage: curolZoomedEx,
-            secondImage: blueProductEx,
-          },
-        },
-      ],
-    },
-    {
-      productId: '257',
-      productName: 'Creme Curology 4',
-      productsByColor: [
-        {
-          color: 'white',
-          id: '1',
-          price: 580,
-          product: {
-            id: '3',
-            firstImage: curolZoomedEx,
-            secondImage: blueProductEx,
-          },
-        },
-      ],
-    },
-  ]
-
   const allProductsRaw = await prisma.product.findMany()
+
+  const allProductsColors = await prisma.productColor.findMany()
 
   const allImages = await prisma.image.findMany()
 
   const allProducts = allProductsRaw.map((product) => {
     return {
       ...product,
-      images: allImages.filter((image) => product.id === image.product_id),
+      productsByColor: allProductsColors
+        .filter((productsColor) => productsColor.product_id === product.id)
+        .map((item) => ({
+          ...item,
+          productsImages: allImages.filter(
+            (actualImage) => actualImage.product_color_id === item.id,
+          ),
+        })),
     }
   })
 
   const formattedProducts = allProducts.map((product) => {
     return {
       id: product.id,
-      color: product.color,
-      price: product.price,
-      productsByColor: [
-        {
-          id: product.images[0].id,
-          firstImage: product.images[0].imageSrc,
-          secondImage: product.images[1].imageSrc,
-        },
-      ],
+      productName: product.name,
+      productDescription: product.description,
+      productsByColor: product.productsByColor.map((productColor) => ({
+        id: productColor.id,
+        colorName: productColor.colorName,
+        colorHex: productColor.colorHex,
+        price: productColor.price,
+        productImages: productColor.productsImages.map((prodImage) => ({
+          id: prodImage.id,
+          imageSrc: prodImage.imageSrc,
+        })),
+      })),
     }
   })
 
-  console.log(formattedProducts.length)
-
   return {
-    props: {
-      colorContent,
-      products: formattedProducts,
-    },
+    props: { products: formattedProducts, colorContent },
     revalidate: 60 * 60 * 24 * 1, // 1 day
   }
 }

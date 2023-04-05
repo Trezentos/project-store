@@ -11,11 +11,7 @@ export default function AccordeonDetail({ bodyText }: AccordeonDetailProps) {
   const accordionRef = useRef<HTMLDivElement>(null)
 
   const expandAccordion = useCallback((e: any) => {
-    console.log('oap')
-
     if (!accordionRef || !accordionRef.current) return
-
-    console.log(accordionRef.current?.style.maxHeight)
 
     if (accordionRef.current?.style.maxHeight === '0px') {
       setIsExpanded(true)

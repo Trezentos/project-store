@@ -1,7 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react'
 import Image, { StaticImageData } from 'next/image'
 import { CaretLeft, CaretRight } from 'phosphor-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowContainer, ImageContainer, ImagesDemo } from './styles'
 
 interface imagesSliderProps {
@@ -32,13 +32,13 @@ function Arrow(props: {
 export default function ImagesSlider({ images }: imagesSliderProps) {
   const [loaded, setLoaded] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+  const sliderConfig = {
     slides: {
       perView: 2,
     },
     loop: true,
 
-    slideChanged(slider) {
+    slideChanged(slider: any) {
       setCurrentSlide(slider.track.details.rel)
     },
     created() {
@@ -55,7 +55,13 @@ export default function ImagesSlider({ images }: imagesSliderProps) {
         slides: { perView: 2, spacing: 5 },
       },
     },
-  })
+  }
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(sliderConfig)
+
+  useEffect(() => {
+    instanceRef.current?.update(sliderConfig)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images, instanceRef])
 
   return (
     <ImagesDemo ref={sliderRef} className="keen-slider">
@@ -80,9 +86,11 @@ export default function ImagesSlider({ images }: imagesSliderProps) {
               currentSlide ===
               instanceRef.current.track.details?.slides.length - 1
             }
-            onClick={(e: any) =>
+            onClick={(e: any) => {
+              // instanceRef.current?.update({}, 1)
+
               e.stopPropagation() || instanceRef.current?.next()
-            }
+            }}
           />
         </ArrowContainer>
       )}

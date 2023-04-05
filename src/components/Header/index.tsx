@@ -8,9 +8,11 @@ import LinksNavigation from './Components/LinksNavigation'
 import { useContext, useEffect, useState } from 'react'
 import { HeaderContext, IHeaderContent } from '@/contexts/HeaderContext'
 import Link from 'next/link'
+import { CartContext } from '@/contexts/CartContext'
 
 export default function Header() {
   const { toggleMobileHeader, updateHeaderContents } = useContext(HeaderContext)
+  const { openCart } = useContext(CartContext)
 
   useEffect(() => {
     const headerContents: IHeaderContent[] = [
@@ -131,6 +133,7 @@ export default function Header() {
     ]
 
     updateHeaderContents(headerContents)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -157,9 +160,9 @@ export default function Header() {
             <a href="">
               <User size={18} />
             </a>
-            <a href="">
+            <button type="button" onClick={openCart}>
               <Bag size={25} />
-            </a>
+            </button>
           </GeneralContent>
         </GeneralOptions>
       </MainContent>

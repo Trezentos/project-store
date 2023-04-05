@@ -7,7 +7,7 @@ import curolProductEx from '../../../../assets/product-ex.avif'
 import watchProducEx from '../../../../assets/product-ex2.avif'
 import curol2ProducEx from '../../../../assets/product-ex3.avif'
 
-import Product, { IProducts } from '../../../Product'
+import Product, { IProduct } from '../../../Product'
 
 function Arrow(props: {
   disabled: boolean
@@ -33,14 +33,14 @@ function Arrow(props: {
 const videoProductEx =
   'https://assets.mixkit.co/videos/preview/mixkit-young-photographer-setting-up-his-camera-outdoors-34408-large.mp4'
 
-const products: IProducts[] = [
+const products: IProduct[] = [
   {
-    productId: '302',
+    id: '302',
     productName: 'Creme Curology',
     productsByColor: [
       {
         id: '1',
-        color: 'purple',
+        colorName: 'purple',
         price: 920,
         product: {
           id: '12',
@@ -51,7 +51,7 @@ const products: IProducts[] = [
       {
         id: '2',
         price: 120,
-        color: 'crimson',
+        colorName: 'crimson',
         product: {
           id: '13',
           firstImage: curol2ProducEx,
@@ -61,12 +61,12 @@ const products: IProducts[] = [
     ],
   },
   {
-    productId: '36',
+    id: '36',
     productName: 'Creme Curology 1',
     productsByColor: [
       {
         id: '1',
-        color: 'green',
+        colorName: 'green',
         price: 120,
         product: {
           id: '12',
@@ -76,7 +76,7 @@ const products: IProducts[] = [
       },
       {
         id: '2',
-        color: 'orange',
+        colorName: 'orange',
         price: 580,
         product: {
           id: '13',
@@ -87,12 +87,12 @@ const products: IProducts[] = [
     ],
   },
   {
-    productId: '43',
+    id: '43',
     productName: 'Creme Curology 2',
     productsByColor: [
       {
         id: '1',
-        color: 'deepskyblue',
+        colorName: 'deepskyblue',
         price: 820,
         product: {
           id: '12',
@@ -102,7 +102,7 @@ const products: IProducts[] = [
       },
       {
         id: '2',
-        color: 'crimson',
+        colorName: 'crimson',
         price: 120,
         product: {
           id: '13',
@@ -113,12 +113,12 @@ const products: IProducts[] = [
     ],
   },
   {
-    productId: '1',
+    id: '1',
     productName: 'Creme Curology 3',
     productsByColor: [
       {
         id: '1',
-        color: 'pink',
+        colorName: 'pink',
         price: 520,
         product: {
           id: '12',
@@ -128,7 +128,7 @@ const products: IProducts[] = [
       },
       {
         id: '2',
-        color: 'crimson',
+        colorName: 'crimson',
         price: 320,
         product: {
           id: '13',
@@ -139,11 +139,11 @@ const products: IProducts[] = [
     ],
   },
   {
-    productId: '2',
+    id: '2',
     productName: 'Creme Curology 4',
     productsByColor: [
       {
-        color: 'white',
+        colorName: 'white',
         id: '1',
         price: 580,
         product: {
@@ -195,8 +195,8 @@ export default function FeaturedProducts() {
           {products?.map((product) => {
             return (
               <Product
-                key={product.productId}
-                productId={product.productId}
+                key={product.id}
+                id={product.id}
                 productsByColor={product.productsByColor}
                 className="keen-slider__slide"
                 productName={product.productName}
