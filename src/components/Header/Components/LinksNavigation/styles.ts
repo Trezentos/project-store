@@ -152,7 +152,6 @@ export const SubUlsNavigationsContainer = styled.div`
   align-items: flex-start;
   display: none;
   padding: 2rem 0;
-  border-bottom: 1px solid black;
   z-index: 9999;
 
   @media (max-width: 1200px) {

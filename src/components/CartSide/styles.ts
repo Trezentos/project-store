@@ -39,7 +39,7 @@ export const Cart = styled.div<CartProps>`
   height: 100%;
   background-color: white;
   position: fixed;
-  right: -500px;
+  right: -800px;
   top: 0;
   z-index: 99999;
   transition: 0.2s;

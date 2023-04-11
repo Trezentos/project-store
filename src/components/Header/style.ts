@@ -73,11 +73,18 @@ export const GeneralContent = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 0.4rem;
+  flex-wrap: wrap;
 
   button {
     all: unset;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    p {
+      width: 1rem;
+    }
     svg {
       transition: 0.3s;
 

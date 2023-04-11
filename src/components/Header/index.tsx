@@ -13,6 +13,7 @@ import { CartContext } from '@/contexts/CartContext'
 export default function Header() {
   const { toggleMobileHeader, updateHeaderContents } = useContext(HeaderContext)
   const { openCart } = useContext(CartContext)
+  const { products, quantityItems } = useContext(CartContext)
 
   useEffect(() => {
     const headerContents: IHeaderContent[] = [
@@ -154,14 +155,15 @@ export default function Header() {
             <a href="">
               <MagnifyingGlass size={18} />
             </a>
-            <a href="">
+            {/* <a href="">
               <HeartStraight size={18} />
-            </a>
+            </a> */}
             <a href="">
               <User size={18} />
             </a>
             <button type="button" onClick={openCart}>
               <Bag size={25} />
+              {quantityItems !== 0 && <p>{quantityItems}</p>}
             </button>
           </GeneralContent>
         </GeneralOptions>

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -68,7 +69,7 @@ export const ProductAmount = styled.div`
   }
 `
 
-export const EditButton = styled.a`
+export const EditButton = styled(Link)`
   all: unset;
   text-decoration: underline;
   cursor: pointer;

@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { Minus, Plus, X } from 'phosphor-react'
 import { Container, EditButton, ProductAmount, ProductDetail } from './styles'
-import ThumbImage from '../../../assets/necessaire-thumb.png'
 import { CartContext, IProductItem } from '@/contexts/CartContext'
 import realFormatter from '@/utils/realFormatter'
 import { useContext } from 'react'
@@ -11,7 +10,7 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const { decreaseAmountByOne, increaseAmountByOne, removeProduct } =
+  const { decreaseAmountByOne, increaseAmountByOne, removeProduct, closeCart } =
     useContext(CartContext)
 
   return (
@@ -50,7 +49,9 @@ export default function Product({ product }: ProductProps) {
           </div>
           <p>{realFormatter(Number(product.quantity) * product.price)}</p>
         </ProductAmount>
-        <EditButton href="/cart">Editar</EditButton>
+        <EditButton href="/cart" onClick={closeCart}>
+          Editar
+        </EditButton>
       </div>
     </Container>
   )

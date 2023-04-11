@@ -24,6 +24,7 @@ export interface IProductItem {
 interface CartContextType {
   products: IProductItem[]
   open: boolean
+  quantityItems: number
   openCart: () => void
   closeCart: () => void
   addProductToCart: (product: IProductItem) => void
@@ -41,6 +42,7 @@ export const CartContext = createContext({} as CartContextType)
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [products, setProducts] = useState<IProductItem[]>([])
   const [open, setOpen] = useState(false)
+  const [quantityItems, setQuantityItems] = useState(0)
 
   const addProductToCart = useCallback(
     (product: IProductItem) => {
@@ -226,11 +228,36 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     setOpen(false)
   }, [])
 
+  useEffect(() => {
+    setQuantityItems(
+      products.reduce<number>((acum, prev) => {
+        return acum + Number(prev.quantity)
+      }, 0),
+    )
+
+    if (products.length !== 0) {
+      const stateJSON = JSON.stringify(products)
+
+      localStorage.setItem('@commerce-products:product-1.0.0', stateJSON)
+    }
+  }, [products])
+
+  useEffect(() => {
+    const storedStateAsJSON = localStorage.getItem(
+      '@commerce-products:product-1.0.0',
+    )
+
+    if (storedStateAsJSON) {
+      setProducts(JSON.parse(storedStateAsJSON))
+    }
+  }, [])
+
   return (
     <CartContext.Provider
       value={{
         openCart,
         closeCart,
+        quantityItems,
         open,
         addProductToCart,
         products,
