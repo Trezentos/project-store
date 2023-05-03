@@ -1,10 +1,16 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function Admin() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('admin/home')
+  }, [router])
+
   return (
     <>
-      <h1>header do admin</h1>
-      <h1>Admin</h1>
+      <h1>Painel Admin</h1>
     </>
   )
 }

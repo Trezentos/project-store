@@ -3,37 +3,18 @@ import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
-import Image1 from '../../../../assets/carroselimgs/carro1.jpg'
-import Image2 from '../../../../assets/carroselimgs/carro2.jpg'
-import Image3 from '../../../../assets/carroselimgs/carro3.jpg'
-
-import Image1mbl from '../../../../assets/carroselimgs/carro-mbl-1.jpg'
-import Image2mbl from '../../../../assets/carroselimgs/carro-mbl-2.jpg'
-import Image3mbl from '../../../../assets/carroselimgs/carro-mbl-3.jpg'
+import { GetStaticProps } from 'next'
+import { api } from '@/lib/axios'
 
 interface ICarrousselItems {
-  name: string
-  mobileSrc: StaticImageData
-  desktopSrc: StaticImageData
+  id: string
+  mobileLink: StaticImageData | string
+  desktopLink: StaticImageData | string
 }
 
-const carrouselImages: ICarrousselItems[] = [
-  {
-    name: '1',
-    desktopSrc: Image1,
-    mobileSrc: Image1mbl,
-  },
-  {
-    name: '2',
-    desktopSrc: Image2,
-    mobileSrc: Image2mbl,
-  },
-  {
-    name: '3',
-    desktopSrc: Image3,
-    mobileSrc: Image3mbl,
-  },
-]
+interface CarrousselProps {
+  carrouselImages: ICarrousselItems[]
+}
 
 function Arrow(props: {
   disabled: boolean
@@ -60,7 +41,7 @@ function Arrow(props: {
   )
 }
 
-export default function Carrousel() {
+export default function Carrousel({ carrouselImages }: CarrousselProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
@@ -112,20 +93,20 @@ export default function Carrousel() {
       <Container className="navigation-wrapper">
         <div ref={sliderRef} className="keen-slider">
           {carrouselImages.map((image) => (
-            <div key={image.name} className="keen-slider__slide">
+            <div key={image.id} className="keen-slider__slide">
               <Image
                 className="desktop"
                 fill
                 alt=""
                 sizes="100vw, 100vh"
-                src={image.desktopSrc}
+                src={image.desktopLink}
               />
               <Image
                 className="mobile"
                 fill
                 alt=""
                 sizes="100vw, 100vh"
-                src={image.mobileSrc}
+                src={image.mobileLink}
               />
             </div>
           ))}
@@ -172,4 +153,14 @@ export default function Carrousel() {
       )}
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const carrousselImages = await api.get('/home/get-carrousel')
+
+  console.log(carrousselImages)
+
+  return {
+    props: [],
+  }
 }

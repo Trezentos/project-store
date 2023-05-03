@@ -5,7 +5,7 @@ import PropertiesProduct from '@/components/Pages/IndividualProduct/PropertiesPr
 import PropertiesProductSize from '@/components/Pages/IndividualProduct/PropertiesProductSize'
 import { CartContext } from '@/contexts/CartContext'
 import { api } from '@/lib/axios'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { IProduct } from '@/pages/api/products/find-individual-product'
 import realFormatter from '@/utils/realFormatter'
 import { GetStaticPaths, GetStaticProps } from 'next'
@@ -48,7 +48,7 @@ export default function IndividualProduct({
   const { addProductToCart } = useContext(CartContext)
 
   const updateProduct = useCallback(
-    async (productId: string, colorId: string) => {
+    async (productId: string, colorId: string, colorOpt: ColorOptionType) => {
       try {
         const { data } = await api.get(`/products/find-individual-product`, {
           params: {
@@ -58,7 +58,9 @@ export default function IndividualProduct({
         })
 
         setSelectedProduct(data)
-      } catch (error) {
+        setSelectedColor(colorOpt)
+      } catch (error: any) {
+        console.log(error.message)
         alert('não foi possível trocar de produto.')
       }
     },
@@ -67,8 +69,7 @@ export default function IndividualProduct({
 
   const changeColor = useCallback(
     (colorOpt: ColorOptionType) => {
-      setSelectedColor(colorOpt)
-      updateProduct(product.id, colorOpt.id)
+      updateProduct(product.id, colorOpt.id, colorOpt)
     },
     [product.id, updateProduct],
   )

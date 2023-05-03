@@ -25,7 +25,7 @@ import curolProductEx from '../../assets/product-ex.avif'
 import watchProducEx from '../../assets/product-ex2.avif'
 import curolZoomedEx from '../../assets/product-ex3.avif'
 import blueProductEx from '../../assets/product-ex4.avif'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 interface ProductsProps {
   colorContent: {

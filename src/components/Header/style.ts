@@ -74,6 +74,7 @@ export const GeneralContent = styled.div`
   align-items: flex-end;
   gap: 0.4rem;
   flex-wrap: wrap;
+  position: relative;
 
   button {
     all: unset;
@@ -85,12 +86,72 @@ export const GeneralContent = styled.div`
     p {
       width: 1rem;
     }
-    svg {
+    > svg {
       transition: 0.3s;
 
       &:hover {
         color: ${(props) => props.theme['pink-400']};
       }
+    }
+  }
+
+  .user-icon:hover {
+    transition: 0.3s color;
+    cursor: pointer;
+
+    svg {
+      color: ${(props) => props.theme['pink-400']};
+    }
+
+    .user-options {
+      display: block;
+    }
+  }
+`
+
+export const UserOptions = styled.div`
+  position: absolute;
+  border: 1px solid ${(props) => props.theme['gray-200']};
+  background-color: white;
+  width: 20rem;
+  right: 0;
+  padding: 1rem;
+  display: none;
+
+  p {
+    margin-bottom: 1rem;
+    color: black;
+    font-size: 0.85rem;
+  }
+
+  > a,
+  button {
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+    width: 100%;
+    height: 3rem;
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+    text-transform: uppercase;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+
+      p {
+        color: black;
+      }
+    }
+  }
+
+  &:hover {
+    p {
+      color: black;
     }
   }
 `

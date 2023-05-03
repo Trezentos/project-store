@@ -1,4 +1,10 @@
-import { Container, GeneralContent, GeneralOptions, MainContent } from './style'
+import {
+  Container,
+  GeneralContent,
+  GeneralOptions,
+  MainContent,
+  UserOptions,
+} from './style'
 import LogoImg from '../../assets/logo2.png'
 import { MagnifyingGlass, HeartStraight, User, Bag, List } from 'phosphor-react'
 import Image from 'next/image'
@@ -9,11 +15,15 @@ import { useContext, useEffect, useState } from 'react'
 import { HeaderContext, IHeaderContent } from '@/contexts/HeaderContext'
 import Link from 'next/link'
 import { CartContext } from '@/contexts/CartContext'
+import { signOut, useSession } from 'next-auth/react'
 
 export default function Header() {
   const { toggleMobileHeader, updateHeaderContents } = useContext(HeaderContext)
   const { openCart } = useContext(CartContext)
   const { products, quantityItems } = useContext(CartContext)
+  const { status } = useSession()
+
+  console.log(status)
 
   useEffect(() => {
     const headerContents: IHeaderContent[] = [
@@ -158,9 +168,30 @@ export default function Header() {
             {/* <a href="">
               <HeartStraight size={18} />
             </a> */}
-            <a href="">
+            <div className="user-icon">
               <User size={18} />
-            </a>
+              {status === 'authenticated' ? (
+                <UserOptions className="user-options">
+                  <p>
+                    Gerencie a sua conta para fazer check-out mais rápido no
+                    futuro e receber e-mails sobre seus pedidos, novos produtos,
+                    eventos e ofertas especiais!
+                  </p>
+                  <Link href="/profile">Gerenciar Perfil</Link>
+                  <button onClick={() => signOut()}>Sair</button>
+                </UserOptions>
+              ) : (
+                <UserOptions className="user-options">
+                  <p>
+                    Crie uma conta para fazer check-out mais rápido no futuro e
+                    receber e-mails sobre seus pedidos, novos produtos, eventos
+                    e ofertas especiais!
+                  </p>
+                  <Link href="/login">Login</Link>
+                  <Link href="/register">Criar Conta</Link>
+                </UserOptions>
+              )}
+            </div>
             <button type="button" onClick={openCart}>
               <Bag size={25} />
               {quantityItems !== 0 && <p>{quantityItems}</p>}
