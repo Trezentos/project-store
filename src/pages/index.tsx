@@ -13,6 +13,8 @@ import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
 import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
 import axios from 'axios'
 import { GetStaticProps } from 'next'
+import 'react-toastify/dist/ReactToastify.css'
+import { toast } from 'react-toastify'
 import InstagramSession, {
   InstagramPostProps,
 } from '@/components/Pages/Home/InstagramPhotos'
@@ -35,13 +37,12 @@ interface HomeProps {
 }
 
 export default function Home({ instagramPhotos, carouselImages }: HomeProps) {
-  console.log(carouselImages)
-
   return (
     <HomeContanier>
-      {carouselImages.length > 1 && (
+      {carouselImages.length > 0 && (
         <Carrousel carrouselImages={carouselImages} />
       )}
+
       <HighlightsProducts>
         <div>
           <Image src={FImage1} alt="" fill sizes="100%, 100%" />

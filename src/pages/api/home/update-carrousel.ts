@@ -1,11 +1,13 @@
-// pages/api/upload.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, Fields, Files } from 'formidable'
-import fs from 'fs'
 import path from 'path'
-import s3 from '@/lib/s3'
+import s3, { s3ParamsToUpload, s3ParamsToDelete } from '@/lib/s3'
 import { prisma } from '@/lib/prisma'
+import formToDataFormatter from '@/utils/formToDataFormatter'
+import carrouselToUpdate from './utils/carrouselDataToUpdate'
+import { object } from 'zod'
+import { CarrousselImage } from '@prisma/client'
+import fs from 'fs'
 
 export const config = {
   api: {
@@ -13,64 +15,79 @@ export const config = {
   },
 }
 
-const upload = async (req: NextApiRequest, res: NextApiResponse) => {
-  const form = new IncomingForm()
-
-  if (req.method !== 'POST') {
-    return res.status(405).end()
-  }
-
-  const formattedFilesData = await new Promise<Files>((resolve, reject) => {
-    form.parse(req, (err, fields: Fields, files: Files) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve(files)
-    })
-  })
-
-  const finalObjs = []
-
-  for (const [key, value] of Object.entries(formattedFilesData)) {
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME ?? '',
-      // @ts-ignore
-      Key: value.originalFilename ?? '',
-      // @ts-ignore
-      Body: fs.readFileSync(value.filepath),
-      ContentType: 'mimeType',
-      ACL: 'public-read',
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).end()
     }
-    const returnedData = await s3.upload(params).promise()
 
-    console.log(returnedData)
+    const { files, fields } = await formToDataFormatter(req)
+    const { newDesktopImage, newMobileImage } = files
 
-    finalObjs.push({
-      name: key,
-      link: returnedData.Location,
-      key: returnedData.Key,
-    })
-  }
+    // @ts-ignore
+    if (newDesktopImage?.size > 3500000 || newMobileImage?.size > 3500000) {
+      return res.status(400).json('As imagens não podem passar de 3 megabytes')
+    }
 
-  const formattedObjs = []
-  for (let index = 0; index < finalObjs.length / 2; index++) {
-    formattedObjs.push({
-      desktop: finalObjs[index * 2],
-      mobile: finalObjs[index * 2 + 1],
-    })
-  }
+    const { carrouselItemId } = fields
 
-  formattedObjs.forEach(async (item) => {
-    await prisma.carrousselImage.create({
-      data: {
-        desktopKey: item.desktop.key,
-        desktopLink: item.desktop.link,
-        mobileKey: item.mobile.key,
-        mobileLink: item.mobile.link,
+    const newFiles = [
+      {
+        newImage: newMobileImage,
+        device: 'mobile',
       },
-    })
-  })
-}
+      {
+        newImage: newDesktopImage,
+        device: 'desktop',
+      },
+    ]
 
-export default upload
+    const updatedCarrousel = newFiles.map(async (fileItem, index) => {
+      const { newImage, device } = fileItem
+
+      if (!newImage) return
+
+      const paramsToUpload = s3ParamsToUpload(newImage)
+
+      const returnedS3Upload = await s3.upload(paramsToUpload).promise()
+
+      const oldCarrousel = await prisma.carrousselImage.findFirst({
+        where: {
+          id: String(carrouselItemId),
+        },
+      })
+
+      const dataToUpdate = carrouselToUpdate(device, returnedS3Upload)
+
+      const updatedData = await prisma.carrousselImage.update({
+        where: {
+          id: String(carrouselItemId),
+        },
+        data: dataToUpdate,
+      })
+
+      const paramsToDelete = s3ParamsToDelete(
+        device === 'desktop'
+          ? oldCarrousel?.desktopKey
+          : oldCarrousel?.mobileKey,
+      )
+
+      await s3.deleteObject(paramsToDelete).promise()
+
+      return updatedData
+    })
+
+    const newCarrousel = await Promise.all(updatedCarrousel)
+
+    if (!newCarrousel[0]) return res.json(newCarrousel[1])
+
+    if (!newCarrousel[1]) return res.json(newCarrousel[0])
+
+    return res.json(newCarrousel[0])
+  } catch (error: any) {
+    return res.json(error.message)
+  }
+}

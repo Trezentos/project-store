@@ -35,12 +35,8 @@ type RegisterFormData = z.infer<typeof registerFormSchema>
 function Register() {
   const session = useSession()
 
-  console.log(session)
-
   async function handleRegister(data: RegisterFormData) {
     try {
-      console.log(data)
-
       await api.post('/users', {
         name: data.name,
         username: data.username,

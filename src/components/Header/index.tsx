@@ -23,8 +23,6 @@ export default function Header() {
   const { products, quantityItems } = useContext(CartContext)
   const { status } = useSession()
 
-  console.log(status)
-
   useEffect(() => {
     const headerContents: IHeaderContent[] = [
       {

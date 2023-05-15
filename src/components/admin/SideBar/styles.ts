@@ -7,7 +7,7 @@ export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 15%;
+  width: 18%;
   border-right: 2px solid #e6e4e9;
   align-items: center;
   align-items: flex-start;
@@ -42,24 +42,49 @@ export const MainMenu = styled.div`
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-weight: 500;
     padding: 0.2rem 0.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     width: 100%;
     background-color: transparent;
     transition: 0.5s;
     color: #767776;
+    border-radius: 4px;
+    border: none;
 
     &.active {
       background-color: #f3f4fd;
       color: black;
     }
 
-    border-radius: 4px;
-    border: none;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
 
     svg {
       margin-right: 4px;
+    }
+  }
+
+  ul {
+    padding-left: 1rem;
+    overflow: hidden;
+    transition: 200ms;
+    max-height: auto;
+    li {
+      list-style: none;
+      margin-bottom: 0.4rem;
+      /* background-color: #f3f4fd; */
+      padding: 0.2rem;
+      display: flex;
+
+      a {
+        flex: 1;
+        font-size: 0.9rem;
+      }
     }
   }
 `

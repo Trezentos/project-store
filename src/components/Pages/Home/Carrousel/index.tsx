@@ -47,7 +47,7 @@ export default function Carrousel({ carrouselImages }: CarrousselProps) {
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,
-      loop: true,
+      loop: carrouselImages.length > 1,
 
       slideChanged(slider) {
         setCurrentSlide(slider.track.details.rel)
@@ -153,14 +153,4 @@ export default function Carrousel({ carrouselImages }: CarrousselProps) {
       )}
     </>
   )
-}
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const carrousselImages = await api.get('/home/get-carrousel')
-
-  console.log(carrousselImages)
-
-  return {
-    props: [],
-  }
 }

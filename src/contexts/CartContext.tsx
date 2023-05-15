@@ -195,8 +195,6 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
 
   const removeProduct = useCallback(
     (product: IProductItem) => {
-      console.log(product)
-
       if (product.selectedSize) {
         setProducts(
           products.filter((item) => {

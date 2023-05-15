@@ -108,10 +108,6 @@ export function FilterContextProvider({
     if (type === 'sizes') return 'Tamanhos'
   }
 
-  useEffect(() => {
-    // console.log(selectedFilters)
-  }, [selectedFilters])
-
   return (
     <FilterContext.Provider
       value={{
