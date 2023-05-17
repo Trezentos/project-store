@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, {
-  ReactNode,
+  useRef,
   useCallback,
   useContext,
   useEffect,
@@ -9,12 +9,13 @@ import React, {
 import { useForm } from 'react-hook-form'
 import { z, ZodError } from 'zod'
 import { ToastContainer, toast } from 'react-toastify'
-import { CarrouselImage } from '..'
+import { CarrouselItem } from '../..'
 import { api } from '@/lib/axios'
 import { InputForm } from './styles'
 import { Plus, Upload } from 'phosphor-react'
 import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
+
 // import { successToast, errorToast } from '@/utils/toast/sucessToast'
 const schema = z.object({
   desktopImage: z.any(),
@@ -28,16 +29,15 @@ interface FormValues {
   mobileImage: FileList
 }
 
-interface EditFormProps {
-  carrouselItem: CarrouselImage
-}
+interface EditFormProps {}
 
-function EditForm({ carrouselItem }: EditFormProps) {
+function EditForm() {
   const [desktopFile, setDesktopFile] = useState<any>(null)
   const [mobileFile, setMobileFile] = useState<any>(null)
   const [isSubmiting, setIsSubmiting] = useState(false)
 
-  const { toggleEditMode, updateCarrouselCard } = useContext(CarrouselContext)
+  const { toggleEditMode, updateCarrouselCard, carrouselCard } =
+    useContext(CarrouselContext)
 
   const {
     register,
@@ -55,11 +55,12 @@ function EditForm({ carrouselItem }: EditFormProps) {
       setIsSubmiting(true)
 
       if (desktopFile === null && mobileFile === null) {
-        alert('Selecione alguma imagem para desktop ou mobile')
+        errorToast('Selecione pelo menos uma imagem desktop ou mobile')
+
         return
       }
 
-      filesToSend.append('carrouselItemId', carrouselItem.id)
+      filesToSend.append('carrouselItemId', carrouselCard.id)
 
       if (desktopFile) {
         filesToSend.append('newDesktopImage', desktopFile)
@@ -71,22 +72,40 @@ function EditForm({ carrouselItem }: EditFormProps) {
 
       const { data } = await api.post('/home/update-carrousel', filesToSend)
 
+      console.log(data)
+
       updateCarrouselCard(data)
       successToast('Carrossel alterado com sucesso!')
+      toggleEditMode()
     } catch (error: any) {
       const { data } = error.response
-
       if (!data) errorToast('Houve algum erro ao alterar o carrossel...')
       errorToast(data)
     } finally {
       setIsSubmiting(false)
-      toggleEditMode()
     }
   }
 
+  useEffect(() => {
+    const labelDesktop = document.querySelector<Element>(
+      '.edit-form .labelDesktopImage',
+    )
+    const labelMobile = document.querySelector<Element>(
+      '.edit-form .labelMobileImage',
+    )
+
+    desktopFile !== null
+      ? labelDesktop?.classList.add('file-selected')
+      : labelDesktop?.classList.remove('file-selected')
+
+    mobileFile !== null
+      ? labelMobile?.classList.add('file-selected')
+      : labelMobile?.classList.remove('file-selected')
+  }, [desktopFile, mobileFile])
+
   return (
-    <InputForm onSubmit={handleSubmit(onSubmit)} className="">
-      <label htmlFor="desktopImage">
+    <InputForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
+      <label htmlFor="desktopImage" className="labelDesktopImage">
         Imagem para Desktop:
         {desktopFile ? <strong>{desktopFile.name}</strong> : <Plus size={40} />}
       </label>
@@ -106,7 +125,7 @@ function EditForm({ carrouselItem }: EditFormProps) {
         <p>Por favor, selecione uma imagem para desktop.</p>
       )}
 
-      <label htmlFor="mobileImage">
+      <label htmlFor="mobileImage" className="labelMobileImage">
         Imagem para Mobile:
         {mobileFile ? <strong>{mobileFile.name}</strong> : <Plus size={40} />}
       </label>

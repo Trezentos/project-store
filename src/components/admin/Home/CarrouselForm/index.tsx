@@ -1,19 +1,17 @@
 // components/ImageForm.tsx
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Pencil } from 'phosphor-react'
-import React, { ReactNode, useContext, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z, ZodError } from 'zod'
 import { Container } from './styles'
-import EditForm from './EditForm'
+import EditForm from './CarrouselContainer/EditForm'
 import { ToastContainer } from 'react-toastify'
-import CarrouselCard from './CarrouselCard'
-import {
-  CarrouselContext,
-  CarrouselContextProvider,
-} from '@/contexts/pages/admin/CarrouselEditionContext'
+import CarrouselCard from './CarrouselContainer'
+import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import AddForm from './AddForm'
+import EditIcons from './components/EditIcons'
 
-export interface CarrouselImage {
+export interface CarrouselItem {
   id: string
   desktopLink: string
   mobileLink: string
@@ -22,7 +20,7 @@ export interface CarrouselImage {
 }
 
 interface ImageFormProps {
-  carrouselItem: CarrouselImage
+  carrouselItem: CarrouselItem
   index: number
 }
 
@@ -30,21 +28,26 @@ export default function CarrouselForm({
   carrouselItem,
   index,
 }: ImageFormProps) {
-  const { desktopLink, desktopKey, id, mobileKey, mobileLink } = carrouselItem
-  const { toggleEditMode, editMode } = useContext(CarrouselContext)
+  const { desktopKey, mobileKey } = carrouselItem
+  const { editMode, updateCarrouselCard } = useContext(CarrouselContext)
+  const isNewCarrousel = !desktopKey && !mobileKey
+
+  useEffect(() => {
+    if (!isNewCarrousel) updateCarrouselCard(carrouselItem)
+  }, [])
 
   return (
     <Container>
       <ToastContainer />
       <header>
-        <p>Carrousel {index + 1}</p>
-        <Pencil onClick={() => toggleEditMode()} size={20} />
+        {!isNewCarrousel ? (
+          <p>Carrousel {index + 1}</p>
+        ) : (
+          <p>Adicionar Carrousel</p>
+        )}
+        {!isNewCarrousel && <EditIcons />}
       </header>
-      {editMode ? (
-        <EditForm carrouselItem={carrouselItem} />
-      ) : (
-        <CarrouselCard carrouselItem={carrouselItem} />
-      )}
+      {isNewCarrousel ? <AddForm /> : <CarrouselCard editMode={editMode} />}
     </Container>
   )
 }

@@ -1,33 +1,36 @@
-import { FormEvent, ReactNode, useCallback, useState } from 'react'
+import { FormEvent, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Container } from './styles'
 import type { GetStaticProps, NextPage } from 'next'
 import CarrouselForm, {
-  CarrouselImage,
+  CarrouselItem,
 } from '../../../../components/admin/Home/CarrouselForm'
 import { api } from '@/lib/axios'
 import { CarrouselContextProvider } from '@/contexts/pages/admin/CarrouselEditionContext'
 
 interface CarrouselProps {
-  carrouselImages: CarrouselImage[]
+  carrouselImages: CarrouselItem[]
 }
 
 export default function Carrousel({ carrouselImages }: CarrouselProps) {
-  const [forms, setForms] = useState<number[]>([0])
+  const [carrousels, setCarrousels] = useState<CarrouselItem[]>(carrouselImages)
 
   const addForm = () => {
-    setForms((prevForms) => [...prevForms, prevForms.length])
+    setCarrousels([
+      ...carrousels,
+      { id: String(Math.floor(Math.random() * 1000)) } as CarrouselItem,
+    ])
   }
 
   return (
     <Container>
       <div>
-        {carrouselImages.map((carrouselItem, index) => (
+        {carrousels.map((carrouselItem, index) => (
           <CarrouselContextProvider key={carrouselItem.id}>
             <CarrouselForm carrouselItem={carrouselItem} index={index} />
           </CarrouselContextProvider>
         ))}
 
-        {forms.length < 6 && (
+        {carrousels.length < 6 && (
           <button onClick={addForm}>Adicionar Carrousel</button>
         )}
       </div>

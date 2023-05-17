@@ -1,20 +1,20 @@
 import Image from 'next/image'
-import { CarrouselImage } from '..'
+import { CarrouselItem } from '../..'
 import { Container, ImageTooltip } from './styles'
 import { Upload } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
 
 interface CarrouselCardProps {
-  carrouselItem: CarrouselImage
+  carrouselItem: CarrouselItem
 }
 
-function CarrouselCard({ carrouselItem }: CarrouselCardProps) {
+function CarrouselCard() {
   const { updateCarrouselCard, carrouselCard } = useContext(CarrouselContext)
   const { desktopLink, desktopKey, id, mobileKey, mobileLink } = carrouselCard
 
   useEffect(() => {
-    if (!carrouselCard.id) updateCarrouselCard(carrouselItem)
+    if (!carrouselCard.id) updateCarrouselCard(carrouselCard)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -13,7 +13,7 @@ export const InputForm = styled.form`
     margin-bottom: 1rem;
     height: 60px;
     width: 100%;
-    border: 1px solid #5e5859;
+    border: 1px solid #d8d8d8;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,15 +22,21 @@ export const InputForm = styled.form`
     cursor: pointer;
     text-align: center;
     padding: 0 0.5rem;
-
+    color: #b2b2b2;
     svg {
-      color: #5e5859;
+      color: #d8d8d8;
     }
 
     input {
       width: inherit;
       cursor: pointer;
       /* margin: 0 auto; */
+    }
+
+    &.file-selected {
+      color: #5e5859;
+      border: 2px solid #5e5859;
+      font-weight: 500;
     }
   }
 
