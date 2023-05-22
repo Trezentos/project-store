@@ -1,4 +1,4 @@
-import { IncomingForm, Fields, Files } from 'formidable'
+import { IncomingForm, Fields, Files, File } from 'formidable'
 import type { NextApiRequest } from 'next'
 
 const form = new IncomingForm()

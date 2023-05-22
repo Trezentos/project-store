@@ -90,9 +90,10 @@ model VerificationToken {
 }
 
 model CarrousselImage {
-    id          String @id @default(uuid())
+    id          String  @id @default(uuid())
     desktopLink String
     desktopKey  String
     mobileLink  String
     mobileKey   String
+    active      Boolean @default(true)
 }

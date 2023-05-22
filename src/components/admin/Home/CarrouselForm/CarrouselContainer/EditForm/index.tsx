@@ -15,25 +15,63 @@ import { InputForm } from './styles'
 import { Plus, Upload } from 'phosphor-react'
 import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
+import InputFile from '../../components/InputFile'
 
 // import { successToast, errorToast } from '@/utils/toast/sucessToast'
-const schema = z.object({
-  desktopImage: z.any(),
-  mobileImage: z.any(),
+
+const MAX_FILE_SIZE = 5200000
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+]
+
+const schema2 = z.object({
+  desktopImage: z
+    .any()
+    .refine(
+      (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
+      `A imagem não pode passar de 5 mb.`,
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      '.jpg, .jpeg, .png and .webp files are accepted.',
+    ),
+  mobileImage: z
+    .any()
+    .refine(
+      (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
+      `A imagem não pode passar de 5 mb.`,
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      '.jpg, .jpeg, .png and .webp files are accepted.',
+    ),
 })
 
-type FormValuesDataInput = z.input<typeof schema>
+const ImageSchema = z
+  .any()
+  .refine(
+    (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
+    `A imagem não pode passar de 5 mb.`,
+  )
+
+const schema = z.object({
+  desktopImage: ImageSchema,
+  mobileImage: ImageSchema,
+})
 
 interface FormValues {
-  desktopImage: FileList
-  mobileImage: FileList
+  desktopImage: FileList | null
+  mobileImage: FileList | null
 }
 
 interface EditFormProps {}
 
 function EditForm() {
-  const [desktopFile, setDesktopFile] = useState<any>(null)
-  const [mobileFile, setMobileFile] = useState<any>(null)
+  const [desktopFileState, setDesktopFileState] = useState<any>(null)
+  const [mobileFileState, setMobileFileState] = useState<any>(null)
   const [isSubmiting, setIsSubmiting] = useState(false)
 
   const { toggleEditMode, updateCarrouselCard, carrouselCard } =
@@ -48,33 +86,33 @@ function EditForm() {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormValues) => {
     try {
+      const { desktopImage, mobileImage } = data
       const filesToSend = new FormData()
-
       setIsSubmiting(true)
 
-      if (desktopFile === null && mobileFile === null) {
-        errorToast('Selecione pelo menos uma imagem desktop ou mobile')
-
+      if (!desktopImage?.[0] && !mobileImage?.[0]) {
+        errorToast('Selecione pelo menos uma imagem.')
         return
       }
 
       filesToSend.append('carrouselItemId', carrouselCard.id)
 
-      if (desktopFile) {
-        filesToSend.append('newDesktopImage', desktopFile)
+      if (desktopImage?.[0]) {
+        filesToSend.append('newDesktopImage', desktopImage[0])
       }
 
-      if (mobileFile) {
-        filesToSend.append('newMobileImage', mobileFile)
+      if (mobileImage?.[0]) {
+        filesToSend.append('newMobileImage', mobileImage[0])
       }
 
-      const { data } = await api.post('/home/update-carrousel', filesToSend)
+      const { data: dataResponse } = await api.post(
+        '/home/update-carrousel',
+        filesToSend,
+      )
 
-      console.log(data)
-
-      updateCarrouselCard(data)
+      updateCarrouselCard(dataResponse)
       successToast('Carrossel alterado com sucesso!')
       toggleEditMode()
     } catch (error: any) {
@@ -94,56 +132,40 @@ function EditForm() {
       '.edit-form .labelMobileImage',
     )
 
-    desktopFile !== null
+    desktopFileState !== null
       ? labelDesktop?.classList.add('file-selected')
       : labelDesktop?.classList.remove('file-selected')
 
-    mobileFile !== null
+    mobileFileState !== null
       ? labelMobile?.classList.add('file-selected')
       : labelMobile?.classList.remove('file-selected')
-  }, [desktopFile, mobileFile])
+  }, [desktopFileState, mobileFileState])
 
   return (
     <InputForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
-      <label htmlFor="desktopImage" className="labelDesktopImage">
-        Imagem para Desktop:
-        {desktopFile ? <strong>{desktopFile.name}</strong> : <Plus size={40} />}
-      </label>
-      <input
-        type="file"
-        id="desktopImage"
+      <InputFile
+        id={'desktopImage'}
+        className={'labelDesktopImage'}
+        title={'Imagem para desktop:'}
         disabled={isSubmiting}
-        {...register('desktopImage')}
-        accept="image/*"
-        onChange={(e: any) => {
-          if (e.target?.files[0]) {
-            setDesktopFile(e.target?.files[0])
-          }
-        }}
+        file={desktopFileState}
+        register={register('desktopImage')}
+        onChange={(e) => setDesktopFileState(e.target?.files)}
       />
-      {errors.desktopImage && (
-        <p>Por favor, selecione uma imagem para desktop.</p>
-      )}
 
-      <label htmlFor="mobileImage" className="labelMobileImage">
-        Imagem para Mobile:
-        {mobileFile ? <strong>{mobileFile.name}</strong> : <Plus size={40} />}
-      </label>
-      <input
-        type="file"
-        id="mobileImage"
+      {errors.desktopImage && <p>{errors.desktopImage.message}</p>}
+
+      <InputFile
+        id={'mobileImage'}
+        className={'labelMobileImage'}
+        title={'Imagem para mobile:'}
         disabled={isSubmiting}
-        {...register('mobileImage')}
-        accept="image/*"
-        onChange={(e: any) => {
-          if (e.target?.files[0]) {
-            setMobileFile(e.target?.files[0])
-          }
-        }}
+        file={mobileFileState}
+        register={register('mobileImage')}
+        onChange={(e) => setMobileFileState(e.target?.files)}
       />
-      {errors.mobileImage && (
-        <p>Por favor, selecione uma imagem para mobile.</p>
-      )}
+
+      {errors.mobileImage && <p>{errors.mobileImage.message}</p>}
 
       <button disabled={isSubmiting} type="submit">
         {isSubmiting ? (

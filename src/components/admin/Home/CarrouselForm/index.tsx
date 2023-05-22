@@ -9,7 +9,7 @@ import { ToastContainer } from 'react-toastify'
 import CarrouselCard from './CarrouselContainer'
 import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
 import AddForm from './AddForm'
-import EditIcons from './components/EditIcons'
+import OptionsCardHeader from './components/OptionsCardHeader'
 
 export interface CarrouselItem {
   id: string
@@ -17,6 +17,7 @@ export interface CarrouselItem {
   mobileLink: string
   desktopKey: string
   mobileKey: string
+  active: boolean
 }
 
 interface ImageFormProps {
@@ -28,16 +29,20 @@ export default function CarrouselForm({
   carrouselItem,
   index,
 }: ImageFormProps) {
-  const { desktopKey, mobileKey } = carrouselItem
-  const { editMode, updateCarrouselCard } = useContext(CarrouselContext)
-  const isNewCarrousel = !desktopKey && !mobileKey
+  const { editMode, updateCarrouselCard, isNewCarrousel, carrouselCard } =
+    useContext(CarrouselContext)
+
+  const { active } = carrouselCard
 
   useEffect(() => {
     if (!isNewCarrousel) updateCarrouselCard(carrouselItem)
   }, [])
 
   return (
-    <Container>
+    <Container
+      id={`carrousel-id-${carrouselCard.id}`}
+      className={!active ? 'hide' : ''}
+    >
       <ToastContainer />
       <header>
         {!isNewCarrousel ? (
@@ -45,7 +50,7 @@ export default function CarrouselForm({
         ) : (
           <p>Adicionar Carrousel</p>
         )}
-        {!isNewCarrousel && <EditIcons />}
+        {!isNewCarrousel && <OptionsCardHeader />}
       </header>
       {isNewCarrousel ? <AddForm /> : <CarrouselCard editMode={editMode} />}
     </Container>

@@ -10,10 +10,11 @@ interface ICarrousselItems {
   id: string
   mobileLink: StaticImageData | string
   desktopLink: StaticImageData | string
+  active: boolean
 }
 
 interface CarrousselProps {
-  carrouselImages: ICarrousselItems[]
+  carrousselsFromApi: ICarrousselItems[]
 }
 
 function Arrow(props: {
@@ -41,13 +42,13 @@ function Arrow(props: {
   )
 }
 
-export default function Carrousel({ carrouselImages }: CarrousselProps) {
+export default function Carrousel({ carrousselsFromApi }: CarrousselProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,
-      loop: carrouselImages.length > 1,
+      loop: carrousselsFromApi.length > 1,
 
       slideChanged(slider) {
         setCurrentSlide(slider.track.details.rel)
@@ -92,7 +93,7 @@ export default function Carrousel({ carrouselImages }: CarrousselProps) {
     <>
       <Container className="navigation-wrapper">
         <div ref={sliderRef} className="keen-slider">
-          {carrouselImages.map((image) => (
+          {carrousselsFromApi.map((image) => (
             <div key={image.id} className="keen-slider__slide">
               <Image
                 className="desktop"

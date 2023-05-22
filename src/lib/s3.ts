@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import formidable from 'formidable'
 import fs from 'fs'
+import crypto from 'node:crypto'
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -8,14 +9,10 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 })
 
-export function s3ParamsToUpload(
-  newImage: formidable.File | formidable.File[],
-) {
+export function s3ParamsToUpload(newImage: formidable.File) {
   return {
     Bucket: process.env.S3_BUCKET_NAME ?? '',
-    // @ts-ignore
     Key: String(newImage.originalFilename) ?? '',
-    // @ts-ignore
     Body: fs.readFileSync(newImage.filepath),
     ContentType: 'mimeType',
     ACL: 'public-read',

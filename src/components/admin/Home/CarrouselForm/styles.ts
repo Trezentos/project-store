@@ -19,4 +19,9 @@ export const Container = styled.div`
       cursor: pointer;
     }
   }
+
+  &.hide {
+    opacity: 0.5;
+    transition: 0.3s;
+  }
 `

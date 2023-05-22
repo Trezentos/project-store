@@ -1,24 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, {
-  useRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z, ZodError } from 'zod'
-import { ToastContainer, toast } from 'react-toastify'
-import { CarrouselItem } from '..'
+import { z } from 'zod'
+import InputFile from '../components/InputFile'
 import { api } from '@/lib/axios'
-import { InputForm } from './styles'
-import { Plus, Upload } from 'phosphor-react'
+import { AddFormContainer, ErrorMessage } from './styles'
 import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 
-const MAX_FILE_SIZE = 3200000
+const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -30,12 +20,11 @@ const schema = z.object({
   addDesktopImage: z
     .any()
     .refine((files) => {
-      console.log(files)
       return files?.length === 1
-    }, 'Image is required.')
+    }, 'Selecione uma imagem.')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`,
+      `A imagem não pode passar de 5 mb.`,
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
@@ -43,10 +32,10 @@ const schema = z.object({
     ),
   addMobileImage: z
     .any()
-    .refine((files) => files?.length === 1, 'Image is required.')
+    .refine((files) => files?.length === 1, 'Selecione uma imagem.')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`,
+      `A imagem não pode passar de 5 mb.`,
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
@@ -55,8 +44,8 @@ const schema = z.object({
 })
 
 interface FormValues {
-  addDesktopImage: FileList | null
-  addMobileImage: FileList | null
+  addMobileImage: FileList
+  addDesktopImage: FileList
 }
 
 export default function AddForm() {
@@ -72,29 +61,45 @@ export default function AddForm() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
+
+  useEffect(() => {
+    const addFormContainer = document.querySelector(
+      '#carrousel-id-temp-id-card',
+    )
+    const addFormButton =
+      document.querySelector<HTMLButtonElement>('#add-form-button')
+
+    if (!addFormButton) return
+
+    addFormContainer
+      ? (addFormButton.style.display = 'none')
+      : (addFormButton.style.display = 'block')
+  }, [carrouselCard.id])
 
   const onSubmit = async (data: FormValues) => {
     try {
       const { addDesktopImage, addMobileImage } = data
       setIsSubmiting(true)
 
-      if (!addDesktopImage || !addMobileImage) return
-
       const formData = new FormData()
       formData.append('desktopImage', addDesktopImage[0])
       formData.append('mobileImage', addMobileImage[0])
 
-      const response = await api.post('/home/update-carrousell', formData)
+      const { data: dataResponse } = await api.post(
+        '/home/insert-carrousel-item',
+        formData,
+      )
 
       successToast('Carrossel adicionado com sucesso!')
+      updateCarrouselCard(dataResponse)
     } catch (error: any) {
-      errorToast('...')
-      console.log(errors)
+      const { data } = error.response
+      if (!data) errorToast('Houve algum erro ao alterar o carrossel...')
+      errorToast(data)
     } finally {
       setIsSubmiting(false)
     }
@@ -108,52 +113,43 @@ export default function AddForm() {
       '.add-form .labelMobileImage',
     )
 
-    desktopFile
+    desktopFile?.[0]?.name
       ? labelDesktop?.classList.add('file-selected')
       : labelDesktop?.classList.remove('file-selected')
 
-    mobileFile
+    mobileFile?.[0]?.name
       ? labelMobile?.classList.add('file-selected')
       : labelMobile?.classList.remove('file-selected')
   }, [desktopFile, mobileFile])
 
   return (
-    <InputForm onSubmit={handleSubmit(onSubmit)} className="add-form">
-      <label htmlFor="addDesktopImage" className="labelDesktopImage">
-        Imagem para Desktop:
-        {desktopFile && desktopFile[0]?.name ? (
-          <strong>{desktopFile[0].name}</strong>
-        ) : (
-          <Plus size={40} />
-        )}
-      </label>
-      <input
-        type="file"
-        id="addDesktopImage"
+    <AddFormContainer onSubmit={handleSubmit(onSubmit)} className="add-form">
+      <InputFile
+        id={'addDesktopImage'}
+        className={'labelDesktopImage'}
+        title={'Imagem para desktop:'}
         disabled={isSubmiting}
-        {...register('addDesktopImage')}
-        accept="image/*"
+        file={desktopFile}
+        register={register('addDesktopImage')}
         onChange={(e) => setDesktopFile(e.target?.files)}
       />
-      {errors.addDesktopImage && <p>{errors.addDesktopImage.message}</p>}
+      <ErrorMessage>
+        {errors.addDesktopImage && <p>{errors.addDesktopImage.message}</p>}
+      </ErrorMessage>
 
-      <label htmlFor="addMobileImage" className="labelMobileImage">
-        Imagem para Mobile:
-        {mobileFile && mobileFile[0]?.name ? (
-          <strong>{mobileFile[0].name}</strong>
-        ) : (
-          <Plus size={40} />
-        )}
-      </label>
-      <input
-        type="file"
-        id="addMobileImage"
-        {...register('addMobileImage')}
+      <InputFile
+        id={'addMobileImage'}
+        className={'labelMobileImage'}
+        title={'Imagem para Mobile:'}
         disabled={isSubmiting}
-        accept="image/*"
-        onChange={(e) => setMobileFile(e.target.files)}
+        file={mobileFile}
+        register={register('addMobileImage')}
+        onChange={(e) => setMobileFile(e.target?.files)}
       />
-      {errors.addMobileImage && <p>{errors.addMobileImage.message}</p>}
+
+      <ErrorMessage>
+        {errors.addMobileImage && <p>{errors.addMobileImage.message}</p>}
+      </ErrorMessage>
 
       <button disabled={isSubmiting} type="submit">
         {isSubmiting ? (
@@ -162,7 +158,6 @@ export default function AddForm() {
           'Enviar imagens selecionadas'
         )}
       </button>
-      <ToastContainer />
-    </InputForm>
+    </AddFormContainer>
   )
 }

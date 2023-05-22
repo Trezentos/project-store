@@ -30,17 +30,21 @@ interface CarrousselImage {
   id: string
   desktopLink: string
   mobileLink: string
+  active: boolean
 }
 interface HomeProps {
   instagramPhotos: InstagramPostProps[]
-  carouselImages: CarrousselImage[]
+  carrousselsFromApi: CarrousselImage[]
 }
 
-export default function Home({ instagramPhotos, carouselImages }: HomeProps) {
+export default function Home({
+  instagramPhotos,
+  carrousselsFromApi,
+}: HomeProps) {
   return (
     <HomeContanier>
-      {carouselImages.length > 0 && (
-        <Carrousel carrouselImages={carouselImages} />
+      {carrousselsFromApi.length > 0 && (
+        <Carrousel carrousselsFromApi={carrousselsFromApi} />
       )}
 
       <HighlightsProducts>
@@ -106,16 +110,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     const { data: carrousselData } = await api.get('/home/get-carrousel')
 
-    const carouselImages = carrousselData.map((item: any) => ({
-      id: item.id,
-      desktopLink: item.desktopLink,
-      mobileLink: item.mobileLink,
-    }))
+    const carrousselsFromApi = carrousselData
+      .map((item: any) => ({
+        id: item.id,
+        desktopLink: item.desktopLink,
+        mobileLink: item.mobileLink,
+        active: item.active,
+      }))
+      .filter((item: any) => item.active)
 
     return {
       props: {
         instagramPhotos,
-        carouselImages,
+        carrousselsFromApi,
       },
     }
   } catch (error) {

@@ -23,7 +23,7 @@ function CarrouselCard() {
       <div>
         <ImageTooltip>
           <div className="tooltip">
-            <Image width={300} height={120} src={desktopLink} alt="" />
+            {id && <Image width={300} height={120} src={desktopLink} alt="" />}
           </div>
           <p>Carrousel Desktop</p>
           <strong>{desktopKey}</strong>
@@ -32,7 +32,7 @@ function CarrouselCard() {
       <div>
         <ImageTooltip>
           <div className="tooltip">
-            <Image width={160} height={280} src={mobileLink} alt="" />
+            {id && <Image width={160} height={280} src={mobileLink} alt="" />}
           </div>
           <p>Carrousel Mobile</p>
           <strong>{mobileKey}</strong>

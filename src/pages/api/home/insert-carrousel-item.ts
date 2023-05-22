@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { IncomingForm, Fields, Files } from 'formidable'
+import formidable, { IncomingForm, Fields, Files } from 'formidable'
 import path from 'path'
 import s3, { s3ParamsToUpload, s3ParamsToDelete } from '@/lib/s3'
 import { prisma } from '@/lib/prisma'
@@ -8,6 +8,8 @@ import carrouselToUpdate from './utils/carrouselDataToUpdate'
 import { object } from 'zod'
 import { CarrousselImage } from '@prisma/client'
 import fs from 'fs'
+import { fileTypeFromFile } from 'file-type'
+import verifyFileType from './utils/verifyImageFileType'
 
 export const config = {
   api: {
@@ -24,16 +26,36 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const { files, fields } = await formToDataFormatter(req)
-    const { newDesktopImage, newMobileImage } = files
+    const { files } = await formToDataFormatter(req)
+    const { desktopImage, mobileImage } = files
 
-    // @ts-ignore
-    if (newDesktopImage?.size > 3500000 || newMobileImage?.size > 3500000) {
+    const desktopImageFile = desktopImage as formidable.File
+    const mobileImageFile = mobileImage as formidable.File
+
+    await verifyFileType(res, String(desktopImageFile.filepath))
+    await verifyFileType(res, String(mobileImageFile.filepath))
+
+    if (desktopImageFile.size > 3500000 || mobileImageFile.size > 3500000) {
       return res.status(400).json('As imagens não podem passar de 3 megabytes')
     }
 
-    return res.json({ message: 'insert carrousel' })
+    const desktopParamsS3 = s3ParamsToUpload(desktopImageFile)
+    const mobileParamsS3 = s3ParamsToUpload(mobileImageFile)
+
+    const returnedDesktopS3 = await s3.upload(desktopParamsS3).promise()
+    const returnedMobileS3 = await s3.upload(mobileParamsS3).promise()
+
+    const newCarrousel = await prisma.carrousselImage.create({
+      data: {
+        desktopKey: returnedDesktopS3.Key,
+        desktopLink: returnedDesktopS3.Location,
+        mobileKey: returnedMobileS3.Key,
+        mobileLink: returnedMobileS3.Location,
+      },
+    })
+
+    return res.status(200).json(newCarrousel)
   } catch (error: any) {
-    return res.json(error.message)
+    return res.status(400).json(error.message)
   }
 }

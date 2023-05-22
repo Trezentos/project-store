@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { IncomingForm, Fields, Files } from 'formidable'
+import formidable, { IncomingForm, Fields, Files } from 'formidable'
 import path from 'path'
 import s3, { s3ParamsToUpload, s3ParamsToDelete } from '@/lib/s3'
 import { prisma } from '@/lib/prisma'
@@ -8,6 +8,7 @@ import carrouselToUpdate from './utils/carrouselDataToUpdate'
 import { object } from 'zod'
 import { CarrousselImage } from '@prisma/client'
 import fs from 'fs'
+import verifyFileType from './utils/verifyImageFileType'
 
 export const config = {
   api: {
@@ -26,6 +27,12 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { newDesktopImage, newMobileImage } = files
+
+    const toVeriFyDesktop = newDesktopImage as formidable.File
+    const toVeriFyMobile = newDesktopImage as formidable.File
+
+    await verifyFileType(res, String(toVeriFyDesktop.filepath))
+    await verifyFileType(res, String(toVeriFyMobile.filepath))
 
     // @ts-ignore
     if (newDesktopImage?.size > 3500000 || newMobileImage?.size > 3500000) {
@@ -50,7 +57,7 @@ export default async function handler(
 
       if (!newImage) return
 
-      const paramsToUpload = s3ParamsToUpload(newImage)
+      const paramsToUpload = s3ParamsToUpload(newImage as formidable.File)
 
       const returnedS3Upload = await s3.upload(paramsToUpload).promise()
 
@@ -82,12 +89,14 @@ export default async function handler(
 
     const newCarrousel = await Promise.all(updatedCarrousel)
 
+    console.log(newCarrousel)
+
     if (!newCarrousel[0]) return res.json(newCarrousel[1])
 
     if (!newCarrousel[1]) return res.json(newCarrousel[0])
 
-    return res.json(newCarrousel[0])
+    return res.json(newCarrousel[1])
   } catch (error: any) {
-    return res.json(error.message)
+    return res.status(400).json(error.message)
   }
 }

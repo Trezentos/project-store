@@ -7,11 +7,13 @@ export interface ICarrouselContent {
   id: string
   mobileKey: string
   mobileLink: string
+  active: boolean
 }
 
 interface CarrouselContextType {
   carrouselCard: ICarrouselContent
   editMode: boolean
+  isNewCarrousel: boolean
   toggleEditMode: () => void
   updateCarrouselCard: (carrouseCard: ICarrouselContent) => void
 }
@@ -26,19 +28,33 @@ export function CarrouselContextProvider({
   children,
 }: CarrouselContextProviderProps) {
   const [editMode, setEditMode] = useState(false)
+  const [isNewCarrousel, setIsNewCarrousel] = useState(false)
   const [carrouselCard, setCarrouselCard] = useState({} as ICarrouselContent)
 
   function toggleEditMode() {
     setEditMode(!editMode)
   }
 
-  function updateCarrouselCard(carrouseCard: ICarrouselContent) {
-    setCarrouselCard(carrouseCard)
+  function updateCarrouselCard(carrouselCard: ICarrouselContent) {
+    setCarrouselCard(carrouselCard)
   }
+
+  useEffect(() => {
+    const { desktopKey, mobileKey } = carrouselCard
+    console.log(desktopKey, mobileKey)
+
+    setIsNewCarrousel(!desktopKey && !mobileKey)
+  }, [carrouselCard])
 
   return (
     <CarrouselContext.Provider
-      value={{ toggleEditMode, editMode, carrouselCard, updateCarrouselCard }}
+      value={{
+        toggleEditMode,
+        editMode,
+        carrouselCard,
+        updateCarrouselCard,
+        isNewCarrousel,
+      }}
     >
       {children}
     </CarrouselContext.Provider>

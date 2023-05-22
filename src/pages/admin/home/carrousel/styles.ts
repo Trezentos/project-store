@@ -21,7 +21,13 @@ export const Container = styled.div`
     > button {
       margin-top: 1rem;
       position: absolute;
-      bottom: 20px;
+      bottom: 50px;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      background-color: #f3f4fd;
+      text-transform: uppercase;
     }
   }
 

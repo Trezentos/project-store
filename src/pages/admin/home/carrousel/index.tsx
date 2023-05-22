@@ -7,23 +7,38 @@ import CarrouselForm, {
 import { api } from '@/lib/axios'
 import { CarrouselContextProvider } from '@/contexts/pages/admin/CarrouselEditionContext'
 
+// Estrita tipagem para a resposta da API
+interface CarrouselAPIResponse {
+  id: string
+  desktopLink: string
+  mobileLink: string
+  desktopKey: string
+  mobileKey: string
+  active: boolean
+}
+
 interface CarrouselProps {
   carrouselImages: CarrouselItem[]
 }
 
 export default function Carrousel({ carrouselImages }: CarrouselProps) {
   const [carrousels, setCarrousels] = useState<CarrouselItem[]>(carrouselImages)
+  const [isAdding, setIsAdding] = useState(true)
 
-  const addForm = () => {
-    setCarrousels([
-      ...carrousels,
-      { id: String(Math.floor(Math.random() * 1000)) } as CarrouselItem,
+  // Ação para adicionar um novo Carrousel ao estado
+  const addForm = useCallback(() => {
+    setCarrousels((prevCarrousels) => [
+      ...prevCarrousels,
+      {
+        id: 'temp-id-card',
+        active: true,
+      } as CarrouselItem,
     ])
-  }
+  }, [])
 
   return (
     <Container>
-      <div>
+      <div id="all-cards">
         {carrousels.map((carrouselItem, index) => (
           <CarrouselContextProvider key={carrouselItem.id}>
             <CarrouselForm carrouselItem={carrouselItem} index={index} />
@@ -31,7 +46,9 @@ export default function Carrousel({ carrouselImages }: CarrouselProps) {
         ))}
 
         {carrousels.length < 6 && (
-          <button onClick={addForm}>Adicionar Carrousel</button>
+          <button onClick={addForm} id="add-form-button">
+            Adicionar Carrousel
+          </button>
         )}
       </div>
     </Container>
@@ -42,15 +59,17 @@ Carrousel.getLayout = function PageLayout(page: ReactNode) {
   return <>{page}</>
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { data } = await api.get('/home/get-carrousel')
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get<CarrouselAPIResponse[]>('/home/get-carrousel')
 
-  const carrouselImages = data.map((item: any) => ({
+  // Map the server data to the local data structure
+  const carrouselImages = data.map((item) => ({
     id: item.id,
     desktopLink: item.desktopLink,
     mobileLink: item.mobileLink,
     desktopKey: item.desktopKey,
     mobileKey: item.mobileKey,
+    active: item.active,
   }))
 
   return {

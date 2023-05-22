@@ -1,0 +1,23 @@
+import CarrouselForm, { CarrouselItem } from '../CarrouselForm'
+
+interface CarrouselListProps {
+  carrousels: CarrouselItem[]
+}
+
+export default function CarrouselList({ carrousels }: CarrouselListProps) {
+  return (
+    <>
+      {carrousels.map((carrouselItem, index) => {
+        console.log('carrouselItem: ', carrouselItem)
+
+        return (
+          <CarrouselForm
+            key={carrouselItem.id}
+            carrouselItem={carrouselItem}
+            index={index}
+          />
+        )
+      })}
+    </>
+  )
+}
