@@ -1,9 +1,8 @@
 import Image from 'next/image'
 import { CarrouselItem } from '../..'
 import { Container, ImageTooltip } from './styles'
-import { Upload } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
-import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 
 interface CarrouselCardProps {
   carrouselItem: CarrouselItem

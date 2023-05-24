@@ -1,4 +1,4 @@
-import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 import { Pencil, ArrowBendDownLeft, X } from 'phosphor-react'
 import { useCallback, useContext, useState } from 'react'
 import ConfirmModal from '../ConfirmModal'

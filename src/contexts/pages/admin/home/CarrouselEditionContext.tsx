@@ -41,7 +41,6 @@ export function CarrouselContextProvider({
 
   useEffect(() => {
     const { desktopKey, mobileKey } = carrouselCard
-    console.log(desktopKey, mobileKey)
 
     setIsNewCarrousel(!desktopKey && !mobileKey)
   }, [carrouselCard])

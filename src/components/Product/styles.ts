@@ -56,7 +56,7 @@ export const ContentWrapper = styled.div`
   }
 
   @media (min-width: 1500px) {
-    height: 600px;
+    height: 650px;
 
     video {
       width: 100%;

@@ -7,7 +7,7 @@ import { Container } from './styles'
 import EditForm from './CarrouselContainer/EditForm'
 import { ToastContainer } from 'react-toastify'
 import CarrouselCard from './CarrouselContainer'
-import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 import AddForm from './AddForm'
 import OptionsCardHeader from './components/OptionsCardHeader'
 

@@ -97,3 +97,11 @@ model CarrousselImage {
     mobileKey   String
     active      Boolean @default(true)
 }
+
+model HighlightHomeImages {
+    id         String @id @default(uuid())
+    image1Link String
+    image1Key  String
+    image2Link String
+    image2Key  String
+}

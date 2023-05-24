@@ -7,12 +7,6 @@ export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   flex-direction: column;
-
-  form {
-    display: flex;
-    flex-direction: column;
-    input {
-      margin-bottom: 1rem;
-    }
-  }
 `
+
+export const CardHeader = styled.header``

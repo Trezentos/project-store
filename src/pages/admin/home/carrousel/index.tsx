@@ -5,7 +5,7 @@ import CarrouselForm, {
   CarrouselItem,
 } from '../../../../components/admin/Home/CarrouselForm'
 import { api } from '@/lib/axios'
-import { CarrouselContextProvider } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContextProvider } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 
 // Estrita tipagem para a resposta da API
 interface CarrouselAPIResponse {

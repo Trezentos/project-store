@@ -89,8 +89,6 @@ export default async function handler(
 
     const newCarrousel = await Promise.all(updatedCarrousel)
 
-    console.log(newCarrousel)
-
     if (!newCarrousel[0]) return res.json(newCarrousel[1])
 
     if (!newCarrousel[1]) return res.json(newCarrousel[0])

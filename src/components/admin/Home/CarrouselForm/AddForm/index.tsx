@@ -2,10 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import InputFile from '../components/InputFile'
+import InputFile from '../../../InputFile'
 import { api } from '@/lib/axios'
 import { AddFormContainer, ErrorMessage } from './styles'
-import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 
 const MAX_FILE_SIZE = 5200000

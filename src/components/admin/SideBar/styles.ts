@@ -36,6 +36,10 @@ export const MainMenu = styled.div`
     margin-bottom: 1rem;
   }
 
+  > div {
+    width: 100%;
+  }
+
   button {
     font-family: 'Montserrat';
     cursor: pointer;
@@ -74,6 +78,7 @@ export const MainMenu = styled.div`
     overflow: hidden;
     transition: 200ms;
     max-height: auto;
+
     li {
       list-style: none;
       margin-bottom: 0.4rem;
@@ -84,6 +89,13 @@ export const MainMenu = styled.div`
       a {
         flex: 1;
         font-size: 0.9rem;
+      }
+
+      &.active {
+        a {
+          font-weight: 500;
+          text-decoration: underline;
+        }
       }
     }
   }

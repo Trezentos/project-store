@@ -8,6 +8,7 @@ import {
   Gear,
   SignOut,
   CaretDown,
+  CaretUp,
 } from 'phosphor-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -20,56 +21,76 @@ interface SidebarProps {
 const painelMenu = [
   {
     name: 'Home',
+    link: 'home',
+    hifen: 'home',
     icon: <House size={20} />,
     subMenu: [
       {
         id: '1',
         link: '/admin/home/carrousel',
         name: 'Carrousel',
+        hifen: 'carrousel',
       },
       {
         id: '2',
         link: '/admin/home/produtos-em-destaque-1',
         name: 'Produtos em destaque 1',
+        hifen: 'produtos-em-destaque-1',
       },
       {
         id: '3',
         link: '/admin/home/imagem-em-destaque',
         name: 'Imagem de fundo',
+        hifen: 'imagem-em-destaque',
       },
       {
         id: '4',
         link: '/admin/home/produtos-em-destaque-2',
         name: 'Produtos em destaque 2',
+        hifen: 'produtos-em-destaque-2',
       },
     ],
   },
   {
     name: 'Editar Menu',
+    link: 'edit-menu',
     icon: <Pencil size={20} />,
-    subMenu: [],
+    subMenu: [
+      {
+        id: '1',
+        link: '/admin/edit-menu/editar-header',
+        name: 'editar-header',
+        hifen: 'editar-header',
+      },
+    ],
   },
   {
     name: 'Produtos',
+    link: 'products',
     icon: <Package size={20} />,
-    subMenu: [],
+    subMenu: [
+      {
+        id: '1',
+        link: '/admin/products/edit-products',
+        name: 'Editar produtos',
+        hifen: 'edit-products',
+      },
+    ],
   },
 ]
 
 function Sidebar({ children }: SidebarProps) {
+  const router = useRouter()
   const iconeSize = 24
 
-  const handleActiveButton = useCallback(
-    (
-      e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-      ulelement: HTMLUListElement | null,
-    ) => {
+  const handleDropdownButton = useCallback(
+    (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
       const allButtons = document.querySelectorAll('#main-buttons button')
       allButtons.forEach((button) => {
         button.classList.remove('active')
       })
-
       e.currentTarget.classList.add('active')
+      const ulelement = e.currentTarget.nextElementSibling as HTMLUListElement
 
       if (!ulelement) return
 
@@ -84,11 +105,40 @@ function Sidebar({ children }: SidebarProps) {
     },
     [],
   )
+  useEffect(() => {
+    // Open the first dropdown menu item and close the others
+    const allUls =
+      document.querySelectorAll<HTMLUListElement>('#main-buttons ul')
+
+    allUls.forEach((ulItem, index) => {
+      if (index === 0) {
+        ulItem.style.maxHeight = ulItem.scrollHeight + 'px'
+      } else {
+        ulItem.style.maxHeight = 0 + 'px'
+      }
+    })
+  }, [])
 
   useEffect(() => {
-    const allButtons = document.querySelectorAll('#main-buttons button')
-    allButtons[0].classList.add('active')
-  }, [])
+    const [, , selectedSubPage, subOption] = router.pathname.split('/')
+    console.log(selectedSubPage)
+    const subPageAsideButton = document.querySelector(
+      `#main-buttons #${selectedSubPage}`,
+    )
+
+    const subOptionAsideButton = document.querySelector(
+      `#main-buttons li#${subOption}`,
+    )
+
+    const allButtons = document.querySelectorAll(`#main-buttons button`)
+    allButtons.forEach((button) => button.classList.remove('active'))
+
+    const allSubOptions = document.querySelectorAll(`#main-buttons  li`)
+    allSubOptions.forEach((button) => button.classList.remove('active'))
+
+    subPageAsideButton?.classList.add('active')
+    subOptionAsideButton?.classList.add('active')
+  }, [router])
 
   return (
     <Container>
@@ -98,24 +148,19 @@ function Sidebar({ children }: SidebarProps) {
           <h4>Menu Principal</h4>
           {painelMenu.map((item) => (
             <div key={item.name}>
-              <button
-                onClick={(e) =>
-                  handleActiveButton(
-                    e,
-                    e.currentTarget.nextElementSibling as HTMLUListElement,
-                  )
-                }
-              >
+              <button id={item.link} onClick={handleDropdownButton}>
                 <div>
                   {item.icon}
                   {item.name}
                 </div>
                 <CaretDown />
               </button>
-              <ul>
+              <ul id={item.link}>
                 {item.subMenu.map((subItem) => (
-                  <li key={subItem.id}>
-                    <Link href={subItem.link}>{subItem.name}</Link>
+                  <li key={subItem.id} id={subItem.hifen}>
+                    <Link href={subItem.link} className="">
+                      {subItem.name}
+                    </Link>
                   </li>
                 ))}
               </ul>

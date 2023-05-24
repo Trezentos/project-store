@@ -13,11 +13,9 @@ import { CarrouselItem } from '../..'
 import { api } from '@/lib/axios'
 import { InputForm } from './styles'
 import { Plus, Upload } from 'phosphor-react'
-import { CarrouselContext } from '@/contexts/pages/admin/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
-import InputFile from '../../components/InputFile'
-
-// import { successToast, errorToast } from '@/utils/toast/sucessToast'
+import InputFile from '../../../../InputFile'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
@@ -123,23 +121,6 @@ function EditForm() {
       setIsSubmiting(false)
     }
   }
-
-  useEffect(() => {
-    const labelDesktop = document.querySelector<Element>(
-      '.edit-form .labelDesktopImage',
-    )
-    const labelMobile = document.querySelector<Element>(
-      '.edit-form .labelMobileImage',
-    )
-
-    desktopFileState !== null
-      ? labelDesktop?.classList.add('file-selected')
-      : labelDesktop?.classList.remove('file-selected')
-
-    mobileFileState !== null
-      ? labelMobile?.classList.add('file-selected')
-      : labelMobile?.classList.remove('file-selected')
-  }, [desktopFileState, mobileFileState])
 
   return (
     <InputForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
