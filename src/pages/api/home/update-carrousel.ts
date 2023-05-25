@@ -29,7 +29,7 @@ export default async function handler(
     const { newDesktopImage, newMobileImage } = files
 
     const toVeriFyDesktop = newDesktopImage as formidable.File
-    const toVeriFyMobile = newDesktopImage as formidable.File
+    const toVeriFyMobile = newMobileImage as formidable.File
 
     await verifyFileType(res, String(toVeriFyDesktop.filepath))
     await verifyFileType(res, String(toVeriFyMobile.filepath))

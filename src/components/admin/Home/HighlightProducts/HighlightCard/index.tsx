@@ -7,26 +7,27 @@ import { useContext } from 'react'
 import { HighlightProductsContext } from '@/contexts/pages/admin/home/HighlightProductsContext'
 
 function HighlightCardProperties() {
-  const { toggleEditMode } = useContext(HighlightProductsContext)
+  const { toggleEditMode, highlightItem } = useContext(HighlightProductsContext)
+  const { image1Key, image1Link, image2Key, image2Link } = highlightItem
 
   return (
     <>
       <div>
         <ImageTooltip>
           <div className="tooltip">
-            <Image width={200} height={250} src={FImage1} alt="" />
+            <Image width={200} height={250} src={image1Link} alt="" />
           </div>
           <p>Imagem 1</p>
-          <strong>{'1.jpg'}</strong>
+          <strong>{image1Key}</strong>
         </ImageTooltip>
       </div>
       <div>
         <ImageTooltip>
           <div className="tooltip">
-            <Image width={200} height={250} src={FImage1} alt="" />
+            <Image width={200} height={250} src={image2Link} alt="" />
           </div>
           <p>Imagem 2</p>
-          <strong>{'2.jpg'}</strong>
+          <strong>{image2Key}</strong>
         </ImageTooltip>
       </div>
     </>

@@ -3,11 +3,23 @@ import { ArrowBendDownLeft, Pencil } from 'phosphor-react'
 import { Container } from './styles'
 import HighlightCardProperties from './HighlightCard'
 import CardEdit from './CardEdit'
-import { useContext } from 'react'
-import { HighlightProductsContext } from '@/contexts/pages/admin/home/HighlightProductsContext'
+import { useContext, useEffect } from 'react'
+import {
+  HighlightItem,
+  HighlightProductsContext,
+} from '@/contexts/pages/admin/home/HighlightProductsContext'
 
-function HighlightProducts() {
-  const { toggleEditMode, editMode } = useContext(HighlightProductsContext)
+interface HighlightProductsProps {
+  highlightItemFromApi: HighlightItem
+}
+
+function HighlightProducts({ highlightItemFromApi }: HighlightProductsProps) {
+  const { toggleEditMode, editMode, updateHighlightItem, highlightItem } =
+    useContext(HighlightProductsContext)
+
+  useEffect(() => {
+    if (!highlightItem.id) updateHighlightItem(highlightItemFromApi)
+  }, [highlightItem, highlightItemFromApi, updateHighlightItem])
 
   return (
     <Container>

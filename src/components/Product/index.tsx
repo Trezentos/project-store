@@ -102,8 +102,6 @@ export default function Product({
         {productsByColor.map((colorProduct, index) => {
           const { productImages } = colorProduct
 
-          console.log(selectedProduct?.id)
-
           return (
             <Link
               key={colorProduct.id}

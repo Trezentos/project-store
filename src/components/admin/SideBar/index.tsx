@@ -121,7 +121,6 @@ function Sidebar({ children }: SidebarProps) {
 
   useEffect(() => {
     const [, , selectedSubPage, subOption] = router.pathname.split('/')
-    console.log(selectedSubPage)
     const subPageAsideButton = document.querySelector(
       `#main-buttons #${selectedSubPage}`,
     )
