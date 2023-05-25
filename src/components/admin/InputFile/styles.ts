@@ -15,7 +15,7 @@ export const Container = styled.div`
   label {
     margin-bottom: 8px;
     height: 60px;
-    width: 100%;
+    width: 240px;
     border: 1px solid #d8d8d8;
     display: flex;
     flex-direction: column;

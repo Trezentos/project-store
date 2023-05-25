@@ -3,12 +3,21 @@ import { createContext, ReactNode, useState, useEffect } from 'react'
 
 export interface IHighlightProductsContent {}
 
+export interface HighlightItem {
+  id: string
+  image1Link: string
+  image1Key: string
+  image2Link: string
+  image2Key: string
+}
 interface HighlightProductsContextType {
   editMode: boolean
+  highlightItem: HighlightItem
   toggleEditMode: (option?: boolean) => void
+  updateHighlightItem: (highlightItem: HighlightItem) => void
 }
 
-interface CarrouselContextProviderProps {
+interface HightlightContextProviderProps {
   children: ReactNode
 }
 
@@ -18,8 +27,11 @@ export const HighlightProductsContext = createContext(
 
 export function HighlightProductsContextProvider({
   children,
-}: CarrouselContextProviderProps) {
+}: HightlightContextProviderProps) {
   const [editMode, setEditMode] = useState(false)
+  const [highlightItem, setHighlightItem] = useState<HighlightItem>(
+    {} as HighlightItem,
+  )
 
   function toggleEditMode(option?: boolean) {
     if (!option) {
@@ -29,11 +41,17 @@ export function HighlightProductsContextProvider({
     setEditMode(option)
   }
 
+  function updateHighlightItem(newHighlightItem: HighlightItem) {
+    setHighlightItem(newHighlightItem)
+  }
+
   return (
     <HighlightProductsContext.Provider
       value={{
         toggleEditMode,
+        updateHighlightItem,
         editMode,
+        highlightItem,
       }}
     >
       {children}

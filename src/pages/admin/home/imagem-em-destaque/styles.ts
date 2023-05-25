@@ -6,7 +6,8 @@ export const Container = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 1rem;
 `
 
 export const CardHeader = styled.header``

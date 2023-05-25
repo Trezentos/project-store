@@ -6,13 +6,11 @@ import {
 } from '@/styles/home'
 import Image from 'next/image'
 import Carrousel from '../components/Pages/Home/Carrousel'
-import FImage1 from '../assets/highlightsProducts/1.jpg'
-import FImage2 from '../assets/highlightsProducts/2.jpg'
 import FImage3 from '../assets/home/bikini-girl-desktop.jpg'
 import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
 import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
 import axios from 'axios'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticProps } from 'next'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
 import InstagramSession, {
@@ -25,6 +23,9 @@ import {
 import Newsletter from '@/components/Pages/Home/Newsletter'
 import SiteAdvantageBlock from '@/components/Pages/Home/SiteAdvantagesBlock'
 import { api } from '@/lib/axios'
+import { MainBackgroundItem } from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
+import { HighlightItem } from '@/contexts/pages/admin/home/HighlightProductsContext'
+import { CarrouselItem } from '@/components/admin/Home/CarrouselForm'
 
 interface CarrousselImage {
   id: string
@@ -35,11 +36,15 @@ interface CarrousselImage {
 interface HomeProps {
   instagramPhotos: InstagramPostProps[]
   carrousselsFromApi: CarrousselImage[]
+  HighLightItem: HighlightItem
+  backgroundHome: MainBackgroundItem
 }
 
 export default function Home({
   instagramPhotos,
   carrousselsFromApi,
+  HighLightItem,
+  backgroundHome,
 }: HomeProps) {
   return (
     <HomeContanier>
@@ -49,25 +54,35 @@ export default function Home({
 
       <HighlightsProducts>
         <div>
-          <Image src={FImage1} alt="" fill sizes="100%, 100%" />
+          <Image
+            src={HighLightItem.image1Link}
+            alt=""
+            fill
+            sizes="100%, 100%"
+          />
           <button>Shop This</button>
         </div>
         <div>
-          <Image src={FImage2} alt="" fill sizes="100%, 100%" />
+          <Image
+            src={HighLightItem.image2Link}
+            alt=""
+            fill
+            sizes="100%, 100%"
+          />
           <button>Shop This</button>
         </div>
       </HighlightsProducts>
       {/* <FeaturedProducts /> */}
       <HighlightImage>
         <Image
-          src={FImage3}
+          src={backgroundHome.desktopLink}
           alt=""
           className="desktop"
           fill
           sizes="100vw, 100vh"
         />
         <Image
-          src={FImage4}
+          src={backgroundHome.mobileLink}
           loading="lazy"
           alt=""
           fill
@@ -90,7 +105,7 @@ export default function Home({
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   try {
     const fields = 'media_url, media_type, caption, timestamp'
     const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
@@ -108,10 +123,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }))
       .filter((item: any) => !String(item.imageSrc).includes('video'))
 
-    const { data: carrousselData } = await api.get('/home/get-carrousel')
+    const { data: carrousselData } = await api.get<CarrouselItem[]>(
+      '/home/get-carrousel',
+    )
+
+    const { data: HighLightItem } = await api.get<HighlightItem[]>(
+      '/home/highlight-images/get-hightlight-images',
+    )
 
     const carrousselsFromApi = carrousselData
-      .map((item: any) => ({
+      .map((item) => ({
         id: item.id,
         desktopLink: item.desktopLink,
         mobileLink: item.mobileLink,
@@ -119,10 +140,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }))
       .filter((item: any) => item.active)
 
+    const { data: backgroundHome } = await api.get<MainBackgroundItem>(
+      '/home/main-background-home/get-background-item',
+    )
+
     return {
       props: {
         instagramPhotos,
         carrousselsFromApi,
+        HighLightItem,
+        backgroundHome,
       },
     }
   } catch (error) {

@@ -105,3 +105,11 @@ model HighlightHomeImages {
     image2Link String
     image2Key  String
 }
+
+model MainBackgroundHome {
+    id          String @id @default(uuid())
+    desktopLink String
+    desktopKey  String
+    mobileLink  String
+    mobileKey   String
+}
