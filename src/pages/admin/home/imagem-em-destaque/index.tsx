@@ -3,16 +3,17 @@ import { CardHeader, Container } from './styles'
 
 import HighlightProducts from '@/components/admin/Home/HighlightProducts'
 import { GetServerSideProps } from 'next'
-import { api } from '@/lib/axios'
+import { api } from '@/lib/api'
 import {
   MainBackgroundItem,
   MainBackgroundHomeContextProvider,
-} from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
+} from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
 import MainBackgroundHome from '@/components/admin/Home/MainBackgroudHome'
 import {
   HighlightItem,
   HighlightProductsContextProvider,
-} from '@/contexts/pages/admin/home/HighlightProductsContext'
+} from '@/contexts/pages/admin/Home/HighlightProductsContext'
+import { parseCookies } from 'nookies'
 
 interface FeaturedWallpaperProps {
   highlightItem: HighlightItem
@@ -38,7 +39,18 @@ FeaturedWallpaper.getLayout = function PageLayout(page: ReactNode) {
   return <>{page}</>
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
+  const { 'nextauth-admin-token': token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/admin/login',
+        permanent: false,
+      },
+    }
+  }
+
   const { data: highlightItemResponse } = await api.get<HighlightItem[]>(
     '/home/highlight-images/get-hightlight-images',
   )

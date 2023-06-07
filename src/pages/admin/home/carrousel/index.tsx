@@ -1,11 +1,12 @@
 import { FormEvent, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Container } from './styles'
-import type { GetStaticProps, NextPage } from 'next'
+import type { GetServerSideProps, GetStaticProps, NextPage } from 'next'
 import CarrouselForm, {
   CarrouselItem,
 } from '../../../../components/admin/Home/CarrouselForm'
-import { api } from '@/lib/axios'
-import { CarrouselContextProvider } from '@/contexts/pages/admin/home/CarrouselEditionContext'
+import { api } from '@/lib/api'
+import { CarrouselContextProvider } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
+import { parseCookies } from 'nookies'
 
 // Estrita tipagem para a resposta da API
 interface CarrouselAPIResponse {
@@ -59,7 +60,18 @@ Carrousel.getLayout = function PageLayout(page: ReactNode) {
   return <>{page}</>
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { 'nextauth-admin-token': token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/admin/login',
+        permanent: false,
+      },
+    }
+  }
+
   const { data } = await api.get<CarrouselAPIResponse[]>('/home/get-carrousel')
 
   // Map the server data to the local data structure

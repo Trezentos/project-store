@@ -1,13 +1,12 @@
-import InputFile from '@/components/admin/InputFile'
+import InputFile from '@/components/admin/InputsComponents/InputFile'
 import { Container, InputForm } from './styles'
-import { ToastContainer } from 'react-toastify'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
-import { api } from '@/lib/axios'
-import { MainBackgroundHomeContext } from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
+import { api } from '@/lib/api'
+import { MainBackgroundHomeContext } from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
 
 const MAX_FILE_SIZE = 5200000
 
@@ -64,8 +63,6 @@ function CardEdit() {
         filesToSend.append('newimageFile2', imageFile2[0])
       }
 
-      console.log(imageFile1, imageFile2)
-
       const { data: dataResponse } = await api.patch(
         '/home/main-background-home/update-background-item',
         filesToSend,
@@ -83,7 +80,6 @@ function CardEdit() {
 
   return (
     <InputForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
-      <ToastContainer />
       <InputFile
         id={'imageFile1'}
         className={'labelImageFile1'}

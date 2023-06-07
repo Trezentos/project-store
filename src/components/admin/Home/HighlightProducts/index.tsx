@@ -7,7 +7,7 @@ import { useContext, useEffect } from 'react'
 import {
   HighlightItem,
   HighlightProductsContext,
-} from '@/contexts/pages/admin/home/HighlightProductsContext'
+} from '@/contexts/pages/admin/Home/HighlightProductsContext'
 
 interface HighlightProductsProps {
   highlightItemFromApi: HighlightItem

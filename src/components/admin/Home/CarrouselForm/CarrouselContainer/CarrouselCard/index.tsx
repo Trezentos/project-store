@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { CarrouselItem } from '../..'
 import { Container, ImageTooltip } from './styles'
 import { useContext, useEffect } from 'react'
-import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 
 interface CarrouselCardProps {
   carrouselItem: CarrouselItem

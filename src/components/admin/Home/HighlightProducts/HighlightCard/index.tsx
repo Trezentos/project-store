@@ -4,7 +4,7 @@ import FImage1 from '../../../../../assets/highlightsProducts/1.jpg'
 import FImage2 from '../../../../../assets/highlightsProducts/2.jpg'
 import { Pencil } from 'phosphor-react'
 import { useContext } from 'react'
-import { HighlightProductsContext } from '@/contexts/pages/admin/home/HighlightProductsContext'
+import { HighlightProductsContext } from '@/contexts/pages/admin/Home/HighlightProductsContext'
 
 function HighlightCardProperties() {
   const { toggleEditMode, highlightItem } = useContext(HighlightProductsContext)

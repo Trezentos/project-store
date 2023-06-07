@@ -11,6 +11,9 @@ import { CartContextProvider } from '@/contexts/CartContext'
 import Cartside from '@/components/CartSide'
 import { SessionProvider } from 'next-auth/react'
 import Sidebar from './../components/admin/SideBar'
+import { AuthAdminProvider } from '@/contexts/pages/admin/AuthAdminContext'
+import { useRouter } from 'next/router'
+import { ToastContainer } from 'react-toastify'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -24,15 +27,26 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) {
+  const router = useRouter()
+
   if (Component.getLayout) {
+    const isLoginPageAdmin = router.pathname.includes('login')
+
     return (
       <>
-        <ThemeProvider theme={defaultTheme}>
-          <AdminStyle />
-          <Sidebar>
-            <Component {...pageProps} />
-          </Sidebar>
-        </ThemeProvider>
+        <AuthAdminProvider>
+          <ThemeProvider theme={defaultTheme}>
+            <AdminStyle />
+            {isLoginPageAdmin ? (
+              <Component {...pageProps} />
+            ) : (
+              <Sidebar>
+                <Component {...pageProps} />
+              </Sidebar>
+            )}
+          </ThemeProvider>
+          <ToastContainer />
+        </AuthAdminProvider>
       </>
     )
   }
@@ -51,6 +65,7 @@ export default function App({
         </CartContextProvider>
         <Footer />
         <GlobalStyle />
+        <ToastContainer />
       </ThemeProvider>
     </>
   )

@@ -4,7 +4,7 @@ import FImage1 from '../../../../../assets/highlightsProducts/1.jpg'
 import FImage2 from '../../../../../assets/highlightsProducts/2.jpg'
 import { Pencil } from 'phosphor-react'
 import { useContext } from 'react'
-import { MainBackgroundHomeContext } from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
+import { MainBackgroundHomeContext } from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
 
 function HighlightCardProperties() {
   const { backgroundItem } = useContext(MainBackgroundHomeContext)

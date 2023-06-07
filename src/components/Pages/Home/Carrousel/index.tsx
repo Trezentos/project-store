@@ -4,7 +4,7 @@ import 'keen-slider/keen-slider.min.css'
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { GetStaticProps } from 'next'
-import { api } from '@/lib/axios'
+import { api } from '@/lib/api'
 
 interface ICarrousselItems {
   id: string

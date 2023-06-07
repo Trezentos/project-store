@@ -27,6 +27,22 @@ model ProductColor {
     availableSizes String?
 }
 
+model ProductCategory {
+    id                  String          @id @default(uuid())
+    imageBackgroundName String
+    imageBackgroundLink String
+    name                String
+    filters             ProductFilter[]
+    active              Boolean         @default(true)
+}
+
+model ProductFilter {
+    id              String            @id @default(uuid())
+    name            String
+    active          Boolean           @default(true)
+    productCategory ProductCategory[]
+}
+
 model Image {
     id               String       @id @default(uuid())
     imageSrc         String?
