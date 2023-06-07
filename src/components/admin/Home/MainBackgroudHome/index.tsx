@@ -7,8 +7,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   MainBackgroundItem,
   MainBackgroundHomeContext,
-} from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
-import { ToastContainer } from 'react-toastify'
+} from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
 
 interface HighlightProductsProps {
   mainBackgroundItemFromApi: MainBackgroundItem
@@ -26,7 +25,6 @@ function MainBackgroundHome({
 
   return (
     <Container>
-      <ToastContainer />
       <header>
         <h4>Imagem principal de fundo</h4>
         {editMode ? (

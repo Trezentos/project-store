@@ -1,4 +1,4 @@
-import InputFile from '@/components/admin/InputFile'
+import InputFile from '@/components/admin/InputsComponents/InputFile'
 import { Container, InputForm } from './styles'
 import { ToastContainer } from 'react-toastify'
 import { useContext, useState } from 'react'
@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
-import { api } from '@/lib/axios'
-import { HighlightProductsContext } from '@/contexts/pages/admin/home/HighlightProductsContext'
+import { api } from '@/lib/api'
+import { HighlightProductsContext } from '@/contexts/pages/admin/Home/HighlightProductsContext'
 
 const MAX_FILE_SIZE = 5200000
 
@@ -112,7 +112,6 @@ function CardEdit() {
           'Enviar imagens selecionadas'
         )}
       </button>
-      <ToastContainer />
     </InputForm>
   )
 }

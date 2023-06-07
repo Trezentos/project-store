@@ -22,9 +22,9 @@ import {
 } from '@/contexts/pages/home/InstagramContext'
 import Newsletter from '@/components/Pages/Home/Newsletter'
 import SiteAdvantageBlock from '@/components/Pages/Home/SiteAdvantagesBlock'
-import { api } from '@/lib/axios'
-import { MainBackgroundItem } from '@/contexts/pages/admin/home/MainBackgroundHomeContext'
-import { HighlightItem } from '@/contexts/pages/admin/home/HighlightProductsContext'
+import { api } from '@/lib/api'
+import { MainBackgroundItem } from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
+import { HighlightItem } from '@/contexts/pages/admin/Home/HighlightProductsContext'
 import { CarrouselItem } from '@/components/admin/Home/CarrouselForm'
 
 interface CarrousselImage {

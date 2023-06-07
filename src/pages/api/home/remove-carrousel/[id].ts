@@ -32,7 +32,7 @@ export default async function handler(
 
     if (!carrouselItem)
       res.status(404).json({
-        message: 'Houver um erro ao encontrar o carrosel para remover...',
+        message: 'Houve um erro ao encontrar o carrosel para remover...',
       })
 
     await prisma.carrousselImage.delete({

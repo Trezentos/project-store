@@ -61,6 +61,8 @@ export const GlobalStyle = createGlobalStyle`
         }
     }
 
+   
+
 `
 export const AdminStyle = createGlobalStyle`
 
@@ -117,5 +119,6 @@ export const AdminStyle = createGlobalStyle`
             height: 100% !important;
         }
     }
+
 
 `

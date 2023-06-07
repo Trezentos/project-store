@@ -5,9 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z, ZodError } from 'zod'
 import { Container } from './styles'
 import EditForm from './CarrouselContainer/EditForm'
-import { ToastContainer } from 'react-toastify'
 import CarrouselCard from './CarrouselContainer'
-import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import AddForm from './AddForm'
 import OptionsCardHeader from './components/OptionsCardHeader'
 
@@ -43,7 +42,6 @@ export default function CarrouselForm({
       id={`carrousel-id-${carrouselCard.id}`}
       className={!active ? 'hide' : ''}
     >
-      <ToastContainer />
       <header>
         {!isNewCarrousel ? (
           <p>Carrousel {index + 1}</p>

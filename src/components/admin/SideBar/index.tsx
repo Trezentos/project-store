@@ -59,7 +59,7 @@ const painelMenu = [
       {
         id: '1',
         link: '/admin/edit-menu/editar-header',
-        name: 'editar-header',
+        name: 'Editar Categorias',
         hifen: 'editar-header',
       },
     ],

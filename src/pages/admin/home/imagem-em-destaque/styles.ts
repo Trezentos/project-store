@@ -8,6 +8,7 @@ export const Container = styled.div`
   height: 100vh;
   flex-direction: row;
   gap: 1rem;
+  background-color: #f8f8f8;
 `
 
 export const CardHeader = styled.header``

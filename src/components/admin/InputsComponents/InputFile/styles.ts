@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+  display: flex;
+  justify-content: center;
   input[type='file'] {
     color: transparent;
     background: transparent;
@@ -16,6 +18,7 @@ export const Container = styled.div`
     margin-bottom: 8px;
     height: 60px;
     width: 240px;
+    width: 100%;
     border: 1px solid #d8d8d8;
     display: flex;
     flex-direction: column;

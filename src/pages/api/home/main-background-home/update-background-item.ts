@@ -24,8 +24,6 @@ export default async function handler(
     const { newimageFile1, newimageFile2 } = files
     const { backgroundImageId } = fields
 
-    console.log(newimageFile1, newimageFile2, backgroundImageId)
-
     const oldHighlightImage = await prisma.mainBackgroundHome.findFirst({
       where: {
         id: String(backgroundImageId),

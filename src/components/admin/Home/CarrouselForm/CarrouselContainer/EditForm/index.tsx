@@ -10,12 +10,12 @@ import { useForm } from 'react-hook-form'
 import { z, ZodError } from 'zod'
 import { ToastContainer, toast } from 'react-toastify'
 import { CarrouselItem } from '../..'
-import { api } from '@/lib/axios'
+import { api } from '@/lib/api'
 import { InputForm } from './styles'
 import { Plus, Upload } from 'phosphor-react'
-import { CarrouselContext } from '@/contexts/pages/admin/home/CarrouselEditionContext'
+import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
-import InputFile from '../../../../InputFile'
+import InputFile from '../../../../InputsComponents/InputFile'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [

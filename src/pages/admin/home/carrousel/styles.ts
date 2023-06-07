@@ -9,6 +9,7 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
   position: relative;
+  background-color: #f8f8f8;
 
   > div {
     max-width: 900px;
