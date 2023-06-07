@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Input from '@/components/admin/InputsComponents/Input'
-import Select, {
+import Checkbox, {
   SelectOption,
 } from '@/components/admin/InputsComponents/InputSelect'
 import { errorToast } from '@/utils/toast/sucessToast'
@@ -33,16 +33,9 @@ export default function RowEditForm() {
         `A imagem não pode passar de 5 mb.`,
       ),
     categoryName: z.string(),
-    filtersOptions: z
-      .array(
-        z.object({
-          value: z.string(),
-          label: z.string(),
-        }),
-      )
-      .refine((values) => values.length > 0, {
-        message: 'Selecione pelo menos uma opção.',
-      }),
+    filtersOptions: z.array(z.string()).refine((values) => values.length > 0, {
+      message: 'Selecione pelo menos uma opção.',
+    }),
   })
 
   type RegisterFormData = z.infer<typeof schema>
@@ -59,12 +52,11 @@ export default function RowEditForm() {
 
   useEffect(() => {
     console.log(errors)
-    console.log(watch('filtersOptions'))
   }, [errors, watch])
 
   const onSubmit = useCallback((data: RegisterFormData) => {
     try {
-      console.log(data)
+      console.log('data', data)
     } catch (error: any) {
       console.log(error)
 
@@ -98,12 +90,12 @@ export default function RowEditForm() {
         />
         {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
 
-        <Select
+        <Checkbox
           id={'filtersOptions'}
           register={register('filtersOptions')}
           options={options}
           title={'Selecionar filtros'}
-          values={[{ value: 'option1', label: 'Opção 1' }]}
+          values={[{ value: 'option1', label: 'Tamanho' }]}
         />
 
         <button disabled={isSubmitting} type="submit">

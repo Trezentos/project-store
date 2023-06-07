@@ -14,7 +14,7 @@ interface SelectProps {
   id: string
 }
 
-const Select: React.FC<SelectProps> = ({
+const Checkbox: React.FC<SelectProps> = ({
   options,
   values,
   title,
@@ -46,12 +46,14 @@ const Select: React.FC<SelectProps> = ({
           <label key={option.value}>
             <input
               type="checkbox"
+              name={id}
               id={id}
               {...register}
               checked={selectedOptions.some(
                 (selected) => selected.value === option.value,
               )}
               onChange={() => handleOptionClick(option)}
+              value={option.value}
             />
             {option.label}
           </label>
@@ -61,4 +63,4 @@ const Select: React.FC<SelectProps> = ({
   )
 }
 
-export default Select
+export default Checkbox
