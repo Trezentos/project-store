@@ -32,8 +32,8 @@ export default async function handler(
     const desktopImageFile = desktopImage as formidable.File
     const mobileImageFile = mobileImage as formidable.File
 
-    await verifyFileType(res, String(desktopImageFile.filepath))
-    await verifyFileType(res, String(mobileImageFile.filepath))
+    await verifyFileType(String(desktopImageFile.filepath))
+    await verifyFileType(String(mobileImageFile.filepath))
 
     if (desktopImageFile.size > 3500000 || mobileImageFile.size > 3500000) {
       return res.status(400).json('As imagens não podem passar de 3 megabytes')

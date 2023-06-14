@@ -1,15 +1,4 @@
-import { recoverUserInformation, signInRequest } from '@/services/auth'
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
-import { setCookie, parseCookies } from 'nookies'
-import { useRouter } from 'next/router'
-import { api } from '@/lib/api'
-import { v4 } from 'uuid'
+import { createContext, ReactNode, useCallback, useState } from 'react'
 
 interface EditCategoriesProviderProps {
   children: ReactNode
@@ -30,13 +19,23 @@ export interface ProductCategory {
 }
 
 interface EditCategoriesContextDatas {
+  thereIsProductCategories: boolean
+  allCategories: ProductCategory[]
+  deleteSingleCategory: (id: string) => void
+  addNewCategorie: (newCategory: ProductCategory) => void
+  updateSingleCategorie: (updatedCategory: ProductCategory) => void
   selectedImage: string | null
+  updateAllCategories: (categories: ProductCategory[]) => void
   isHoverdImage: boolean
   updateSelectedImage: (imgSrc: string) => void
   updateHoveredImage: (isHovered: boolean) => void
-  modalIsOpen: boolean
-  closeModal: () => void
-  openModal: () => void
+  editModalIsOpen: boolean
+  addModalIsOpen: boolean
+  categoryToEdit: ProductCategory
+  closeEditModal: () => void
+  closeAddModal: () => void
+  openEditionModal: (id: string) => void
+  openAddModal: () => void
 }
 
 export const EditCategoriesContext = createContext<EditCategoriesContextDatas>(
@@ -48,7 +47,52 @@ export function EditCategoriesProvider({
 }: EditCategoriesProviderProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isHoverdImage, setIsHoveredImage] = useState(false)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false)
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false)
+  const [categoryToEdit, setCategoryToEdit] = useState<ProductCategory>(
+    {} as ProductCategory,
+  )
+  const [allCategories, setAllCategories] = useState<ProductCategory[]>(
+    [] as ProductCategory[],
+  )
+
+  const deleteSingleCategory = useCallback(
+    (id: string) => {
+      setAllCategories(
+        allCategories
+          .filter((row) => row.id !== id)
+          .sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1)),
+      )
+    },
+    [allCategories],
+  )
+
+  const updateAllCategories = useCallback(
+    (categories: ProductCategory[]) => {
+      setAllCategories(categories)
+    },
+    [setAllCategories],
+  )
+
+  const updateSingleCategorie = useCallback(
+    (updatedCategory: ProductCategory) => {
+      setAllCategories(
+        allCategories.map((item) => {
+          if (item.id === updatedCategory.id) return updatedCategory
+          return item
+        }),
+      )
+    },
+    [allCategories],
+  )
+
+  const addNewCategorie = useCallback((newCategory: ProductCategory) => {
+    setAllCategories((prev) =>
+      [...prev, newCategory].sort((a, b) =>
+        a.active === b.active ? 0 : a.active ? -1 : 1,
+      ),
+    )
+  }, [])
 
   const updateSelectedImage = useCallback((imgSrc: string) => {
     setSelectedImage(imgSrc)
@@ -58,23 +102,44 @@ export function EditCategoriesProvider({
     setIsHoveredImage(isHovered)
   }, [])
 
-  const closeModal = () => {
-    setModalIsOpen(false)
+  const closeEditModal = () => {
+    setEditModalIsOpen(false)
   }
-  const openModal = () => {
-    setModalIsOpen(true)
+  const closeAddModal = () => {
+    setAddModalIsOpen(false)
   }
+  const openEditionModal = (id: string) => {
+    const selectedCategory = allCategories.find((item) => item.id === id)
+    if (!selectedCategory) return
+    setCategoryToEdit(selectedCategory)
+    setEditModalIsOpen(true)
+  }
+  const openAddModal = () => {
+    setAddModalIsOpen(true)
+  }
+
+  const thereIsProductCategories = !!allCategories?.[0]
 
   return (
     <EditCategoriesContext.Provider
       value={{
         selectedImage,
         updateSelectedImage,
+        categoryToEdit,
+        updateSingleCategorie,
         updateHoveredImage,
         isHoverdImage,
-        closeModal,
-        openModal,
-        modalIsOpen,
+        closeEditModal,
+        openEditionModal,
+        addNewCategorie,
+        editModalIsOpen,
+        openAddModal,
+        updateAllCategories,
+        addModalIsOpen,
+        deleteSingleCategory,
+        allCategories,
+        thereIsProductCategories,
+        closeAddModal,
       }}
     >
       {children}

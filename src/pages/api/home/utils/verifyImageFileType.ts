@@ -1,10 +1,7 @@
 import { fileTypeFromFile } from 'file-type'
 import { NextApiResponse } from 'next'
 
-export default async function verifyFileType(
-  res: NextApiResponse,
-  filepath: string,
-) {
+export default async function verifyFileType(filepath: string) {
   const fileType = await fileTypeFromFile(filepath)
 
   const allowedFileTypes = [
@@ -12,6 +9,7 @@ export default async function verifyFileType(
     'image/jpg',
     'image/png',
     'image/webp',
+    'image/avif',
   ]
 
   if (!fileType) {

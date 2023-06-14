@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { FieldError } from 'react-hook-form'
 import { Container } from './styles'
 
@@ -19,8 +19,11 @@ const Input: React.FC<InputProps> = ({
   register,
   id,
 }) => {
+  const [changeValue, setChangeValue] = useState(value)
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
+    setChangeValue(value)
   }
 
   return (
@@ -30,7 +33,7 @@ const Input: React.FC<InputProps> = ({
         id={id}
         {...register}
         type={type}
-        value={value}
+        value={changeValue}
         onChange={handleChange}
       />
       {inputError && <p>{inputError.message}</p>}

@@ -8,21 +8,26 @@ import {
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 import { api } from '@/lib/api'
 import EditRowModal from '../EditRowModal'
+import AddNewRow from '../AddNewRow'
 
 interface TableProps {
   productCategoriesFromApi: ProductCategory[]
 }
 
 export default function Table({ productCategoriesFromApi }: TableProps) {
-  const [productCategories, setProductCategories] = useState(
-    productCategoriesFromApi,
-  )
   const [expandedRows, setExpandedRows] = useState<string[]>([])
-  const { isHoverdImage, selectedImage } = useContext(EditCategoriesContext)
-  const thereIsProductCategories = !!productCategories?.[0]
-  const { closeModal, modalIsOpen, openModal } = useContext(
+  const { isHoverdImage, selectedImage, allCategories } = useContext(
     EditCategoriesContext,
   )
+  const thereIsProductCategories = !!allCategories?.[0]
+  const {
+    closeEditModal,
+    editModalIsOpen,
+    openEditionModal,
+    deleteSingleCategory,
+    updateAllCategories,
+    updateSingleCategorie,
+  } = useContext(EditCategoriesContext)
 
   const handleExpandRow = useCallback(
     (id: string) => {
@@ -41,7 +46,7 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
     async (id: string) => {
       try {
         await api.delete(`/edit-menu/categories/delete-categorie/${id}`)
-        setProductCategories(productCategories.filter((row) => row.id !== id))
+        deleteSingleCategory(id)
         successToast('Categoria removida com sucesso')
       } catch (error: any) {
         const { data } = error.response
@@ -49,19 +54,13 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
         errorToast(data)
       }
     },
-    [productCategories],
+    [deleteSingleCategory],
   )
   const handleEditRow = useCallback(
     async (id: string) => {
-      try {
-        openModal()
-      } catch (error: any) {
-        const { data } = error.response
-        if (!data) errorToast('Houve algum erro ao remover a categoria...')
-        errorToast(data)
-      }
+      openEditionModal(id)
     },
-    [openModal],
+    [openEditionModal],
   )
 
   const handleShowHideRow = useCallback(
@@ -75,20 +74,24 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
           },
         )
 
-        setProductCategories(
-          productCategories.map((item) => {
-            if (item.id === data.id) return data
-            return item
-          }),
-        )
+        updateSingleCategorie(data)
       } catch (error: any) {
         const { data } = error.response
         if (!data) errorToast('Houve algum erro ao esconder a categoria...')
         errorToast(data)
       }
     },
-    [productCategories],
+    [updateSingleCategorie],
   )
+
+  useEffect(() => {
+    if (!allCategories[0]) updateAllCategories(productCategoriesFromApi)
+  }, [
+    allCategories,
+    productCategoriesFromApi,
+    deleteSingleCategory,
+    updateAllCategories,
+  ])
 
   return (
     <>
@@ -96,7 +99,7 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
         <SuspendedImage
           width={400}
           height={250}
-          src={selectedImage ?? productCategories[0].imageBackgroundLink}
+          src={selectedImage ?? allCategories[0].imageBackgroundLink}
           alt=""
           style={{
             top: isHoverdImage ? '5px' : '-300px',
@@ -116,21 +119,23 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
           </tr>
         </thead>
         <tbody>
-          {productCategories.map((row, index) => (
-            <TableRow
-              key={row.id}
-              data={row}
-              isExpanded={expandedRows.includes(row.id)}
-              onExpand={handleExpandRow}
-              onDelete={handleDeleteRow}
-              onShowHide={handleShowHideRow}
-              onEdit={handleEditRow}
-              index={index}
-            />
-          ))}
+          {allCategories[0] &&
+            allCategories.map((row, index) => (
+              <TableRow
+                key={row.id}
+                data={row}
+                isExpanded={expandedRows.includes(row.id)}
+                onExpand={handleExpandRow}
+                onDelete={handleDeleteRow}
+                onShowHide={handleShowHideRow}
+                onEdit={handleEditRow}
+                index={index}
+              />
+            ))}
         </tbody>
       </StyledTable>
-      <EditRowModal isOpen={modalIsOpen} closeModal={closeModal} />
+      <EditRowModal isOpen={editModalIsOpen} closeModal={closeEditModal} />
+      <AddNewRow />
     </>
   )
 }

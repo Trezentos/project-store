@@ -103,10 +103,15 @@ const TableRow: React.FC<TableRowProps> = ({
         <td onClick={() => onEdit(data.id)}>
           <FaRegEdit />
         </td>
-        <td onClick={handleDeleteRow}>
-          <FaRegTrashAlt />
+        <td>
+          <FaRegTrashAlt onClick={handleDeleteRow} />
         </td>
-        <td onClick={() => onShowHide(data.id, data.active)}>
+        <td
+          onClick={() => {
+            console.log(data)
+            return onShowHide(data.id, data.active)
+          }}
+        >
           {data.active ? (
             <FaRegEye title="Clique para esconder a categoria do site" />
           ) : (

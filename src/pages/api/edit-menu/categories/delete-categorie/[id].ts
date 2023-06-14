@@ -31,11 +31,12 @@ export default async function handler(
     })
 
     if (!categoryItem)
-      res.status(404).json({
-        message: 'Houve um erro ao encontrar a categoria para remover...',
+      return res.status(404).json({
+        message:
+          'Houve um erro ao tentar encontrar a categoria para remover...',
       })
 
-    const paramsToDelete = s3ParamsToDelete(categoryItem?.imageBackgroundName)
+    const paramsToDelete = s3ParamsToDelete(categoryItem.imageBackgroundName)
 
     await s3.deleteObject(paramsToDelete).promise()
 
@@ -45,7 +46,7 @@ export default async function handler(
       },
     })
 
-    return res.status(204).json({})
+    return res.status(204)
   } catch (error: any) {
     return res.status(400).json(error.message)
   }

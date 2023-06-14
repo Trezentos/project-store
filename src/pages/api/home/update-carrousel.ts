@@ -31,8 +31,8 @@ export default async function handler(
     const toVeriFyDesktop = newDesktopImage as formidable.File
     const toVeriFyMobile = newMobileImage as formidable.File
 
-    await verifyFileType(res, String(toVeriFyDesktop.filepath))
-    await verifyFileType(res, String(toVeriFyMobile.filepath))
+    if (newDesktopImage) await verifyFileType(String(toVeriFyDesktop.filepath))
+    if (newMobileImage) await verifyFileType(String(toVeriFyMobile.filepath))
 
     // @ts-ignore
     if (newDesktopImage?.size > 3500000 || newMobileImage?.size > 3500000) {

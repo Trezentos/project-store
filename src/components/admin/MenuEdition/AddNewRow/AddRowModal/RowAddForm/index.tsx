@@ -1,5 +1,5 @@
 import InputFile from '@/components/admin/InputsComponents/InputFile'
-import { EditForm } from './styles'
+import { AddForm, ErrorMessage } from './styles'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,14 +14,10 @@ import { api } from '@/lib/api'
 
 const MAX_FILE_SIZE = 5200000
 
-export default function RowEditForm() {
+export default function RowAddForm() {
   const [imageFile, setImageFile] = useState<any>(null)
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const {
-    categoryToEdit,
-    updateSingleCategorie,
-    closeEditModal: closeModal,
-  } = useContext(EditCategoriesContext)
+  const { addNewCategorie, closeAddModal } = useContext(EditCategoriesContext)
 
   const options = [
     { value: 'option1', label: 'Cor' },
@@ -32,12 +28,12 @@ export default function RowEditForm() {
   const schema = z.object({
     imageFile: z
       .any()
-      .optional()
+      .refine((files) => files.length === 1, `Insira alguma imagem.`)
       .refine(
         (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
         `A imagem não pode passar de 5 mb.`,
       ),
-    categoryName: z.string().min(1, {
+    categoryName: z.string().min(2, {
       message: 'Digite algum nome para a categoria',
     }),
     filtersOptions: z.array(z.string()).refine((values) => values.length > 0, {
@@ -58,13 +54,17 @@ export default function RowEditForm() {
     resolver: zodResolver(schema),
   })
 
+  useEffect(() => {
+    console.log(errors)
+    console.log(watch('filtersOptions'))
+  }, [errors, watch])
+
   const onSubmit = useCallback(
     async (data: RegisterFormData) => {
       try {
         const { categoryName, filtersOptions, imageFile } = data
         const formData = new FormData()
 
-        formData.append('id', categoryToEdit.id)
         formData.append('categoryName', categoryName)
 
         filtersOptions.forEach((item, index) =>
@@ -73,66 +73,72 @@ export default function RowEditForm() {
 
         if (imageFile.length > 0) formData.append('imageFile', imageFile[0])
 
-        const { data: dataResponse } = await api.put(
-          'edit-menu/categories/edit-categorie',
+        const { data: dataResponse } = await api.post(
+          'edit-menu/categories/add-new-categorie',
           formData,
         )
 
-        updateSingleCategorie(dataResponse)
-        closeModal()
+        addNewCategorie(dataResponse)
+        closeAddModal()
       } catch (error: any) {
-        closeModal()
+        closeAddModal()
         const { data } = error.response
         if (!data) errorToast('Houve algum erro ao alterar alguma imagem...')
         errorToast(data)
       }
     },
-    [categoryToEdit.id, closeModal, updateSingleCategorie],
+    [closeAddModal, addNewCategorie],
   )
 
   return (
-    <EditForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
-      <h3>Editar categoria de {categoryToEdit.name}</h3>
+    <AddForm onSubmit={handleSubmit(onSubmit)} className="add-form">
+      <h3>Adicione uma nova categoria</h3>
 
       <div>
-        <Input
-          id={'categoryName'}
-          register={register('categoryName')}
-          label="Editar nome da categoria"
-          value={categoryToEdit.name}
-          type="text"
-        />
+        <div>
+          <Input
+            id={'categoryName'}
+            register={register('categoryName')}
+            label="Nome da categoria"
+            type="text"
+            value=""
+          />
+          {errors.categoryName && (
+            <ErrorMessage>{`${errors.categoryName.message}`}</ErrorMessage>
+          )}
+        </div>
 
-        <InputFile
-          id={'imageFile'}
-          register={register('imageFile')}
-          className={'labelImageFile'}
-          title={'Imagem de fundo:'}
-          disabled={isSubmitting}
-          file={imageFile}
-          onChange={(e) => setImageFile(e.target?.files)}
-        />
-        {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
+        <div>
+          <InputFile
+            id={'imageFile'}
+            register={register('imageFile')}
+            className={'labelImageFile'}
+            title={'Imagem de fundo:'}
+            disabled={isSubmitting}
+            file={imageFile}
+            onChange={(e) => setImageFile(e.target?.files)}
+          />
+          {errors.imageFile && (
+            <ErrorMessage>{`${errors.imageFile.message}`}</ErrorMessage>
+          )}
+        </div>
 
         <Checkbox
           id={'filtersOptions'}
           register={register('filtersOptions')}
           options={options}
           title={'Selecionar filtros'}
-          values={categoryToEdit.filters.map((item, index) => ({
-            value: `option${index + 1}`,
-            label: item.name,
-          }))}
+          values={[{ value: 'option2', label: 'Preço' }]}
         />
 
         <button disabled={isSubmitting} type="submit">
           {isSubmitting ? (
             <div className="loader active"></div>
           ) : (
-            'Confirmar edição'
+            'Adicionar categoria'
           )}
         </button>
       </div>
-    </EditForm>
+    </AddForm>
   )
 }

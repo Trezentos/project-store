@@ -5,12 +5,14 @@ export const AddFormContainer = styled.form`
   justify-content: space-between;
 
   .loader {
-    /* position: absolute; */
+    position: absolute;
     bottom: 0;
     left: 50%;
     transform: translate(-50%, -50%);
     border: 4px solid #f3f3f3;
     border-top: 4px solid #3498db;
+    border: 4px solid red;
+    border-top: 4px solid red;
     border-radius: 50%;
     width: 20px;
     height: 20px;

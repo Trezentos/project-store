@@ -45,7 +45,7 @@ export default async function handler(
 
       const typedNewimageFile = item as formidable.File
 
-      await verifyFileType(res, String(typedNewimageFile.filepath))
+      await verifyFileType(String(typedNewimageFile.filepath))
 
       const paramsToUpload = s3ParamsToUpload(typedNewimageFile)
 

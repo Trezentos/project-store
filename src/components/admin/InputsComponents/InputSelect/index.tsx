@@ -53,7 +53,7 @@ const Checkbox: React.FC<SelectProps> = ({
                 (selected) => selected.value === option.value,
               )}
               onChange={() => handleOptionClick(option)}
-              value={option.value}
+              value={option.label}
             />
             {option.label}
           </label>
