@@ -32,6 +32,7 @@ model ProductCategory {
     imageBackgroundName String
     imageBackgroundLink String
     name                String
+    hifen               String
     filters             ProductFilter[]
     active              Boolean         @default(true)
 }

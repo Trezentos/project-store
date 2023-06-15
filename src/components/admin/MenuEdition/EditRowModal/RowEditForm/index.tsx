@@ -1,5 +1,5 @@
 import InputFile from '@/components/admin/InputsComponents/InputFile'
-import { EditForm } from './styles'
+import { EditForm, ErrorMessage } from './styles'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,13 +15,11 @@ import { api } from '@/lib/api'
 const MAX_FILE_SIZE = 5200000
 
 export default function RowEditForm() {
+  const { categoryToEdit, updateSingleCategorie, closeEditModal } = useContext(
+    EditCategoriesContext,
+  )
   const [imageFile, setImageFile] = useState<any>(null)
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const {
-    categoryToEdit,
-    updateSingleCategorie,
-    closeEditModal: closeModal,
-  } = useContext(EditCategoriesContext)
 
   const options = [
     { value: 'option1', label: 'Cor' },
@@ -39,6 +37,9 @@ export default function RowEditForm() {
       ),
     categoryName: z.string().min(1, {
       message: 'Digite algum nome para a categoria',
+    }),
+    hifen: z.string().min(1, {
+      message: 'Digite algum nome para o hifen',
     }),
     filtersOptions: z.array(z.string()).refine((values) => values.length > 0, {
       message: 'Selecione pelo menos uma opção.',
@@ -61,11 +62,12 @@ export default function RowEditForm() {
   const onSubmit = useCallback(
     async (data: RegisterFormData) => {
       try {
-        const { categoryName, filtersOptions, imageFile } = data
+        const { categoryName, filtersOptions, imageFile, hifen } = data
         const formData = new FormData()
 
         formData.append('id', categoryToEdit.id)
         formData.append('categoryName', categoryName)
+        formData.append('hifen', hifen)
 
         filtersOptions.forEach((item, index) =>
           formData.append(`selectedOption${index}`, item),
@@ -79,15 +81,15 @@ export default function RowEditForm() {
         )
 
         updateSingleCategorie(dataResponse)
-        closeModal()
+        closeEditModal()
       } catch (error: any) {
-        closeModal()
+        closeEditModal()
         const { data } = error.response
         if (!data) errorToast('Houve algum erro ao alterar alguma imagem...')
         errorToast(data)
       }
     },
-    [categoryToEdit.id, closeModal, updateSingleCategorie],
+    [categoryToEdit.id, closeEditModal, updateSingleCategorie],
   )
 
   return (
@@ -95,13 +97,30 @@ export default function RowEditForm() {
       <h3>Editar categoria de {categoryToEdit.name}</h3>
 
       <div>
-        <Input
-          id={'categoryName'}
-          register={register('categoryName')}
-          label="Editar nome da categoria"
-          value={categoryToEdit.name}
-          type="text"
-        />
+        <div>
+          <Input
+            id={'categoryName'}
+            register={register('categoryName')}
+            label="Editar nome da categoria"
+            value={categoryToEdit.name}
+            type="text"
+          />
+          {errors.categoryName && (
+            <ErrorMessage>{`${errors.categoryName.message}`}</ErrorMessage>
+          )}
+        </div>
+        <div>
+          <Input
+            id={'hifen'}
+            register={register('hifen')}
+            label="Editar hifen"
+            value={categoryToEdit.hifen}
+            type="text"
+          />
+          {errors.hifen && (
+            <ErrorMessage>{`${errors.hifen.message}`}</ErrorMessage>
+          )}
+        </div>
 
         <InputFile
           id={'imageFile'}

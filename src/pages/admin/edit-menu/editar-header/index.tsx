@@ -1,31 +1,17 @@
 import { ReactNode } from 'react'
-import { Container } from './styles'
-import Table from '@/components/admin/MenuEdition/Table/Table'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
-import { api } from '@/lib/api'
-import {
-  EditCategoriesContext,
-  EditCategoriesProvider,
-  ProductCategory,
-} from '@/contexts/pages/admin/EditCategoriesContext'
+import { Container } from './styles'
 
-interface CategoriesProps {
-  productCategories: ProductCategory[]
-}
-export default function Categories({ productCategories }: CategoriesProps) {
+export default function EditHeader() {
   return (
     <Container>
-      <div>
-        <EditCategoriesProvider>
-          <Table productCategoriesFromApi={productCategories} />
-        </EditCategoriesProvider>
-      </div>
+      <h1>Editar header</h1>
     </Container>
   )
 }
 
-Categories.getLayout = function PageLayout(page: ReactNode) {
+EditHeader.getLayout = function PageLayout(page: ReactNode) {
   return <>{page}</>
 }
 
@@ -41,17 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const { data } = await api.get<ProductCategory[]>(
-    '/edit-menu/categories/get-categories',
-  )
-
-  const orderedByActive = data.sort((a, b) =>
-    a.active === b.active ? 0 : a.active ? -1 : 1,
-  )
-
   return {
-    props: {
-      productCategories: orderedByActive ?? [],
-    },
+    props: {},
   }
 }

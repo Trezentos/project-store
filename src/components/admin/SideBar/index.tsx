@@ -58,8 +58,14 @@ const painelMenu = [
     subMenu: [
       {
         id: '1',
-        link: '/admin/edit-menu/editar-header',
+        link: '/admin/edit-menu/editar-categorias',
         name: 'Editar Categorias',
+        hifen: 'editar-categorias',
+      },
+      {
+        id: '2',
+        link: '/admin/edit-menu/editar-header',
+        name: 'Editar Cabeçalho',
         hifen: 'editar-header',
       },
     ],
@@ -85,11 +91,6 @@ function Sidebar({ children }: SidebarProps) {
 
   const handleDropdownButton = useCallback(
     (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-      const allButtons = document.querySelectorAll('#main-buttons button')
-      allButtons.forEach((button) => {
-        button.classList.remove('active')
-      })
-      e.currentTarget.classList.add('active')
       const ulelement = e.currentTarget.nextElementSibling as HTMLUListElement
 
       if (!ulelement) return
@@ -105,21 +106,30 @@ function Sidebar({ children }: SidebarProps) {
     },
     [],
   )
-  useEffect(() => {
-    // Open the first dropdown menu item and close the others
-    const allUls =
-      document.querySelectorAll<HTMLUListElement>('#main-buttons ul')
 
-    allUls.forEach((ulItem, index) => {
-      if (index === 0) {
-        ulItem.style.maxHeight = ulItem.scrollHeight + 'px'
+  useEffect(() => {
+    // Open one of dropdowns menu item and close the others
+    const allDivs = document.querySelectorAll<HTMLUListElement>(
+      '#main-buttons > div',
+    )
+
+    allDivs.forEach((divItem) => {
+      const activeButton = divItem.getElementsByClassName('active')
+      if (!divItem.lastElementChild) return
+
+      if (activeButton[0]) {
+        // @ts-ignore
+        divItem.lastElementChild.style.maxHeight =
+          divItem.lastElementChild.scrollHeight + 'px'
       } else {
-        ulItem.style.maxHeight = 0 + 'px'
+        // @ts-ignore
+        divItem.lastElementChild.style.maxHeight = 0 + 'px'
       }
     })
   }, [])
 
   useEffect(() => {
+    // highlight the menu-item
     const [, , selectedSubPage, subOption] = router.pathname.split('/')
     const subPageAsideButton = document.querySelector(
       `#main-buttons #${selectedSubPage}`,

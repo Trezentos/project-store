@@ -25,7 +25,7 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { imageFile } = files
-    const { categoryName, ...allOptions } = fields
+    const { categoryName, hifen, ...allOptions } = fields
 
     const newImage = await createNewImageAWS(imageFile)
 
@@ -51,6 +51,7 @@ export default async function handler(
       data: {
         imageBackgroundLink: newImage.Location,
         imageBackgroundName: newImage.Key,
+        hifen: String(hifen),
         name: String(categoryName),
         filters: { connect: { id: filterCategorie.id } },
       },

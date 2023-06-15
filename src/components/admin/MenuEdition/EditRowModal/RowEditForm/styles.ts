@@ -54,3 +54,8 @@ export const EditForm = styled.form`
     }
   }
 `
+
+export const ErrorMessage = styled.p`
+  color: tomato;
+  text-align: left;
+`

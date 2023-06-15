@@ -93,6 +93,7 @@ const TableRow: React.FC<TableRowProps> = ({
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
+        <td>{data.hifen}</td>
         <td>
           <strong ref={textHoverToImageRef}>{data.imageBackgroundName}</strong>
         </td>

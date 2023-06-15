@@ -36,6 +36,9 @@ export default function RowAddForm() {
     categoryName: z.string().min(2, {
       message: 'Digite algum nome para a categoria',
     }),
+    hifen: z.string().min(2, {
+      message: 'Digite algum nome para o hifen',
+    }),
     filtersOptions: z.array(z.string()).refine((values) => values.length > 0, {
       message: 'Selecione pelo menos uma opção.',
     }),
@@ -54,18 +57,15 @@ export default function RowAddForm() {
     resolver: zodResolver(schema),
   })
 
-  useEffect(() => {
-    console.log(errors)
-    console.log(watch('filtersOptions'))
-  }, [errors, watch])
-
   const onSubmit = useCallback(
     async (data: RegisterFormData) => {
       try {
-        const { categoryName, filtersOptions, imageFile } = data
+        const { categoryName, filtersOptions, imageFile, hifen } = data
         const formData = new FormData()
 
         formData.append('categoryName', categoryName)
+
+        formData.append('hifen', hifen)
 
         filtersOptions.forEach((item, index) =>
           formData.append(`selectedOption${index}`, item),
@@ -105,6 +105,18 @@ export default function RowAddForm() {
           />
           {errors.categoryName && (
             <ErrorMessage>{`${errors.categoryName.message}`}</ErrorMessage>
+          )}
+        </div>
+        <div>
+          <Input
+            id={'hifen'}
+            register={register('hifen')}
+            label="Nome do hifen"
+            type="text"
+            value=""
+          />
+          {errors.hifen && (
+            <ErrorMessage>{`${errors.hifen.message}`}</ErrorMessage>
           )}
         </div>
 

@@ -14,6 +14,7 @@ export interface ProductCategory {
   imageBackgroundName: string
   imageBackgroundLink: string
   name: string
+  hifen: string
   active: boolean
   filters: ProductFilters[]
 }

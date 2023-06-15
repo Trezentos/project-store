@@ -25,7 +25,7 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { imageFile } = files
-    const { id, categoryName, ...allOptions } = fields
+    const { id, categoryName, hifen, ...allOptions } = fields
 
     const oldCategory = await prisma.productCategory.findFirst({
       where: {
@@ -51,11 +51,13 @@ export default async function handler(
       },
       data: {
         name: String(categoryName),
+        hifen: String(hifen),
         ...newImageFormatted,
       },
     })
 
-    if (oldCategory) await deleteOldImageAWS(oldCategory.imageBackgroundName)
+    if (oldCategory && imageFile)
+      await deleteOldImageAWS(oldCategory.imageBackgroundName)
 
     return res.status(200).json(updatedCategory)
   } catch (error: any) {
