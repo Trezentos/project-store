@@ -22,6 +22,7 @@ import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
 import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
 import Product, { IProduct } from '@/components/Product'
 import { prisma } from '@/lib/prisma'
+import getAllProducts from '@/services/get-all-products'
 
 interface ProductsProps {
   colorContent: {
@@ -192,49 +193,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       id: 354,
     },
   ]
-  const videoProductEx =
-    'https://assets.mixkit.co/videos/preview/mixkit-young-photographer-setting-up-his-camera-outdoors-34408-large.mp4'
 
-  const allProductsRaw = await prisma.product.findMany()
-
-  const allProductsColors = await prisma.productColor.findMany()
-
-  const allImages = await prisma.image.findMany()
-
-  const allProducts = allProductsRaw.map((product) => {
-    return {
-      ...product,
-      productsByColor: allProductsColors
-        .filter((productsColor) => productsColor.product_id === product.id)
-        .map((item) => ({
-          ...item,
-          productsImages: allImages.filter(
-            (actualImage) => actualImage.product_color_id === item.id,
-          ),
-        })),
-    }
-  })
-
-  const formattedProducts = allProducts.map((product) => {
-    return {
-      id: product.id,
-      productName: product.name,
-      productDescription: product.description,
-      productsByColor: product.productsByColor.map((productColor) => ({
-        id: productColor.id,
-        colorName: productColor.colorName,
-        colorHex: productColor.colorHex,
-        price: productColor.price,
-        productImages: productColor.productsImages.map((prodImage) => ({
-          id: prodImage.id,
-          imageSrc: prodImage.imageSrc,
-        })),
-      })),
-    }
-  })
+  const products = await getAllProducts()
 
   return {
-    props: { products: formattedProducts, colorContent },
+    props: { products, colorContent },
     revalidate: 60 * 60 * 24 * 1, // 1 day
   }
 }
