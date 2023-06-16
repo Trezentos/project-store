@@ -33,8 +33,27 @@ model ProductCategory {
     imageBackgroundLink String
     name                String
     hifen               String
-    filters             ProductFilter[]
     active              Boolean         @default(true)
+    filters             ProductFilter[]
+    HeaderItem          HeaderItem[]
+    HeaderSubItem       HeaderSubItem[]
+}
+
+model HeaderItem {
+    id              String          @id @default(uuid())
+    itemName        String
+    category_id     String
+    ProductCategory ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    HeaderSubItem   HeaderSubItem[]
+}
+
+model HeaderSubItem {
+    id              String          @id @default(uuid())
+    itemName        String
+    headerItem_id   String
+    HeaderItem      HeaderItem      @relation(fields: [headerItem_id], references: [id], onDelete: Cascade)
+    category_id     String
+    ProductCategory ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
 }
 
 model ProductFilter {

@@ -2,11 +2,22 @@ import { ReactNode } from 'react'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 import { Container } from './styles'
+import { EditHeaderFromAdminProvider } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
+import { api } from '@/lib/api'
+import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
+import HeaderTable from '@/components/admin/MenuEdition/HeaderTable/Table'
 
-export default function EditHeader() {
+interface EditHeaderProps {
+  allCategories: ProductCategory[]
+}
+export default function EditHeader({ allCategories }: EditHeaderProps) {
   return (
     <Container>
-      <h1>Editar header</h1>
+      <div>
+        <EditHeaderFromAdminProvider value={{ allCategories }}>
+          <HeaderTable />
+        </EditHeaderFromAdminProvider>
+      </div>
     </Container>
   )
 }
@@ -27,7 +38,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
+  const { data } = await api.get<ProductCategory[]>(
+    'edit-menu/categories/get-categories',
+  )
+
   return {
-    props: {},
+    props: { allCategories: data },
   }
 }

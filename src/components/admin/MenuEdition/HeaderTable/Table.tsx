@@ -10,9 +10,7 @@ import { api } from '@/lib/api'
 import EditRowModal from '../EditRowModal'
 import AddNewRow from '../AddNewRow'
 
-interface TableProps {}
-
-export default function Table() {
+export default function HeaderTable() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
   const { isHoverdImage, selectedImage, allCategories } = useContext(
     EditCategoriesContext,
@@ -84,44 +82,29 @@ export default function Table() {
 
   return (
     <>
-      {thereIsProductCategories && (
-        <SuspendedImage
-          width={400}
-          height={250}
-          src={selectedImage ?? allCategories[0].imageBackgroundLink}
-          alt=""
-          style={{
-            top: isHoverdImage ? '5px' : '-300px',
-          }}
-        />
-      )}
       <StyledTable>
         <thead>
           <tr>
-            <th>Categoria</th>
-            <th>Hífen</th>
-            <th>Imagem de Fundo</th>
-            <th>Filtros</th>
+            <th>Nome do item</th>
+            <th>Categoria do item</th>
             <th>Expandir</th>
             <th>Editar</th>
             <th>Apagar</th>
-            <th>Exibir/Ocultar</th>
           </tr>
         </thead>
         <tbody>
-          {allCategories[0] &&
-            allCategories.map((row, index) => (
-              <TableRow
-                key={row.id}
-                data={row}
-                isExpanded={expandedRows.includes(row.id)}
-                onExpand={handleExpandRow}
-                onDelete={handleDeleteRow}
-                onShowHide={handleShowHideRow}
-                onEdit={handleEditRow}
-                index={index}
-              />
-            ))}
+          {/* {allCategories.map((row, index) => (
+            <TableRow
+              key={row.id}
+              data={row}
+              isExpanded={expandedRows.includes(row.id)}
+              onExpand={handleExpandRow}
+              onDelete={handleDeleteRow}
+              onShowHide={handleShowHideRow}
+              onEdit={handleEditRow}
+              index={index}
+            />
+          ))} */}
         </tbody>
       </StyledTable>
       <EditRowModal isOpen={editModalIsOpen} closeModal={closeEditModal} />
