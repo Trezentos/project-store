@@ -1,12 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export interface FiltersProps {
-  id: string
-  name: string
-  hifen: string
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -16,16 +10,12 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const categories = await prisma.productCategory.findMany({
-      include: {
-        filters: true,
-      },
-    })
+    const filters = await prisma.productFilter.findMany({})
 
-    if (!categories)
+    if (!filters)
       return res.status(400).json({ message: 'No categories were found' })
 
-    return res.status(201).json(categories)
+    return res.status(201).json(filters)
   } catch (error: any) {
     return res.json(error.message)
   }

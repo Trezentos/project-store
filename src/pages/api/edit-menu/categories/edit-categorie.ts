@@ -1,7 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import formidable, { IncomingForm, Fields, Files } from 'formidable'
-import path from 'path'
-import s3, { s3ParamsToUpload, s3ParamsToDelete } from '@/lib/s3'
 import { prisma } from '@/lib/prisma'
 import formToDataFormatter from '@/utils/formToDataFormatter'
 import verifyFileType from '../../home/utils/verifyImageFileType'
@@ -25,7 +22,7 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { imageFile } = files
-    const { id, categoryName, hifen, ...allOptions } = fields
+    const { id, categoryName, hifen, ...allFiltersIds } = fields
 
     const oldCategory = await prisma.productCategory.findFirst({
       where: {
@@ -42,6 +39,16 @@ export default async function handler(
         }
       : {}
 
+    const filtersOnBase = await prisma.productFilter.findMany()
+    const filtersToConnect = [...Object.values(allFiltersIds)].map((item) => ({
+      id: String(item),
+    }))
+    const filtersToDisconnect = filtersOnBase
+      .filter((filterOnBase) => {
+        return !filtersToConnect.some((item) => item.id === filterOnBase.id)
+      })
+      .map((item) => ({ id: item.id }))
+
     const updatedCategory = await prisma.productCategory.update({
       include: {
         filters: true,
@@ -52,6 +59,10 @@ export default async function handler(
       data: {
         name: String(categoryName),
         hifen: String(hifen),
+        filters: {
+          connect: filtersToConnect,
+          disconnect: filtersToDisconnect,
+        },
         ...newImageFormatted,
       },
     })

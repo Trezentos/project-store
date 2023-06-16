@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
 } from 'react'
+import { ProductFilter } from '../admin/EditCategoriesContext'
 
 interface FilterType {
   type: string
@@ -18,16 +19,29 @@ interface FilterContextType {
   clearLocalFilters: (type: string) => void
   mainTitle: (type: string) => string | undefined
   updateLocalFilter: (filterOption: { type: string; value: string }) => void
+  activeFilters: ProductFilter[]
+  colorContent: {
+    id: number
+    color: string
+  }[]
 }
 
 interface FilterContextProviderProps {
   children: ReactNode
+  value: {
+    colorContent: {
+      id: number
+      color: string
+    }[]
+    activeFilters: ProductFilter[]
+  }
 }
 
 export const FilterContext = createContext({} as FilterContextType)
 
 export function FilterContextProvider({
   children,
+  value: { colorContent, activeFilters },
 }: FilterContextProviderProps) {
   const [selectedFilters, setSelectedFilters] = useState<FilterType[]>([])
 
@@ -115,7 +129,9 @@ export function FilterContextProvider({
         updateLocalFilter,
         clearLocalFilters,
         clearAllFilters,
+        colorContent,
         mainTitle,
+        activeFilters,
       }}
     >
       {children}

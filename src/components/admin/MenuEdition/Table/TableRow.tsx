@@ -71,7 +71,6 @@ const TableRow: React.FC<TableRowProps> = ({
   const handleDeleteRow = useCallback(() => {
     Array.from(trRef.current?.children as ArrayLike<Element>).forEach(
       (item) => {
-        console.log(item)
         item.innerHTML = ''
         // @ts-ignore
         item.style.padding = '0px'
@@ -107,12 +106,7 @@ const TableRow: React.FC<TableRowProps> = ({
         <td>
           <FaRegTrashAlt onClick={handleDeleteRow} />
         </td>
-        <td
-          onClick={() => {
-            console.log(data)
-            return onShowHide(data.id, data.active)
-          }}
-        >
+        <td onClick={() => onShowHide(data.id, data.active)}>
           {data.active ? (
             <FaRegEye title="Clique para esconder a categoria do site" />
           ) : (

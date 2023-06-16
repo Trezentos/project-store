@@ -8,17 +8,22 @@ import {
   EditCategoriesContext,
   EditCategoriesProvider,
   ProductCategory,
+  ProductFilter,
 } from '@/contexts/pages/admin/EditCategoriesContext'
 
 interface CategoriesProps {
   productCategories: ProductCategory[]
+  filters: ProductFilter[]
 }
-export default function Categories({ productCategories }: CategoriesProps) {
+export default function Categories({
+  productCategories,
+  filters,
+}: CategoriesProps) {
   return (
     <Container>
       <div>
-        <EditCategoriesProvider>
-          <Table productCategoriesFromApi={productCategories} />
+        <EditCategoriesProvider value={{ filters, productCategories }}>
+          <Table />
         </EditCategoriesProvider>
       </div>
     </Container>
@@ -41,17 +46,21 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const { data } = await api.get<ProductCategory[]>(
+  const { data: categoriesData } = await api.get<ProductCategory[]>(
     '/edit-menu/categories/get-categories',
   )
+  const { data: filtersData } = await api.get<ProductFilter[]>(
+    '/edit-menu/filters/get-filters',
+  )
 
-  const orderedByActive = data.sort((a, b) =>
+  const orderedByActive = categoriesData.sort((a, b) =>
     a.active === b.active ? 0 : a.active ? -1 : 1,
   )
 
   return {
     props: {
       productCategories: orderedByActive ?? [],
+      filters: filtersData ?? [],
     },
   }
 }

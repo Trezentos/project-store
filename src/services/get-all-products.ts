@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { ProductCategory } from '@prisma/client'
 
 const colorContent = [
   {
@@ -47,7 +48,7 @@ const colorContent = [
   },
 ]
 
-export default async function getManyProducts(categorie?: string) {
+export default async function getManyProducts(category: ProductCategory) {
   const allProductsRaw = await prisma.product.findMany()
 
   const allProductsColors = await prisma.productColor.findMany()
@@ -68,6 +69,14 @@ export default async function getManyProducts(categorie?: string) {
     }
   })
 
+  const activeFilters = await prisma.productFilter.findMany({
+    where: {
+      productCategory: {
+        some: { id: category.id },
+      },
+    },
+  })
+
   const formattedProducts = allProducts.map((product) => {
     return {
       id: product.id,
@@ -86,5 +95,9 @@ export default async function getManyProducts(categorie?: string) {
     }
   })
 
-  return { allProducts: formattedProducts, colorContent }
+  return {
+    allProducts: formattedProducts,
+    colorContent,
+    activeFilters,
+  }
 }

@@ -18,17 +18,18 @@ import {
 
 interface FilterProps {
   type: 'colors' | 'sizes' | 'prices'
-  colorContent?: {
-    id: number
-    color: string
-  }[]
 }
 
-export function Filter({ type, colorContent }: FilterProps) {
+export function Filter({ type }: FilterProps) {
   const asideOptionRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const { updateLocalFilter, selectedFilters, clearLocalFilters, mainTitle } =
-    useContext(FilterContext)
+  const {
+    updateLocalFilter,
+    selectedFilters,
+    clearLocalFilters,
+    mainTitle,
+    colorContent,
+  } = useContext(FilterContext)
 
   const expandAccordion = useCallback(() => {
     if (!asideOptionRef || !asideOptionRef.current) return
@@ -97,7 +98,7 @@ export function Filter({ type, colorContent }: FilterProps) {
   )
 
   return (
-    <div>
+    <>
       <AsideHeader>
         <button onClick={() => expandAccordion()}>
           <h3>{mainTitle(type)}</h3>
@@ -177,6 +178,6 @@ export function Filter({ type, colorContent }: FilterProps) {
             })}
         </ul>
       </AsideOptions>
-    </div>
+    </>
   )
 }

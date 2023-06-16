@@ -5,9 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Input from '@/components/admin/InputsComponents/Input'
-import Checkbox, {
-  SelectOption,
-} from '@/components/admin/InputsComponents/InputSelect'
+import Checkbox from '@/components/admin/InputsComponents/InputSelect'
 import { errorToast } from '@/utils/toast/sucessToast'
 import { EditCategoriesContext } from '@/contexts/pages/admin/EditCategoriesContext'
 import { api } from '@/lib/api'
@@ -15,17 +13,15 @@ import { api } from '@/lib/api'
 const MAX_FILE_SIZE = 5200000
 
 export default function RowEditForm() {
-  const { categoryToEdit, updateSingleCategorie, closeEditModal } = useContext(
-    EditCategoriesContext,
-  )
+  const {
+    categoryToEdit,
+    updateSingleCategorie,
+    closeEditModal,
+    options,
+    filters,
+  } = useContext(EditCategoriesContext)
   const [imageFile, setImageFile] = useState<any>(null)
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-
-  const options = [
-    { value: 'option1', label: 'Cor' },
-    { value: 'option2', label: 'Preço' },
-    { value: 'option3', label: 'Tamanho' },
-  ]
 
   const schema = z.object({
     imageFile: z
@@ -69,9 +65,9 @@ export default function RowEditForm() {
         formData.append('categoryName', categoryName)
         formData.append('hifen', hifen)
 
-        filtersOptions.forEach((item, index) =>
-          formData.append(`selectedOption${index}`, item),
-        )
+        filtersOptions.forEach((item, index) => {
+          formData.append(`filter[${index}]`, item)
+        })
 
         if (imageFile.length > 0) formData.append('imageFile', imageFile[0])
 
@@ -138,8 +134,8 @@ export default function RowEditForm() {
           register={register('filtersOptions')}
           options={options}
           title={'Selecionar filtros'}
-          values={categoryToEdit.filters.map((item, index) => ({
-            value: `option${index + 1}`,
+          values={categoryToEdit.filters.map((item) => ({
+            value: item.id,
             label: item.name,
           }))}
         />

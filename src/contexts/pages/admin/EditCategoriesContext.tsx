@@ -1,14 +1,10 @@
 import { createContext, ReactNode, useCallback, useState } from 'react'
-
-interface EditCategoriesProviderProps {
-  children: ReactNode
-}
-
-interface ProductFilters {
+export interface ProductFilter {
   id: string
   name: string
-  active: boolean
+  hifen: string
 }
+
 export interface ProductCategory {
   id: string
   imageBackgroundName: string
@@ -16,12 +12,24 @@ export interface ProductCategory {
   name: string
   hifen: string
   active: boolean
-  filters: ProductFilters[]
+  filters: ProductFilter[]
+}
+interface EditCategoriesProviderProps {
+  children: ReactNode
+  value: {
+    filters: ProductFilter[]
+    productCategories: ProductCategory[]
+  }
 }
 
 interface EditCategoriesContextDatas {
   thereIsProductCategories: boolean
   allCategories: ProductCategory[]
+  options: {
+    value: string
+    label: string
+  }[]
+  filters: ProductFilter[]
   deleteSingleCategory: (id: string) => void
   addNewCategorie: (newCategory: ProductCategory) => void
   updateSingleCategorie: (updatedCategory: ProductCategory) => void
@@ -45,6 +53,7 @@ export const EditCategoriesContext = createContext<EditCategoriesContextDatas>(
 
 export function EditCategoriesProvider({
   children,
+  value: { productCategories, filters },
 }: EditCategoriesProviderProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isHoverdImage, setIsHoveredImage] = useState(false)
@@ -53,9 +62,8 @@ export function EditCategoriesProvider({
   const [categoryToEdit, setCategoryToEdit] = useState<ProductCategory>(
     {} as ProductCategory,
   )
-  const [allCategories, setAllCategories] = useState<ProductCategory[]>(
-    [] as ProductCategory[],
-  )
+  const [allCategories, setAllCategories] =
+    useState<ProductCategory[]>(productCategories)
 
   const deleteSingleCategory = useCallback(
     (id: string) => {
@@ -95,6 +103,11 @@ export function EditCategoriesProvider({
     )
   }, [])
 
+  const options = filters.map((filter) => ({
+    value: filter.id,
+    label: filter.name,
+  }))
+
   const updateSelectedImage = useCallback((imgSrc: string) => {
     setSelectedImage(imgSrc)
   }, [])
@@ -127,6 +140,7 @@ export function EditCategoriesProvider({
         selectedImage,
         updateSelectedImage,
         categoryToEdit,
+        filters,
         updateSingleCategorie,
         updateHoveredImage,
         isHoverdImage,
@@ -141,6 +155,7 @@ export function EditCategoriesProvider({
         allCategories,
         thereIsProductCategories,
         closeAddModal,
+        options,
       }}
     >
       {children}

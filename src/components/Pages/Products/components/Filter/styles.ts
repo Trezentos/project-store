@@ -4,7 +4,7 @@ export const AsideHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* border: 1px solid black; */
+  margin: 0.5rem 0;
 
   button {
     width: 100%;
@@ -41,7 +41,7 @@ export const AsideHeader = styled.div`
 `
 
 export const AsideOptions = styled.div`
-  padding: 0.2rem 1.4rem;
+  padding: 0rem 1.4rem;
   overflow: hidden;
   max-height: 0px;
   transition: 0.3s max-height ease-out;

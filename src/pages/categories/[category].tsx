@@ -3,8 +3,8 @@ import { api } from '@/lib/api'
 import getManyProducts from '@/services/get-all-products'
 import { ProductCategory } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
-import { Filter } from '@/components/Pages/Products/Filter'
-import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
+import { Filter } from '@/components/Pages/Products/components/Filter'
+import SelectedFilters from '@/components/Pages/Products/components/Filter/SelectedFilters'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
   AsideFilterContainer,
@@ -22,6 +22,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CaretLeft, CaretRight, List } from 'phosphor-react'
 import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
+import { ProductFilter } from '@/contexts/pages/admin/EditCategoriesContext'
+import Filters from '@/components/Pages/Products/Filters'
 
 interface CategoryPageProps {
   category: ProductCategory
@@ -30,12 +32,14 @@ interface CategoryPageProps {
     color: string
   }[]
   products: IProduct[]
+  activeFilters: ProductFilter[]
 }
 
 export default function CategoryPage({
   category,
   colorContent,
   products,
+  activeFilters,
 }: CategoryPageProps) {
   const [showFiltersContainer, setShowFilters] = useState(true)
   const [selectedPage, setSelectedPage] = useState(1)
@@ -107,11 +111,8 @@ export default function CategoryPage({
             className={showFiltersContainer ? 'active' : ''}
           />
           <AsideFilterContainer className={showFiltersContainer ? 'open' : ''}>
-            <FilterContextProvider>
-              <Filter colorContent={colorContent} type="colors" />
-              <Filter type="sizes" />
-              <Filter type="prices" />
-              <SelectedFilters />
+            <FilterContextProvider value={{ colorContent, activeFilters }}>
+              <Filters />
             </FilterContextProvider>
           </AsideFilterContainer>
 
@@ -170,12 +171,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     `/edit-menu/categories/get-single-category/${category}`,
   )
 
-  console.log(data)
-
-  const { allProducts, colorContent } = await getManyProducts()
+  const { allProducts, colorContent, activeFilters } = await getManyProducts(
+    data,
+  )
 
   return {
-    props: { category: data, products: allProducts, colorContent },
+    props: {
+      category: data,
+      products: allProducts,
+      colorContent,
+      activeFilters,
+    },
     revalidate: 60 * 60 * 24, // Atualize a página a cada 24 horas
   }
 }

@@ -10,11 +10,9 @@ import { api } from '@/lib/api'
 import EditRowModal from '../EditRowModal'
 import AddNewRow from '../AddNewRow'
 
-interface TableProps {
-  productCategoriesFromApi: ProductCategory[]
-}
+interface TableProps {}
 
-export default function Table({ productCategoriesFromApi }: TableProps) {
+export default function Table() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
   const { isHoverdImage, selectedImage, allCategories } = useContext(
     EditCategoriesContext,
@@ -83,15 +81,6 @@ export default function Table({ productCategoriesFromApi }: TableProps) {
     },
     [updateSingleCategorie],
   )
-
-  useEffect(() => {
-    if (!allCategories[0]) updateAllCategories(productCategoriesFromApi)
-  }, [
-    allCategories,
-    productCategoriesFromApi,
-    deleteSingleCategory,
-    updateAllCategories,
-  ])
 
   return (
     <>
