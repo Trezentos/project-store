@@ -1,4 +1,4 @@
-import { ColorOptionType } from '@/pages/individualProduct/[id]'
+import { ColorOptionType } from '@/pages/categories/individualProduct/[id]'
 import { useCallback, useState } from 'react'
 import { ColorDiv, ColorsOptionsContainer, Container, SizeDiv } from './styles'
 

@@ -5,11 +5,17 @@ export const Container = styled.div`
 `
 
 export const Banner = styled.div`
-  max-width: 100vw;
+  max-width: 100%;
+  max-height: 700px;
+  overflow: hidden;
 
   img {
-    object-fit: contain;
+    object-fit: cover !important;
     position: relative !important;
+    background-position: bottom !important;
+    object-position: center !important;
+    height: 700px !important;
+    /* width: 700px !important; */
   }
 `
 

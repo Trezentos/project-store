@@ -124,20 +124,24 @@ export default function Header() {
         ],
       },
       {
-        name: 'CLOTHING',
+        name: 'ACESSÓRIOS',
+        link: '/acessorios',
       },
       {
-        name: 'ACESSORIES',
+        name: 'CAMISETAS',
+        link: '/camisetas',
       },
       {
-        name: 'LOOKBOOK',
+        name: 'TÊNIS',
+        link: '/tenis',
       },
       {
         name: 'INSTASHOP',
         link: '/instashop',
       },
       {
-        name: 'SALE',
+        name: 'PROMOÇÃO',
+        link: '/promocao',
       },
     ]
 

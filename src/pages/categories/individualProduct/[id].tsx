@@ -17,7 +17,7 @@ import {
   Container,
   ProductProperties,
   MainContent,
-} from '../../styles/individualProduct'
+} from '../../../styles/individualProduct'
 
 export interface ColorOptionType {
   hexName: string

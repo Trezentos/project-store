@@ -19,7 +19,9 @@ export default async function handler(
     if (!categories)
       return res.status(400).json({ message: 'No categories were found' })
 
-    return res.status(201).json(categories)
+    const activeCategories = categories.filter((item) => item.active)
+
+    return res.status(201).json(activeCategories)
   } catch (error: any) {
     return res.json(error.message)
   }

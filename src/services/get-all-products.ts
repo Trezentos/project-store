@@ -1,6 +1,53 @@
 import { prisma } from '@/lib/prisma'
 
-export default async function getAllProducts() {
+const colorContent = [
+  {
+    color: 'purple',
+    id: 1,
+  },
+  {
+    color: 'red',
+    id: 2,
+  },
+  {
+    color: 'blue',
+    id: 3,
+  },
+  {
+    color: 'crimson',
+    id: 4,
+  },
+  {
+    color: 'pink',
+    id: 5,
+  },
+  {
+    color: 'gray',
+    id: 6,
+  },
+  {
+    color: 'brown',
+    id: 7,
+  },
+  {
+    color: 'deepskyblue',
+    id: 8,
+  },
+  {
+    color: 'yellow',
+    id: 9,
+  },
+  {
+    color: 'orange',
+    id: 12,
+  },
+  {
+    color: 'aliceblue',
+    id: 354,
+  },
+]
+
+export default async function getManyProducts(categorie?: string) {
   const allProductsRaw = await prisma.product.findMany()
 
   const allProductsColors = await prisma.productColor.findMany()
@@ -39,5 +86,5 @@ export default async function getAllProducts() {
     }
   })
 
-  return formattedProducts
+  return { allProducts: formattedProducts, colorContent }
 }

@@ -55,7 +55,7 @@ export default function LinksNavigation() {
                 </button>
                 <Link
                   onClick={() => toggleMobileHeader()}
-                  href="/products"
+                  href="/categories"
                   className="desktop"
                 >
                   {content.name}
@@ -64,7 +64,7 @@ export default function LinksNavigation() {
             )) || (
               <Link
                 onClick={() => toggleMobileHeader()}
-                href={content.link ?? '/products'}
+                href={`/categories${content.link}`}
               >
                 {content.name}
               </Link>
@@ -104,7 +104,7 @@ export default function LinksNavigation() {
                     {ulItem.map((liItem) => (
                       <li key={liItem.name}>
                         <Link
-                          href="/products"
+                          href="/categories"
                           onClick={() => toggleMobileHeader()}
                         >
                           {liItem.name}

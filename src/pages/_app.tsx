@@ -33,40 +33,36 @@ export default function App({
     const isLoginPageAdmin = router.pathname.includes('login')
 
     return (
-      <>
-        <AuthAdminProvider>
-          <ThemeProvider theme={defaultTheme}>
-            <AdminStyle />
-            {isLoginPageAdmin ? (
+      <AuthAdminProvider>
+        <ThemeProvider theme={defaultTheme}>
+          <AdminStyle />
+          {isLoginPageAdmin ? (
+            <Component {...pageProps} />
+          ) : (
+            <Sidebar>
               <Component {...pageProps} />
-            ) : (
-              <Sidebar>
-                <Component {...pageProps} />
-              </Sidebar>
-            )}
-          </ThemeProvider>
-          <ToastContainer />
-        </AuthAdminProvider>
-      </>
+            </Sidebar>
+          )}
+        </ThemeProvider>
+        <ToastContainer />
+      </AuthAdminProvider>
     )
   }
 
   return (
-    <>
-      <ThemeProvider theme={defaultTheme}>
-        <CartContextProvider>
-          <SessionProvider session={session}>
-            <HeaderContextProvider>
-              <Header />
-            </HeaderContextProvider>
-            <Component {...pageProps} />
-          </SessionProvider>
-          <Cartside />
-        </CartContextProvider>
-        <Footer />
-        <GlobalStyle />
-        <ToastContainer />
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={defaultTheme}>
+      <CartContextProvider>
+        <SessionProvider session={session}>
+          <HeaderContextProvider>
+            <Header />
+          </HeaderContextProvider>
+          <Component {...pageProps} />
+        </SessionProvider>
+        <Cartside />
+      </CartContextProvider>
+      <Footer />
+      <GlobalStyle />
+      <ToastContainer />
+    </ThemeProvider>
   )
 }

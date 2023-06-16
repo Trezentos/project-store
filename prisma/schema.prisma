@@ -40,6 +40,7 @@ model ProductCategory {
 model ProductFilter {
     id              String            @id @default(uuid())
     name            String
+    hifen           String
     active          Boolean           @default(true)
     productCategory ProductCategory[]
 }

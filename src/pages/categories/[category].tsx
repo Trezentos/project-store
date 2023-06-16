@@ -1,6 +1,11 @@
-import { InstagramContext } from '@/contexts/pages/home/InstagramContext'
-import Image from 'next/image'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import Product, { IProduct } from '@/components/Product'
+import { api } from '@/lib/api'
+import getManyProducts from '@/services/get-all-products'
+import { ProductCategory } from '@prisma/client'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { Filter } from '@/components/Pages/Products/Filter'
+import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   AsideFilterContainer,
   AsideFilterContainerBGMobile,
@@ -13,18 +18,13 @@ import {
   PaginationContainer,
   ProductsContainer,
 } from './styles'
-import BannerImage from './banner.jpg'
 import Link from 'next/link'
+import Image from 'next/image'
 import { CaretLeft, CaretRight, List } from 'phosphor-react'
-import { Filter } from '@/components/Pages/Products/Filter'
-import { GetStaticProps } from 'next'
 import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
-import SelectedFilters from '@/components/Pages/Products/Filter/SelectedFilters'
-import Product, { IProduct } from '@/components/Product'
-import { prisma } from '@/lib/prisma'
-import getAllProducts from '@/services/get-all-products'
 
-interface ProductsProps {
+interface CategoryPageProps {
+  category: ProductCategory
   colorContent: {
     id: number
     color: string
@@ -32,7 +32,11 @@ interface ProductsProps {
   products: IProduct[]
 }
 
-export default function Products({ colorContent, products }: ProductsProps) {
+export default function CategoryPage({
+  category,
+  colorContent,
+  products,
+}: CategoryPageProps) {
   const [showFiltersContainer, setShowFilters] = useState(true)
   const [selectedPage, setSelectedPage] = useState(1)
 
@@ -74,7 +78,7 @@ export default function Products({ colorContent, products }: ProductsProps) {
         <Link href={'/products'}>Todos os produtos</Link>
       </Breadcrumb>
       <Banner>
-        <Image src={BannerImage} alt="" fill />
+        <Image src={category.imageBackgroundLink} alt="" fill />
       </Banner>
       <FilterLayout>
         <Header>
@@ -146,58 +150,32 @@ export default function Products({ colorContent, products }: ProductsProps) {
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const colorContent = [
-    {
-      color: 'purple',
-      id: 1,
-    },
-    {
-      color: 'red',
-      id: 2,
-    },
-    {
-      color: 'blue',
-      id: 3,
-    },
-    {
-      color: 'crimson',
-      id: 4,
-    },
-    {
-      color: 'pink',
-      id: 5,
-    },
-    {
-      color: 'gray',
-      id: 6,
-    },
-    {
-      color: 'brown',
-      id: 7,
-    },
-    {
-      color: 'deepskyblue',
-      id: 8,
-    },
-    {
-      color: 'yellow',
-      id: 9,
-    },
-    {
-      color: 'orange',
-      id: 12,
-    },
-    {
-      color: 'aliceblue',
-      id: 354,
-    },
-  ]
-
-  const products = await getAllProducts()
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get<ProductCategory[]>(
+    '/edit-menu/categories/get-categories',
+  )
 
   return {
-    props: { products, colorContent },
-    revalidate: 60 * 60 * 24 * 1, // 1 day
+    paths: data.map((category) => ({
+      params: { category: category.hifen },
+    })),
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const category = params?.category as string
+
+  const { data } = await api.get<ProductCategory>(
+    `/edit-menu/categories/get-single-category/${category}`,
+  )
+
+  console.log(data)
+
+  const { allProducts, colorContent } = await getManyProducts()
+
+  return {
+    props: { category: data, products: allProducts, colorContent },
+    revalidate: 60 * 60 * 24, // Atualize a página a cada 24 horas
   }
 }
