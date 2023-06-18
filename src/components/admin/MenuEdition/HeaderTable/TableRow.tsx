@@ -8,10 +8,7 @@ import React, {
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import { animated, useSpring } from 'react-spring'
-import {
-  EditCategoriesContext,
-  ProductCategory,
-} from '@/contexts/pages/admin/EditCategoriesContext'
+import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
 
 interface TableRowProps {
   data: ProductCategory
@@ -65,15 +62,13 @@ const TableRow: React.FC<TableRowProps> = ({
 
   useEffect(() => {
     animateRowExpansion()
-  }, [animateRowExpansion, data.id, data.imageBackgroundLink, showHoveredImage])
+  }, [animateRowExpansion, data.id, data.imageBackgroundLink])
 
   return (
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
         <td>{data.hifen}</td>
-
-        <td>{data.filters.map((item) => item.name).join(', ')}</td>
         <td onClick={() => onExpand(data.id)}>
           {isExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
         </td>

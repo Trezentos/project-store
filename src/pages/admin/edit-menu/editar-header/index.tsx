@@ -6,6 +6,7 @@ import { EditHeaderFromAdminProvider } from '@/contexts/pages/admin/EditHeaderFr
 import { api } from '@/lib/api'
 import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
 import HeaderTable from '@/components/admin/MenuEdition/HeaderTable/Table'
+import requestHeaderData from '@/services/menu/getHeaderContent'
 
 interface EditHeaderProps {
   allCategories: ProductCategory[]
@@ -38,11 +39,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const { data } = await api.get<ProductCategory[]>(
-    'edit-menu/categories/get-categories',
-  )
+  const { allCategories, headerItems } = await requestHeaderData()
 
   return {
-    props: { allCategories: data },
+    props: { allCategories, headerItems },
   }
 }

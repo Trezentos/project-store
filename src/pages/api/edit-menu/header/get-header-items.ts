@@ -16,18 +16,15 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const categories = await prisma.productCategory.findMany({
-      include: {
-        filters: true,
-      },
-    })
+    const headerItems = await prisma.headerItem.findMany({})
 
-    if (!categories)
-      return res.status(400).json({ message: 'No categories were found' })
+    if (!headerItems)
+      return res.status(400).json({ message: 'No header items were found' })
 
-    return res.status(201).json(categories)
+    console.log(headerItems)
+
+    return res.status(201).json(headerItems)
   } catch (error: any) {
-    console.log(error.message)
-    return res.json([])
+    return res.json(error.message)
   }
 }

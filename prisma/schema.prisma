@@ -40,16 +40,18 @@ model ProductCategory {
 }
 
 model HeaderItem {
-    id              String          @id @default(uuid())
-    itemName        String
-    category_id     String
-    ProductCategory ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    HeaderSubItem   HeaderSubItem[]
+    id                  String           @id @default(uuid())
+    name                String
+    backgroundImageLink String?
+    backgroundImageName String?
+    category_id         String?
+    ProductCategory     ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    HeaderSubItem       HeaderSubItem[]
 }
 
 model HeaderSubItem {
     id              String          @id @default(uuid())
-    itemName        String
+    name            String
     headerItem_id   String
     HeaderItem      HeaderItem      @relation(fields: [headerItem_id], references: [id], onDelete: Cascade)
     category_id     String

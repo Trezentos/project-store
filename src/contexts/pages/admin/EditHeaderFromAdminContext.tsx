@@ -2,6 +2,8 @@ import { createContext, ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ProductCategory } from './EditCategoriesContext'
 
+export interface HeaderItem {}
+
 interface EditHeaderFromAdminProviderProps {
   children: ReactNode
   value: {

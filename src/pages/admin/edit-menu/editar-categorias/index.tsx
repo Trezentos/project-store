@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Container } from './styles'
-import CategorieTable from '@/components/admin/MenuEdition/CategorieTable/Table'
+import Table from '@/components/admin/MenuEdition/CategorieTable/Table'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 import { api } from '@/lib/api'
@@ -22,7 +22,7 @@ export default function Categories({
     <Container>
       <div>
         <EditCategoriesProvider value={{ filters, productCategories }}>
-          <CategorieTable />
+          <Table />
         </EditCategoriesProvider>
       </div>
     </Container>
