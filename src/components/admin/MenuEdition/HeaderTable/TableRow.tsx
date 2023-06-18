@@ -8,10 +8,10 @@ import React, {
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import { animated, useSpring } from 'react-spring'
-import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
+import { HeaderItem } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 
 interface TableRowProps {
-  data: ProductCategory
+  data: HeaderItem
   isExpanded: boolean
   onExpand: (id: string) => void
   onDelete: (id: string) => void
@@ -62,13 +62,13 @@ const TableRow: React.FC<TableRowProps> = ({
 
   useEffect(() => {
     animateRowExpansion()
-  }, [animateRowExpansion, data.id, data.imageBackgroundLink])
+  }, [animateRowExpansion, data.id])
 
   return (
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
-        <td>{data.hifen}</td>
+        <td>{data.linkName}</td>
         <td onClick={() => onExpand(data.id)}>
           {isExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
         </td>

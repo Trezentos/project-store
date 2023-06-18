@@ -1,29 +1,16 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import TableRow from './TableRow'
 import { StyledTable, SuspendedImage } from './styles'
-import {
-  EditCategoriesContext,
-  ProductCategory,
-} from '@/contexts/pages/admin/EditCategoriesContext'
+import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 import { api } from '@/lib/api'
 import EditRowModal from '../EditRowModal'
 import AddNewRow from '../AddNewRow'
+import { EditHeaderFromAdminContext } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 
 export default function HeaderTable() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
-  const { isHoverdImage, selectedImage, allCategories } = useContext(
-    EditCategoriesContext,
-  )
-  const thereIsProductCategories = !!allCategories?.[0]
-  const {
-    closeEditModal,
-    editModalIsOpen,
-    openEditionModal,
-    deleteSingleCategory,
-    updateAllCategories,
-    updateSingleCategorie,
-  } = useContext(EditCategoriesContext)
+  const { allCategories, headerItems } = useContext(EditHeaderFromAdminContext)
 
   const handleExpandRow = useCallback(
     (id: string) => {
@@ -38,47 +25,38 @@ export default function HeaderTable() {
     [expandedRows],
   )
 
-  const handleDeleteRow = useCallback(
-    async (id: string) => {
-      try {
-        await api.delete(`/edit-menu/categories/delete-categorie/${id}`)
-        deleteSingleCategory(id)
-        successToast('Categoria removida com sucesso')
-      } catch (error: any) {
-        const { data } = error.response
-        if (!data) errorToast('Houve algum erro ao remover a categoria...')
-        errorToast(data)
-      }
-    },
-    [deleteSingleCategory],
-  )
-  const handleEditRow = useCallback(
-    async (id: string) => {
-      openEditionModal(id)
-    },
-    [openEditionModal],
-  )
+  const handleDeleteRow = useCallback(async (id: string) => {
+    try {
+      await api.delete(`/edit-menu/categories/delete-categorie/${id}`)
+      // deleteSingleCategory(id)
+      successToast('Categoria removida com sucesso')
+    } catch (error: any) {
+      const { data } = error.response
+      if (!data) errorToast('Houve algum erro ao remover a categoria...')
+      errorToast(data)
+    }
+  }, [])
+  const handleEditRow = useCallback(async (id: string) => {
+    // openEditionModal(id)
+  }, [])
 
-  const handleShowHideRow = useCallback(
-    async (id: string, active: boolean) => {
-      try {
-        const { data } = await api.put<ProductCategory>(
-          `/edit-menu/categories/hide-categorie`,
-          {
-            id,
-            active: !active,
-          },
-        )
+  const handleShowHideRow = useCallback(async (id: string, active: boolean) => {
+    try {
+      const { data } = await api.put<ProductCategory>(
+        `/edit-menu/categories/hide-categorie`,
+        {
+          id,
+          active: !active,
+        },
+      )
 
-        updateSingleCategorie(data)
-      } catch (error: any) {
-        const { data } = error.response
-        if (!data) errorToast('Houve algum erro ao esconder a categoria...')
-        errorToast(data)
-      }
-    },
-    [updateSingleCategorie],
-  )
+      // updateSingleCategorie(data)
+    } catch (error: any) {
+      const { data } = error.response
+      if (!data) errorToast('Houve algum erro ao esconder a categoria...')
+      errorToast(data)
+    }
+  }, [])
 
   return (
     <>
@@ -93,7 +71,7 @@ export default function HeaderTable() {
           </tr>
         </thead>
         <tbody>
-          {/* {allCategories.map((row, index) => (
+          {headerItems.map((row, index) => (
             <TableRow
               key={row.id}
               data={row}
@@ -104,10 +82,10 @@ export default function HeaderTable() {
               onEdit={handleEditRow}
               index={index}
             />
-          ))} */}
+          ))}
         </tbody>
       </StyledTable>
-      <EditRowModal isOpen={editModalIsOpen} closeModal={closeEditModal} />
+      {/* <EditRowModal isOpen={editModalIsOpen} closeModal={closeEditModal} /> */}
       <AddNewRow />
     </>
   )

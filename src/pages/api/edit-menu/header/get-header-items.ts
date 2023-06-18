@@ -1,10 +1,19 @@
 import { prisma } from '@/lib/prisma'
+import { ProductCategory } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export interface FiltersProps {
-  id: string
-  name: string
-  hifen: string
+const getPropertyValueFrom = (
+  categories: ProductCategory[],
+  {
+    categoryId,
+    property,
+  }: { categoryId: string | null; property: 'hifen' | 'name' },
+) => {
+  return categories
+    .filter((categorieItem) => {
+      return categorieItem.id === categoryId
+    })
+    .reduce((_, curr) => curr[`${property}`], '')
 }
 
 export default async function handler(
@@ -16,12 +25,25 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const headerItems = await prisma.headerItem.findMany({})
+    const headerItemsFromBase = await prisma.headerItem.findMany({})
+    const categories = await prisma.productCategory.findMany({})
 
-    if (!headerItems)
+    if (!headerItemsFromBase || !categories)
       return res.status(400).json({ message: 'No header items were found' })
 
-    console.log(headerItems)
+    const headerItems = headerItemsFromBase.map((headerItem) => {
+      return {
+        ...headerItem,
+        linkTo: getPropertyValueFrom(categories, {
+          categoryId: headerItem.category_id,
+          property: 'hifen',
+        }),
+        linkName: getPropertyValueFrom(categories, {
+          categoryId: headerItem.category_id,
+          property: 'name',
+        }),
+      }
+    })
 
     return res.status(201).json(headerItems)
   } catch (error: any) {

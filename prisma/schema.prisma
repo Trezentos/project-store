@@ -40,13 +40,23 @@ model ProductCategory {
 }
 
 model HeaderItem {
-    id                  String           @id @default(uuid())
-    name                String
-    backgroundImageLink String?
-    backgroundImageName String?
-    category_id         String?
-    ProductCategory     ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    HeaderSubItem       HeaderSubItem[]
+    id                    String           @id @default(uuid())
+    name                  String
+    backgroundImageLink   String?
+    backgroundImageName   String?
+    backgroundImageLinkTo String?
+    category_id           String?
+    ProductCategory       ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    HeaderSubItem         HeaderSubItem[]
+
+    subItemTitleColum1 String?
+    subItemLinkColum1  String?
+
+    subItemTitleColum2 String?
+    subItemLinkColum2  String?
+
+    subItemTitleColum3 String?
+    subItemLinkColum3  String?
 }
 
 model HeaderSubItem {
@@ -56,6 +66,7 @@ model HeaderSubItem {
     HeaderItem      HeaderItem      @relation(fields: [headerItem_id], references: [id], onDelete: Cascade)
     category_id     String
     ProductCategory ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    columnPosition  Int
 }
 
 model ProductFilter {

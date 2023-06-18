@@ -2,7 +2,10 @@ import { ReactNode } from 'react'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 import { Container } from './styles'
-import { EditHeaderFromAdminProvider } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
+import {
+  EditHeaderFromAdminProvider,
+  HeaderItem,
+} from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import { api } from '@/lib/api'
 import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
 import HeaderTable from '@/components/admin/MenuEdition/HeaderTable/Table'
@@ -10,12 +13,16 @@ import requestHeaderData from '@/services/menu/getHeaderContent'
 
 interface EditHeaderProps {
   allCategories: ProductCategory[]
+  headerItems: HeaderItem[]
 }
-export default function EditHeader({ allCategories }: EditHeaderProps) {
+export default function EditHeader({
+  allCategories,
+  headerItems,
+}: EditHeaderProps) {
   return (
     <Container>
       <div>
-        <EditHeaderFromAdminProvider value={{ allCategories }}>
+        <EditHeaderFromAdminProvider value={{ allCategories, headerItems }}>
           <HeaderTable />
         </EditHeaderFromAdminProvider>
       </div>
