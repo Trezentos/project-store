@@ -117,6 +117,7 @@ export const AdminStyle = createGlobalStyle`
         .ReactModal__Content.ReactModal__Content--after-open {
             width: 100% !important;
             height: 100% !important;
+
         }
     }
 

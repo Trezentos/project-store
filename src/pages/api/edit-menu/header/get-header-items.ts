@@ -25,7 +25,11 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const headerItemsFromBase = await prisma.headerItem.findMany({})
+    const headerItemsFromBase = await prisma.headerItem.findMany({
+      include: {
+        HeaderSubItem: true,
+      },
+    })
     const categories = await prisma.productCategory.findMany({})
 
     if (!headerItemsFromBase || !categories)
@@ -33,14 +37,41 @@ export default async function handler(
 
     const headerItems = headerItemsFromBase.map((headerItem) => {
       return {
-        ...headerItem,
+        id: headerItem.id,
+        name: getPropertyValueFrom(categories, {
+          categoryId: headerItem.category_id,
+          property: 'name',
+        }),
         linkTo: getPropertyValueFrom(categories, {
           categoryId: headerItem.category_id,
           property: 'hifen',
         }),
-        linkName: getPropertyValueFrom(categories, {
-          categoryId: headerItem.category_id,
-          property: 'name',
+        featuredImg: {
+          name: headerItem.backgroundImageName,
+          imageUrl: headerItem.backgroundImageLink,
+          linkTo: headerItem.backgroundImageLinkTo,
+        },
+        categoryId: headerItem.category_id,
+        headerSubItems: headerItem.HeaderSubItem.map((subHeaderItem) => {
+          return {
+            name: subHeaderItem.name,
+            linkTo: getPropertyValueFrom(categories, {
+              categoryId: subHeaderItem.category_id,
+              property: 'hifen',
+            }),
+            isHighlighted: subHeaderItem.isHighlightedSubItem,
+            columnPosition: subHeaderItem.columnPosition,
+            categoryId: subHeaderItem.category_id,
+          }
+        }).sort((a, b) => {
+          if (a.isHighlighted && !b.isHighlighted) {
+            return -1
+          } else if (!a.isHighlighted && b.isHighlighted) {
+            return 1
+          }
+
+          // Manter a ordem original para valores iguais
+          return 0
         }),
       }
     })

@@ -48,14 +48,14 @@ export default function Home({
 }: HomeProps) {
   return (
     <HomeContanier>
-      {carrousselsFromApi.length > 0 && (
+      {carrousselsFromApi?.length > 0 && (
         <Carrousel carrousselsFromApi={carrousselsFromApi} />
       )}
 
       <HighlightsProducts>
         <div>
           <Image
-            src={HighLightItem.image1Link}
+            src={HighLightItem?.image1Link}
             alt=""
             fill
             sizes="100%, 100%"
@@ -64,7 +64,7 @@ export default function Home({
         </div>
         <div>
           <Image
-            src={HighLightItem.image2Link}
+            src={HighLightItem?.image2Link}
             alt=""
             fill
             sizes="100%, 100%"
@@ -75,14 +75,14 @@ export default function Home({
       {/* <FeaturedProducts /> */}
       <HighlightImage>
         <Image
-          src={backgroundHome.desktopLink}
+          src={backgroundHome?.desktopLink}
           alt=""
           className="desktop"
           fill
           sizes="100vw, 100vh"
         />
         <Image
-          src={backgroundHome.mobileLink}
+          src={backgroundHome?.mobileLink}
           loading="lazy"
           alt=""
           fill
@@ -91,7 +91,9 @@ export default function Home({
         />
       </HighlightImage>
       <InstagramContextProvider>
-        <InstagramSession instagramMedias={instagramPhotos} />
+        {instagramPhotos?.[0] && (
+          <InstagramSession instagramMedias={instagramPhotos} />
+        )}
       </InstagramContextProvider>
 
       <SiteAdvantageBlock />

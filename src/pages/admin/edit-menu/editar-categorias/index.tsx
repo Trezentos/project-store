@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Container } from './styles'
-import Table from '@/components/admin/MenuEdition/CategorieTable/Table'
+import Table from '@/components/admin/MenuEdition/Categories/CategorieTable/Table'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 import { api } from '@/lib/api'
@@ -20,11 +20,9 @@ export default function Categories({
 }: CategoriesProps) {
   return (
     <Container>
-      <div>
-        <EditCategoriesProvider value={{ filters, productCategories }}>
-          <Table />
-        </EditCategoriesProvider>
-      </div>
+      <EditCategoriesProvider value={{ filters, productCategories }}>
+        <Table />
+      </EditCategoriesProvider>
     </Container>
   )
 }

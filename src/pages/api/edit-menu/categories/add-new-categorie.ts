@@ -25,7 +25,7 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { imageFile } = files
-    const { categoryName, hifen, ...allOptions } = fields
+    const { categoryName, hifen, ...allFiltersIds } = fields
 
     const newImage = await createNewImageAWS(imageFile)
 
@@ -35,11 +35,10 @@ export default async function handler(
         .json({ message: 'Não foi possível adicionar a imagem' })
     }
 
-    const filterCategorie = await prisma.productFilter.findFirst({
-      where: {
-        name: String(allOptions.selectedOption0),
-      },
-    })
+    const filterCategorie = await prisma.productFilter.findMany({})
+    const filtersToConnect = [...Object.values(allFiltersIds)].map((item) => ({
+      id: String(item),
+    }))
 
     if (!filterCategorie) {
       return res
@@ -53,7 +52,7 @@ export default async function handler(
         imageBackgroundName: newImage.Key,
         hifen: String(hifen),
         name: String(categoryName),
-        filters: { connect: { id: filterCategorie.id } },
+        filters: { connect: filtersToConnect },
       },
       include: {
         filters: true,

@@ -19,11 +19,6 @@ export const MainContent = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  img,
-  a {
-    display: block;
-    margin: auto 0;
-  }
 
   button {
     background-color: transparent;
@@ -44,7 +39,7 @@ export const GeneralOptions = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  padding: 0.4rem 0;
+  padding: 0.8rem 0;
   > a {
     margin-left: auto;
     font-weight: 500;

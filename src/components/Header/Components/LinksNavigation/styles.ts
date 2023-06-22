@@ -15,61 +15,8 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     list-style: none;
     font-weight: 500;
     font-size: 0.9rem;
-
-    > a {
-      height: 80px;
-      line-height: 80px;
-      padding: 0 0.3rem;
-      transition: 0.3s color, 0.3s border-bottom, 0.3s background-color;
-      font-weight: 500;
-      border-bottom: 3px transparent solid;
-      outline: none;
-      &.desktop {
-        display: none;
-      }
-
-      @media (min-width: 1200px) {
-        display: inline-block !important;
-
-        &:hover {
-          border-bottom: 3px ${(props) => props.theme['black-800']} solid;
-          color: ${(props) => props.theme['pink-400']};
-        }
-      }
-
-      &:active {
-        background-color: ${(props) => props.theme['pink-400']};
-      }
-    }
-
-    > button {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      width: 100%;
-      outline: none;
-      height: 50px;
-      border: none;
-      font-size: 0.9rem;
-      transition: 0.3s;
-      padding-left: 1rem;
-      font-family: 'Montserrat';
-      font-weight: 500;
-      border-bottom: 1px solid ${(props) => props.theme['gray-100']};
-      transition: 0.3s background-color;
-
-      &:active {
-        background-color: ${(props) => props.theme['pink-400']};
-      }
-
-      svg {
-        margin-left: auto;
-      }
-
-      @media (min-width: 1200px) {
-        display: none;
-      }
-    }
+    text-transform: uppercase;
+    border-bottom: 1px solid ${(props) => props.theme['gray-100']};
 
     @media (min-width: 1200px) {
       &:hover {
@@ -86,7 +33,8 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     flex-direction: column;
     width: 100%;
     z-index: 99999;
-    height: 110vh;
+    height: calc(100vh + 20px);
+
     transition: 0.3s;
     right: ${(props) => (props.mobileHeaderActive ? '0%' : '100%')};
 
@@ -104,13 +52,13 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
       width: 100%;
 
       > a {
-        line-height: 50px;
+        /* line-height: 50px;
         height: 50px;
         width: 100%;
         display: flex;
         text-align: right;
         padding-left: 1rem;
-        border-bottom: 1px solid ${(props) => props.theme['gray-100']};
+        border-bottom: 1px solid ${(props) => props.theme['gray-100']}; */
       }
     }
   }
@@ -125,21 +73,6 @@ export const ULNavigation = styled.ul<ULNavigationProps>`
     }
   }
 `
-export const ImageContainer = styled.a`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-
-  p {
-    margin-top: 0.4rem;
-    font-weight: 200;
-  }
-
-  @media (max-width: 1200px) {
-    display: none !important;
-  }
-`
 
 export const SubUlsNavigationsContainer = styled.div`
   position: absolute;
@@ -147,9 +80,9 @@ export const SubUlsNavigationsContainer = styled.div`
   width: 100vw;
   display: flex;
   justify-content: center;
-  gap: 4rem;
-  background-color: ${(props) => props.theme.white};
   align-items: flex-start;
+  gap: 3rem;
+  background-color: ${(props) => props.theme.white};
   display: none;
   padding: 2rem 0;
   z-index: 9999;
@@ -185,59 +118,7 @@ export const SubUlsNavigationsContainer = styled.div`
   }
 `
 
-export const SubULNavigation = styled.ul`
-  li {
-    list-style: none;
-    margin-top: 0.8rem;
-
-    a {
-      font-weight: 400;
-      transition: 0.3s;
-
-      &:hover {
-        color: ${(props) => props.theme['pink-400']};
-      }
-    }
-
-    &:first-child {
-      a {
-        font-weight: 500;
-      }
-    }
-  }
-
-  @media (max-width: 1200px) {
-    margin-top: 2rem;
-    text-align: left;
-    width: 100%;
-
-    li {
-      border-bottom: 1px solid ${(props) => props.theme['gray-100']};
-      width: 100%;
-      font-size: 0.9rem;
-      padding: 1.2rem 0;
-      transition: 0.3s background-color;
-
-      a {
-        padding-left: 1.5rem;
-        font-size: 1rem;
-        font-weight: 500;
-      }
-
-      &:first-child {
-        a {
-          padding-left: 1rem;
-        }
-      }
-
-      &:active {
-        background-color: ${(props) => props.theme['pink-400']};
-      }
-    }
-  }
-`
-
-export const MobileContent = styled.div`
+export const HeaderMobile = styled.div`
   display: none;
 
   @media (max-width: 1200px) {
@@ -260,29 +141,4 @@ export const MobileContent = styled.div`
       border: none;
     }
   }
-`
-export const SubMobileOptions = styled.div`
-  @media (max-width: 1200px) {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: flex-start;
-
-    svg {
-      margin: 5px;
-    }
-
-    img {
-      margin: 0 auto;
-    }
-
-    button {
-      margin-right: auto;
-      background-color: transparent;
-      border: none;
-      display: flex;
-      width: 100%;
-    }
-  }
-  display: none;
 `

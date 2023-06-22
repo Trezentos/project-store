@@ -1,4 +1,3 @@
-// components/ImageForm.tsx
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { ReactNode, useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'

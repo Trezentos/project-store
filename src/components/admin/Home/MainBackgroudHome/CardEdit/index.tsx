@@ -1,4 +1,4 @@
-import InputFile from '@/components/admin/InputsComponents/InputFile'
+import InputFile from '@/components/admin/components/Inputs/InputFile'
 import { Container, InputForm } from './styles'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'

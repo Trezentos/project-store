@@ -48,25 +48,16 @@ model HeaderItem {
     category_id           String?
     ProductCategory       ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
     HeaderSubItem         HeaderSubItem[]
-
-    subItemTitleColum1 String?
-    subItemLinkColum1  String?
-
-    subItemTitleColum2 String?
-    subItemLinkColum2  String?
-
-    subItemTitleColum3 String?
-    subItemLinkColum3  String?
 }
 
 model HeaderSubItem {
-    id              String          @id @default(uuid())
-    name            String
-    headerItem_id   String
-    HeaderItem      HeaderItem      @relation(fields: [headerItem_id], references: [id], onDelete: Cascade)
-    category_id     String
-    ProductCategory ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    columnPosition  Int
+    id                   String          @id @default(uuid())
+    name                 String
+    HeaderItem           HeaderItem[]
+    category_id          String
+    ProductCategory      ProductCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    columnPosition       Int
+    isHighlightedSubItem Boolean         @default(false)
 }
 
 model ProductFilter {

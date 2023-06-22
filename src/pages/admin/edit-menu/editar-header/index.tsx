@@ -8,7 +8,7 @@ import {
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import { api } from '@/lib/api'
 import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
-import HeaderTable from '@/components/admin/MenuEdition/HeaderTable/Table'
+import HeaderTable from '@/components/admin/MenuEdition/Header/HeaderTable/Table'
 import requestHeaderData from '@/services/menu/getHeaderContent'
 
 interface EditHeaderProps {
@@ -21,11 +21,11 @@ export default function EditHeader({
 }: EditHeaderProps) {
   return (
     <Container>
-      <div>
-        <EditHeaderFromAdminProvider value={{ allCategories, headerItems }}>
-          <HeaderTable />
-        </EditHeaderFromAdminProvider>
-      </div>
+      <EditHeaderFromAdminProvider
+        value={{ allCategories, headerItemsFromAPI: headerItems }}
+      >
+        <HeaderTable />
+      </EditHeaderFromAdminProvider>
     </Container>
   )
 }

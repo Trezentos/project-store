@@ -7,14 +7,4 @@ export const Container = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #f8f8f8;
-
-  > div {
-    border: 1px solid lightgray;
-    width: 70%;
-    height: calc(100% - 270px);
-    overflow-y: scroll;
-    border-radius: 10px;
-    margin-top: 270px;
-    position: relative;
-  }
 `
