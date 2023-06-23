@@ -14,13 +14,8 @@ import ConfirmButton from '@/components/admin/components/ConfirmButton'
 const MAX_FILE_SIZE = 5200000
 
 export default function RowEditForm() {
-  const {
-    categoryToEdit,
-    updateSingleCategorie,
-    closeEditModal,
-    options,
-    filters,
-  } = useContext(EditCategoriesContext)
+  const { categoryToEdit, updateCategory, closeEditModal, options, filters } =
+    useContext(EditCategoriesContext)
   const [imageFile, setImageFile] = useState<any>(null)
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
@@ -77,7 +72,7 @@ export default function RowEditForm() {
           formData,
         )
 
-        updateSingleCategorie(dataResponse)
+        updateCategory(dataResponse)
         closeEditModal()
       } catch (error: any) {
         closeEditModal()
@@ -86,7 +81,7 @@ export default function RowEditForm() {
         errorToast(data)
       }
     },
-    [categoryToEdit.id, closeEditModal, updateSingleCategorie],
+    [categoryToEdit.id, closeEditModal, updateCategory],
   )
 
   return (

@@ -18,7 +18,7 @@ export default function RowEditForm() {
     addModalIsOpen,
     headerItemToEdit,
     allCategoriesOptions,
-    updateSingleHeaderItem,
+    updateHeaderItem,
     getCategoryOption,
     closeEditModal,
   } = useContext(EditHeaderFromAdminContext)
@@ -66,7 +66,7 @@ export default function RowEditForm() {
           },
         )
 
-        updateSingleHeaderItem(data)
+        updateHeaderItem(data)
         closeEditModal()
         console.log('returned:', data)
       } catch (error: any) {
@@ -81,7 +81,7 @@ export default function RowEditForm() {
       closeEditModal,
       headerItemToEdit.id,
       setError,
-      updateSingleHeaderItem,
+      updateHeaderItem,
     ],
   )
 

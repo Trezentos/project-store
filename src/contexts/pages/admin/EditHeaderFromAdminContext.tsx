@@ -47,7 +47,8 @@ interface EditHeaderFromAdminContextData {
   openEditionModal: (id: string) => void
   headerItemToEdit: HeaderItem
   openAddModal: () => void
-  updateSingleHeaderItem: (headerItem: HeaderItem) => void
+  updateHeaderItem: (headerItem: HeaderItem) => void
+  deleteHeaderItem: (id: string) => void
   getCategoryOption: (id: string) => {
     label: string
     value: string
@@ -112,7 +113,7 @@ export function EditHeaderFromAdminProvider({
   const openAddModal = () => {
     setAddModalIsOpen(true)
   }
-  const updateSingleHeaderItem = useCallback(
+  const updateHeaderItem = useCallback(
     (headerItem: HeaderItem) => {
       setHeaderItems(
         headerItems.map((item) => {
@@ -120,6 +121,13 @@ export function EditHeaderFromAdminProvider({
           return item
         }),
       )
+    },
+    [headerItems],
+  )
+
+  const deleteHeaderItem = useCallback(
+    (id: string) => {
+      setHeaderItems(headerItems.filter((item) => item.id !== id))
     },
     [headerItems],
   )
@@ -138,7 +146,8 @@ export function EditHeaderFromAdminProvider({
         editModalIsOpen,
         headerItemToEdit,
         allCategoriesOptions,
-        updateSingleHeaderItem,
+        updateHeaderItem,
+        deleteHeaderItem,
       }}
     >
       {children}

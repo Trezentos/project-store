@@ -22,8 +22,8 @@ export default function Table() {
     closeEditModal,
     editModalIsOpen,
     openEditionModal,
-    deleteSingleCategory,
-    updateSingleCategorie,
+    deleteCategory,
+    updateCategory,
   } = useContext(EditCategoriesContext)
 
   const handleExpandRow = useCallback(
@@ -43,7 +43,7 @@ export default function Table() {
     async (id: string) => {
       try {
         await api.delete(`/edit-menu/categories/delete-categorie/${id}`)
-        deleteSingleCategory(id)
+        deleteCategory(id)
         successToast('Categoria removida com sucesso')
       } catch (error: any) {
         const { data } = error.response
@@ -51,7 +51,7 @@ export default function Table() {
         errorToast(data)
       }
     },
-    [deleteSingleCategory],
+    [deleteCategory],
   )
   const handleEditRow = useCallback(
     async (id: string) => {
@@ -71,14 +71,14 @@ export default function Table() {
           },
         )
 
-        updateSingleCategorie(data)
+        updateCategory(data)
       } catch (error: any) {
         const { data } = error.response
         if (!data) errorToast('Houve algum erro ao esconder a categoria...')
         errorToast(data)
       }
     },
-    [updateSingleCategorie],
+    [updateCategory],
   )
 
   return (

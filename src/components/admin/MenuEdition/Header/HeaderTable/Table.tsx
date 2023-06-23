@@ -16,6 +16,7 @@ export default function HeaderTable() {
     editModalIsOpen,
     closeEditModal,
     openEditionModal,
+    deleteHeaderItem,
   } = useContext(EditHeaderFromAdminContext)
 
   const handleExpandRow = useCallback(
@@ -31,17 +32,19 @@ export default function HeaderTable() {
     [expandedRows],
   )
 
-  const handleDeleteRow = useCallback(async (id: string) => {
-    try {
-      await api.delete(`/edit-menu/categories/delete-categorie/${id}`)
-      // deleteSingleCategory(id)
-      successToast('Categoria removida com sucesso')
-    } catch (error: any) {
-      const { data } = error.response
-      if (!data) errorToast('Houve algum erro ao remover a categoria...')
-      errorToast(data)
-    }
-  }, [])
+  const handleDeleteRow = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`/edit-menu/header/delete-header-item/${id}`)
+        deleteHeaderItem(id)
+      } catch (error: any) {
+        const { data } = error.response
+        if (!data) errorToast('Houve algum erro ao remover a categoria...')
+        errorToast(data)
+      }
+    },
+    [deleteHeaderItem],
+  )
   const handleEditRow = useCallback(
     async (id: string) => {
       openEditionModal(id)

@@ -30,9 +30,9 @@ interface EditCategoriesContextDatas {
     label: string
   }[]
   filters: ProductFilter[]
-  deleteSingleCategory: (id: string) => void
+  deleteCategory: (id: string) => void
   addNewCategorie: (newCategory: ProductCategory) => void
-  updateSingleCategorie: (updatedCategory: ProductCategory) => void
+  updateCategory: (updatedCategory: ProductCategory) => void
   selectedImage: string | null
   updateAllCategories: (categories: ProductCategory[]) => void
   isHoverdImage: boolean
@@ -141,7 +141,7 @@ export function EditCategoriesProvider({
         updateSelectedImage,
         categoryToEdit,
         filters,
-        updateSingleCategorie,
+        updateCategory: updateSingleCategorie,
         updateHoveredImage,
         isHoverdImage,
         closeEditModal,
@@ -151,7 +151,7 @@ export function EditCategoriesProvider({
         openAddModal,
         updateAllCategories,
         addModalIsOpen,
-        deleteSingleCategory,
+        deleteCategory: deleteSingleCategory,
         allCategories,
         thereIsProductCategories,
         closeAddModal,
