@@ -20,6 +20,7 @@ export default function RowEditForm() {
     allCategoriesOptions,
     updateSingleHeaderItem,
     getCategoryOption,
+    closeEditModal,
   } = useContext(EditHeaderFromAdminContext)
 
   const categoryDefaultValue = getCategoryOption(headerItemToEdit.categoryId)
@@ -66,6 +67,7 @@ export default function RowEditForm() {
         )
 
         updateSingleHeaderItem(data)
+        closeEditModal()
         console.log('returned:', data)
       } catch (error: any) {
         const { data } = error.response
@@ -76,6 +78,7 @@ export default function RowEditForm() {
     },
     [
       allCategoriesOptions,
+      closeEditModal,
       headerItemToEdit.id,
       setError,
       updateSingleHeaderItem,

@@ -9,7 +9,7 @@ import {
 import { api } from '@/lib/api'
 import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
 import HeaderTable from '@/components/admin/MenuEdition/Header/HeaderTable/Table'
-import requestHeaderData from '@/services/menu/getHeaderContent'
+import requestHeaderData from '@/services/admin/menu/getHeaderContent'
 
 interface EditHeaderProps {
   allCategories: ProductCategory[]

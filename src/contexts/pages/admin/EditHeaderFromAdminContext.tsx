@@ -67,8 +67,6 @@ export function EditHeaderFromAdminProvider({
   children,
   value: { allCategories, headerItemsFromAPI },
 }: EditHeaderFromAdminProviderProps) {
-  const [user, setUser] = useState()
-  const router = useRouter()
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
   const [addModalIsOpen, setAddModalIsOpen] = useState(false)
   const [headerItemToEdit, setHeaderItemToEdit] = useState<HeaderItem>(

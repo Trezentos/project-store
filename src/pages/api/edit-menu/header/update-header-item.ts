@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
+import { formatHeaderItemObject } from '@/services/admin/menu/formatHeaderItemsArray'
 
 export const config = {
   api: {
@@ -20,6 +21,8 @@ export default async function handler(
       body: { headerItemName, headerItemId, newCategoryId },
     } = req
 
+    const categories = await prisma.productCategory.findMany({})
+
     const updatedHeaderItem = await prisma.headerItem.update({
       where: {
         id: headerItemId,
@@ -28,11 +31,17 @@ export default async function handler(
         name: headerItemName,
         category_id: newCategoryId,
       },
+      include: {
+        HeaderSubItem: true,
+      },
     })
 
-    console.log(updatedHeaderItem)
+    const formatedHeaderItem = formatHeaderItemObject(
+      updatedHeaderItem,
+      categories,
+    )
 
-    return res.status(200).json(updatedHeaderItem)
+    return res.status(200).json(formatedHeaderItem)
   } catch (error: any) {
     console.log(error.message)
     return res.json(error.message)

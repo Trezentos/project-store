@@ -16,6 +16,7 @@ export interface ISubHeaderContent {
   linkTo: string
   isHighlighted: boolean
   columnPosition: number
+  categoryId: string
 }
 export interface IHeaderContent {
   id: string

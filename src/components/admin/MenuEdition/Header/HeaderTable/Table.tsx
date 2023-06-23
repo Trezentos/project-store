@@ -44,12 +44,9 @@ export default function HeaderTable() {
   }, [])
   const handleEditRow = useCallback(
     async (id: string) => {
-      console.log(allCategories)
-      console.log(id)
-
       openEditionModal(id)
     },
-    [allCategories, openEditionModal],
+    [openEditionModal],
   )
 
   const handleShowHideRow = useCallback(async (id: string, active: boolean) => {

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import formatHeaderItemsArray from '@/services/admin/menu/formatHeaderItemsArray'
 import { ProductCategory } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -35,46 +36,7 @@ export default async function handler(
     if (!headerItemsFromBase || !categories)
       return res.status(400).json({ message: 'No header items were found' })
 
-    const headerItems = headerItemsFromBase.map((headerItem) => {
-      return {
-        id: headerItem.id,
-        name: getPropertyValueFrom(categories, {
-          categoryId: headerItem.category_id,
-          property: 'name',
-        }),
-        linkTo: getPropertyValueFrom(categories, {
-          categoryId: headerItem.category_id,
-          property: 'hifen',
-        }),
-        featuredImg: {
-          name: headerItem.backgroundImageName,
-          imageUrl: headerItem.backgroundImageLink,
-          linkTo: headerItem.backgroundImageLinkTo,
-        },
-        categoryId: headerItem.category_id,
-        headerSubItems: headerItem.HeaderSubItem.map((subHeaderItem) => {
-          return {
-            name: subHeaderItem.name,
-            linkTo: getPropertyValueFrom(categories, {
-              categoryId: subHeaderItem.category_id,
-              property: 'hifen',
-            }),
-            isHighlighted: subHeaderItem.isHighlightedSubItem,
-            columnPosition: subHeaderItem.columnPosition,
-            categoryId: subHeaderItem.category_id,
-          }
-        }).sort((a, b) => {
-          if (a.isHighlighted && !b.isHighlighted) {
-            return -1
-          } else if (!a.isHighlighted && b.isHighlighted) {
-            return 1
-          }
-
-          // Manter a ordem original para valores iguais
-          return 0
-        }),
-      }
-    })
+    const headerItems = formatHeaderItemsArray(headerItemsFromBase, categories)
 
     return res.status(201).json(headerItems)
   } catch (error: any) {
