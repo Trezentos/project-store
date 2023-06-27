@@ -1,10 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 import { formatHeaderItemObject } from '@/services/admin/menu/formatHeaderItemsArray'
+import formToDataFormatter from '@/utils/formToDataFormatter'
+import createNewImageAWS from '@/utils/createNewImageAws'
+import deleteOldImageAWS from '@/utils/deleteOldImageAws'
+import changeNewHeaderItemImage from '@/services/admin/menu/changeNewHeaderItemImage'
 
 export const config = {
   api: {
-    bodyParser: true,
+    bodyParser: false,
   },
 }
 
@@ -17,19 +21,51 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const {
-      body: { headerItemName, headerItemId, newCategoryId },
-    } = req
+    const { files, fields } = await formToDataFormatter(req)
+    const { imageFile } = files
+    const { headerItemId, headerItemName, newCategoryId, changeImageBoolean } =
+      fields
+    const isToChangeImage = changeImageBoolean === 'true'
 
-    const categories = await prisma.productCategory.findMany({})
+    const newCategory = await prisma.productCategory.findFirst({
+      where: {
+        id: String(newCategoryId),
+      },
+    })
+
+    if (!newCategory) {
+      return res.status(405).json({ message: 'Categoria não encontrada' })
+    }
+
+    const oldHeaderItem = await prisma.headerItem.findFirst({
+      where: {
+        id: String(headerItemId),
+      },
+    })
+
+    if (!oldHeaderItem) {
+      return res
+        .status(405)
+        .json({ message: 'Item do cabeçalho não encontrado' })
+    }
+
+    const returnedObjectImage = await changeNewHeaderItemImage({
+      imageFile,
+      linkToImage: newCategory.hifen,
+      isToChange: isToChangeImage,
+    })
+
+    if (isToChangeImage)
+      await deleteOldImageAWS(oldHeaderItem.backgroundImageName)
 
     const updatedHeaderItem = await prisma.headerItem.update({
       where: {
-        id: headerItemId,
+        id: String(headerItemId),
       },
       data: {
-        name: headerItemName,
-        category_id: newCategoryId,
+        name: String(headerItemName),
+        category_id: String(newCategoryId),
+        ...returnedObjectImage,
       },
       include: {
         HeaderSubItem: true,
@@ -38,7 +74,7 @@ export default async function handler(
 
     const formatedHeaderItem = formatHeaderItemObject(
       updatedHeaderItem,
-      categories,
+      newCategory,
     )
 
     return res.status(200).json(formatedHeaderItem)

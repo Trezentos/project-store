@@ -8,7 +8,10 @@ import React, {
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import { animated, useSpring } from 'react-spring'
-import { HeaderItem } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
+import {
+  EditHeaderFromAdminContext,
+  HeaderItem,
+} from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 
 interface TableRowProps {
   data: HeaderItem
@@ -32,6 +35,10 @@ const TableRow: React.FC<TableRowProps> = ({
   const [divHeight, setDivHeight] = useState('0')
   const textHoverToImageRef = useRef<HTMLElement>(null)
   const trRef = useRef<HTMLTableRowElement | null>(null)
+  const { imageUrl, linkTo, name: ImageName } = data.featuredImg
+  const { updateHoveredImage, updateSelectedImage } = useContext(
+    EditHeaderFromAdminContext,
+  )
 
   const rowAnimation = useSpring({
     height: isExpanded ? divHeight : '0px',
@@ -60,15 +67,29 @@ const TableRow: React.FC<TableRowProps> = ({
     }, 200)
   }, [data.id, onDelete])
 
+  const showHoveredImage = useCallback(() => {
+    textHoverToImageRef.current?.addEventListener('mouseover', () => {
+      updateHoveredImage(true)
+      updateSelectedImage(imageUrl)
+    })
+    textHoverToImageRef.current?.addEventListener('mouseleave', () => {
+      updateHoveredImage(false)
+    })
+  }, [imageUrl, updateHoveredImage, updateSelectedImage])
+
   useEffect(() => {
     animateRowExpansion()
-  }, [animateRowExpansion, data.id])
+    showHoveredImage()
+  }, [animateRowExpansion, data.id, showHoveredImage])
 
   return (
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
-        <td>{data.linkTo}</td>
+        <td>
+          <strong ref={textHoverToImageRef}>{ImageName}</strong>
+        </td>
+        <td>{data.linkName}</td>
         <td onClick={() => onExpand(data.id)}>
           {isExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
         </td>

@@ -24,6 +24,7 @@ import { CaretLeft, CaretRight, List } from 'phosphor-react'
 import { FilterContextProvider } from '@/contexts/pages/products/FilterContext'
 import { ProductFilter } from '@/contexts/pages/admin/EditCategoriesContext'
 import Filters from '@/components/Pages/Products/Filters'
+import { Any } from 'react-spring'
 
 interface CategoryPageProps {
   category: ProductCategory
@@ -158,30 +159,44 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: data.map((category) => ({
-      params: { category: category.hifen },
+      params: { hifen: category.hifen },
     })),
     fallback: 'blocking',
   }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const category = params?.category as string
+  try {
+    const hifen = params?.hifen as string
 
-  const { data } = await api.get<ProductCategory>(
-    `/edit-menu/categories/get-single-category/${category}`,
-  )
+    const { data } = await api.get<ProductCategory>(
+      `/edit-menu/categories/get-single-category/${hifen}`,
+    )
 
-  const { allProducts, colorContent, activeFilters } = await getManyProducts(
-    data,
-  )
+    const { allProducts, colorContent, activeFilters } = await getManyProducts(
+      data,
+    )
 
-  return {
-    props: {
-      category: data,
-      products: allProducts,
-      colorContent,
-      activeFilters,
-    },
-    revalidate: 60 * 60 * 24, // Atualize a página a cada 24 horas
+    return {
+      props: {
+        category: data,
+        products: allProducts,
+        colorContent,
+        activeFilters,
+      },
+      revalidate: 60 * 60 * 24, // Atualize a página a cada 24 horas
+    }
+  } catch (err: any) {
+    console.log(err.message)
+
+    return {
+      props: {
+        category: [],
+        products: [],
+        colorContent: [],
+        activeFilters: [],
+      },
+      revalidate: 60 * 60 * 24, // Atualize a página a cada 24 horas
+    }
   }
 }

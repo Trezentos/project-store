@@ -46,7 +46,7 @@ export default async function handler(
       },
     })
 
-    return res.status(204)
+    return res.status(204).end()
   } catch (error: any) {
     return res.status(400).json(error.message)
   }

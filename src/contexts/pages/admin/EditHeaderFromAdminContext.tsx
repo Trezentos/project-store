@@ -13,9 +13,11 @@ export interface HeaderItem {
   name: string
   linkTo: string
   linkName: string
-  backgroundImageLink: string
-  backgroundImageName: string
-  backgroundImageLinkTo: string
+  featuredImg: {
+    imageUrl: string | null
+    linkTo: string | null
+    name: string | null
+  }
   categoryId: string
 }
 
@@ -45,10 +47,15 @@ interface EditHeaderFromAdminContextData {
   closeEditModal: () => void
   closeAddModal: () => void
   openEditionModal: (id: string) => void
+  isHoverdImage: boolean
+  selectedImage: string | null
   headerItemToEdit: HeaderItem
   openAddModal: () => void
+  removeFeaturedImage: () => void
   updateHeaderItem: (headerItem: HeaderItem) => void
   deleteHeaderItem: (id: string) => void
+  updateSelectedImage: (imgSrc: string | null) => void
+  updateHoveredImage: (isHovered: boolean) => void
   getCategoryOption: (id: string) => {
     label: string
     value: string
@@ -70,10 +77,12 @@ export function EditHeaderFromAdminProvider({
 }: EditHeaderFromAdminProviderProps) {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
   const [addModalIsOpen, setAddModalIsOpen] = useState(false)
+  const [headerItems, setHeaderItems] = useState(headerItemsFromAPI)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [isHoverdImage, setIsHoveredImage] = useState(false)
   const [headerItemToEdit, setHeaderItemToEdit] = useState<HeaderItem>(
     {} as HeaderItem,
   )
-  const [headerItems, setHeaderItems] = useState(headerItemsFromAPI)
 
   const closeEditModal = () => {
     setEditModalIsOpen(false)
@@ -82,7 +91,7 @@ export function EditHeaderFromAdminProvider({
     setAddModalIsOpen(false)
   }
   const openEditionModal = (id: string) => {
-    const selectedHeader = headerItemsFromAPI.find((item) => item.id === id)
+    const selectedHeader = headerItems.find((item) => item.id === id)
     if (!selectedHeader) return
     setHeaderItemToEdit(selectedHeader)
     setEditModalIsOpen(true)
@@ -132,9 +141,31 @@ export function EditHeaderFromAdminProvider({
     [headerItems],
   )
 
+  const updateSelectedImage = useCallback((imgSrc: string | null) => {
+    setSelectedImage(imgSrc)
+  }, [])
+
+  const updateHoveredImage = useCallback((isHovered: boolean) => {
+    setIsHoveredImage(isHovered)
+  }, [])
+
+  const removeFeaturedImage = useCallback(() => {
+    setHeaderItemToEdit({
+      ...headerItemToEdit,
+      featuredImg: {
+        imageUrl: null,
+        linkTo: null,
+        name: null,
+      },
+    })
+  }, [headerItemToEdit])
+
   return (
     <EditHeaderFromAdminContext.Provider
       value={{
+        updateSelectedImage,
+        updateHoveredImage,
+        isHoverdImage,
         allCategories,
         headerItems,
         closeAddModal,
@@ -146,8 +177,10 @@ export function EditHeaderFromAdminProvider({
         editModalIsOpen,
         headerItemToEdit,
         allCategoriesOptions,
+        removeFeaturedImage,
         updateHeaderItem,
         deleteHeaderItem,
+        selectedImage,
       }}
     >
       {children}

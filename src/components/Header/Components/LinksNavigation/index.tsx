@@ -20,9 +20,11 @@ export default function LinksNavigation() {
       {headerContent.map((headerItem) => {
         const { headerSubItems } = headerItem
 
+        console.log(headerItem.linkTo)
+
         return (
           <li key={headerItem.id}>
-            <HeaderItem linkTo={headerItem.linkTo}>
+            <HeaderItem linkTo={encodeURI(headerItem.linkTo ?? '')}>
               {headerItem.name}
             </HeaderItem>
             {headerSubItems?.[0] && (

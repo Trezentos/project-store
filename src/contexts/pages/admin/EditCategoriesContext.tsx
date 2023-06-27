@@ -139,11 +139,11 @@ export function EditCategoriesProvider({
       value={{
         selectedImage,
         updateSelectedImage,
+        isHoverdImage,
         categoryToEdit,
         filters,
         updateCategory: updateSingleCategorie,
         updateHoveredImage,
-        isHoverdImage,
         closeEditModal,
         openEditionModal,
         addNewCategorie,

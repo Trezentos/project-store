@@ -13,25 +13,13 @@ import {
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import ConfirmButton from '@/components/admin/components/ConfirmButton'
 import InputFile from '@/components/admin/components/Inputs/InputFile'
-import { X } from 'phosphor-react'
-import FeaturedImagePreview from './FeaturedImagePreview'
 
-export default function RowEditForm() {
-  const {
-    addModalIsOpen,
-    headerItemToEdit,
-    allCategoriesOptions,
-    updateHeaderItem,
-    getCategoryOption,
-    closeEditModal,
-    removeFeaturedImage,
-  } = useContext(EditHeaderFromAdminContext)
+export default function RowAddForm() {
+  const { allCategoriesOptions, updateHeaderItem, closeEditModal } = useContext(
+    EditHeaderFromAdminContext,
+  )
 
-  const categoryDefaultValue = getCategoryOption(headerItemToEdit.categoryId)
   const [imageFile, setImageFile] = useState<any>(null)
-  const [thereIsImage, setThereIsImage] = useState<any>(null)
-  const { featuredImg } = headerItemToEdit
-  const thereIsFeaturedImage = featuredImg.name
 
   const schema = z.object({
     headerItemName: z.string().min(1, {
@@ -44,7 +32,12 @@ export default function RowEditForm() {
         (files) => (files?.[0]?.size ?? 0) <= 5200000,
         `A imagem não pode passar de 5 mb.`,
       ),
-    category: z.object({ value: z.string(), label: z.string() }),
+    category: z
+      .object({
+        value: z.string(),
+        label: z.string(),
+      })
+      .refine((item) => console.log(item), '0pa'),
   })
 
   type RegisterFormData = z.infer<typeof schema>
@@ -64,8 +57,7 @@ export default function RowEditForm() {
     async (editFormData: RegisterFormData) => {
       try {
         const { headerItemName, category, imageFile } = editFormData
-        const thereIsFileOnInput = imageFile.length > 0
-        let changeImage = false
+        const changeImage = false
         const formData = new FormData()
 
         if (
@@ -75,19 +67,8 @@ export default function RowEditForm() {
           return
         }
 
-        if (featuredImg.name && !thereIsFileOnInput) {
-          changeImage = false
-        } else if (!thereIsFileOnInput && !featuredImg.name) {
-          formData.append('imageFile', imageFile[0])
-          changeImage = true
-        } else {
-          formData.append('imageFile', imageFile[0])
-          changeImage = true
-        }
-
         formData.append('headerItemName', headerItemName)
         formData.append('newCategoryId', category.value)
-        formData.append('headerItemId', headerItemToEdit.id)
         formData.append('changeImageBoolean', String(changeImage))
 
         const { data } = await api.put<HeaderItem>(
@@ -95,24 +76,24 @@ export default function RowEditForm() {
           formData,
         )
 
+        console.log(data)
+
         updateHeaderItem(data)
         closeEditModal()
       } catch (error: any) {
         const { data } = error.response
         if (!data)
-          errorToast('Houve algum erro ao editar o item do cabeçalho...')
+          errorToast('Houve algum erro ao adicionar o item do cabeçalho...')
         errorToast(data)
       }
     },
-    [
-      allCategoriesOptions,
-      closeEditModal,
-      featuredImg.name,
-      headerItemToEdit.id,
-      setError,
-      updateHeaderItem,
-    ],
+    [allCategoriesOptions, closeEditModal, setError, updateHeaderItem],
   )
+
+  useEffect(() => {
+    watch('category')
+    console.log(errors)
+  }, [watch, errors])
 
   return (
     <EditForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
@@ -124,7 +105,6 @@ export default function RowEditForm() {
             id={'headerItemName'}
             register={register('headerItemName')}
             label="Editar nome do item do Cabeçalho"
-            value={headerItemToEdit.name}
             type="text"
           />
           {errors.headerItemName && (
@@ -132,34 +112,25 @@ export default function RowEditForm() {
           )}
         </div>
 
-        <FeaturedImagePreview thereIsFeaturedImage={thereIsFeaturedImage}>
-          <strong>{featuredImg.name}</strong>
-        </FeaturedImagePreview>
-        <>
-          <InputFile
-            id={'imageFile'}
-            register={register('imageFile')}
-            className={`labelImageFile ${
-              thereIsFeaturedImage ? 'invisible' : ''
-            }`}
-            title={'Imagem de fundo:'}
-            disabled={isSubmitting}
-            file={imageFile}
-            onChange={(e) => setImageFile(e.target?.files)}
-          />
-          {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
-        </>
+        <InputFile
+          id={'imageFile'}
+          register={register('imageFile')}
+          className={`labelImageFile`}
+          title={'Imagem de fundo:'}
+          disabled={isSubmitting}
+          file={imageFile}
+          onChange={(e) => setImageFile(e.target?.files)}
+        />
+        {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
 
         <div>
           <p>Categoria</p>
           <Controller
             control={control}
             name="category"
-            defaultValue={categoryDefaultValue}
             render={({ field }) => (
               <InputSelect
                 options={allCategoriesOptions}
-                defaultValue={categoryDefaultValue}
                 onChange={(item) => field.onChange(item)}
               />
             )}
@@ -170,7 +141,7 @@ export default function RowEditForm() {
         </div>
 
         <ConfirmButton isSubmitting={isSubmitting}>
-          Confirmar edição
+          Criar novo item
         </ConfirmButton>
       </div>
     </EditForm>

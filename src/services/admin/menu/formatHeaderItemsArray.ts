@@ -2,7 +2,10 @@ import { HeaderItem, ProductCategory, HeaderSubItem } from '@prisma/client'
 
 const getPropertyValueFrom = (
   categories: ProductCategory[],
-  { categoryId, property }: { categoryId: string | null; property: 'hifen' },
+  {
+    categoryId,
+    property,
+  }: { categoryId: string | null; property: 'hifen' | 'name' },
 ) => {
   return categories
     .filter((categorieItem) => {
@@ -24,6 +27,10 @@ export default function formatHeaderItemsArray(
       linkTo: getPropertyValueFrom(categories, {
         categoryId: headerItem.category_id,
         property: 'hifen',
+      }),
+      linkName: getPropertyValueFrom(categories, {
+        categoryId: headerItem.category_id,
+        property: 'name',
       }),
       featuredImg: {
         name: headerItem.backgroundImageName,
@@ -60,15 +67,13 @@ export function formatHeaderItemObject(
   headerItem: HeaderItem & {
     HeaderSubItem: HeaderSubItem[]
   },
-  categories: ProductCategory[],
+  category: ProductCategory,
 ) {
   return {
     id: headerItem.id,
     name: headerItem.name,
-    linkTo: getPropertyValueFrom(categories, {
-      property: 'hifen',
-      categoryId: headerItem.category_id,
-    }),
+    linkTo: category.hifen,
+    linkName: category.name,
     featuredImg: {
       name: headerItem.backgroundImageName,
       imageUrl: headerItem.backgroundImageLink,
@@ -78,10 +83,8 @@ export function formatHeaderItemObject(
     headerSubItems: headerItem.HeaderSubItem.map((subHeaderItem) => {
       return {
         name: subHeaderItem.name,
-        linkTo: getPropertyValueFrom(categories, {
-          categoryId: subHeaderItem.category_id,
-          property: 'hifen',
-        }),
+        linkTo: category.hifen,
+        linkName: category.name,
         isHighlighted: subHeaderItem.isHighlightedSubItem,
         columnPosition: subHeaderItem.columnPosition,
         categoryId: subHeaderItem.category_id,

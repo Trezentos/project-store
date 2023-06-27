@@ -7,10 +7,13 @@ import { api } from '@/lib/api'
 import { EditHeaderFromAdminContext } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import Modal from '../../../components/Modal'
 import RowEditForm from '../RowEditForm'
+import AddNewRowModal from '../AddNewRowModal'
 
 export default function HeaderTable() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
   const {
+    isHoverdImage,
+    selectedImage,
     allCategories,
     headerItems,
     editModalIsOpen,
@@ -35,7 +38,7 @@ export default function HeaderTable() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       try {
-        await api.delete(`/edit-menu/header/delete-header-item/${id}`)
+        // await api.delete(`/edit-menu/header/delete-header-item/${id}`)
         deleteHeaderItem(id)
       } catch (error: any) {
         const { data } = error.response
@@ -76,10 +79,22 @@ export default function HeaderTable() {
 
   return (
     <Container>
+      {
+        <SuspendedImage
+          width={400}
+          height={250}
+          src={selectedImage ?? allCategories[0].imageBackgroundLink}
+          alt=""
+          style={{
+            top: isHoverdImage ? '5px' : '-300px',
+          }}
+        />
+      }
       <StyledTable>
         <thead>
           <tr>
             <th>Nome do item</th>
+            <th>Imagem de destaque</th>
             <th>Categoria do item</th>
             <th>Expandir</th>
             <th>Editar</th>
@@ -104,7 +119,7 @@ export default function HeaderTable() {
       <Modal isOpen={editModalIsOpen} closeModal={closeEditModal}>
         <RowEditForm />
       </Modal>
-      {/* <AddNewRow /> */}
+      <AddNewRowModal />
     </Container>
   )
 }

@@ -11,8 +11,6 @@ import { EditCategoriesContext } from '@/contexts/pages/admin/EditCategoriesCont
 import { api } from '@/lib/api'
 import ConfirmButton from '@/components/admin/components/ConfirmButton'
 
-const MAX_FILE_SIZE = 5200000
-
 export default function RowEditForm() {
   const { categoryToEdit, updateCategory, closeEditModal, options, filters } =
     useContext(EditCategoriesContext)
@@ -24,7 +22,7 @@ export default function RowEditForm() {
       .any()
       .optional()
       .refine(
-        (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
+        (files) => (files[0]?.size ?? 0) <= 5200000,
         `A imagem não pode passar de 5 mb.`,
       ),
     categoryName: z.string().min(1, {

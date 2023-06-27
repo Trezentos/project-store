@@ -23,7 +23,7 @@ interface InputSelectProps {
     value: string
     label: string
   }[]
-  defaultValue: {
+  defaultValue?: {
     value: string
     label: string
   }

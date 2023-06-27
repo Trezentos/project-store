@@ -10,10 +10,10 @@ export default async function handler(
       return res.status(405).end()
     }
 
-    const category = req.query?.category as string
+    const hifen = encodeURI(req.query?.hifen as string)
 
     const foundCategory = await prisma.productCategory.findFirst({
-      where: { hifen: category },
+      where: { hifen },
       include: {
         filters: true,
       },

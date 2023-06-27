@@ -60,6 +60,7 @@ export function HeaderContextProvider({
       const { data } = await api.get<HeaderItem[]>(
         '/edit-menu/header/get-header-items',
       )
+
       setHeaderContent(data)
     } catch (err: any) {
       console.error(err.message)

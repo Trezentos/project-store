@@ -98,7 +98,6 @@ export default function Table() {
         <thead>
           <tr>
             <th>Categoria</th>
-            <th>Hífen</th>
             <th>Imagem de Fundo</th>
             <th>Filtros</th>
             <th>Expandir</th>

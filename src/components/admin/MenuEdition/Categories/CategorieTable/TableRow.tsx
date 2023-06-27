@@ -18,6 +18,10 @@ import {
   EditCategoriesContext,
   ProductCategory,
 } from '@/contexts/pages/admin/EditCategoriesContext'
+import {
+  cleanAllContentFromRowTable,
+  removeRowFromTable,
+} from '@/components/admin/utils/DOMFunctions'
 
 interface TableRowProps {
   data: ProductCategory
@@ -69,16 +73,11 @@ const TableRow: React.FC<TableRowProps> = ({
   }, [data.id])
 
   const handleDeleteRow = useCallback(() => {
-    Array.from(trRef.current?.children as ArrayLike<Element>).forEach(
-      (item) => {
-        item.innerHTML = ''
-        // @ts-ignore
-        item.style.padding = '0px'
-      },
-    )
+    cleanAllContentFromRowTable(trRef.current?.children)
 
     setTimeout(() => {
       onDelete(data.id)
+      removeRowFromTable(trRef.current?.children)
       // 200 must be equal on styles: transition: padding 0.2s;
     }, 200)
   }, [data.id, onDelete])
@@ -92,7 +91,6 @@ const TableRow: React.FC<TableRowProps> = ({
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
-        <td>{data.hifen}</td>
         <td>
           <strong ref={textHoverToImageRef}>{data.imageBackgroundName}</strong>
         </td>
