@@ -7,7 +7,6 @@ interface InstaModalProps {
   children: ReactNode
   id?: string
 }
-Modal.setAppElement('#__next')
 
 export default function EditRowModal({
   isOpen,
@@ -50,7 +49,7 @@ export default function EditRowModal({
     setTop('-300px')
   }, [isOpen])
 
-  return (
+  return isOpen ? (
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
@@ -60,5 +59,7 @@ export default function EditRowModal({
     >
       {children}
     </Modal>
+  ) : (
+    <></>
   )
 }

@@ -14,6 +14,7 @@ import Sidebar from './../components/admin/SideBar'
 import { AuthAdminProvider } from '@/contexts/pages/admin/AuthAdminContext'
 import { useRouter } from 'next/router'
 import { ToastContainer } from 'react-toastify'
+import Modal from 'react-modal'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -22,6 +23,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
+
+Modal.setAppElement('#__next')
 
 export default function App({
   Component,

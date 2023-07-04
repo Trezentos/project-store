@@ -6,8 +6,19 @@ import {
   useState,
 } from 'react'
 import { useRouter } from 'next/router'
-import { ProductCategory } from './EditCategoriesContext'
+import produce from 'immer'
 
+import { ProductCategory } from './EditCategoriesContext'
+export interface SubHeaderItem {
+  id: string
+  name: string
+  linkTo: string
+  linkName: string
+  categoryId: string
+  isHighlighted: boolean
+  columnPosition: number
+  headerItemId: string
+}
 export interface HeaderItem {
   id: string
   name: string
@@ -19,16 +30,7 @@ export interface HeaderItem {
     name: string | null
   }
   categoryId: string
-}
-
-export interface HeaderSubItem {
-  id: string
-  name: string
-  linkTo: string
-  categoryName: string
-  backgroundImageLink: string
-  backgroundImageName: string
-  categoryId: string
+  headerSubItems: SubHeaderItem[]
 }
 
 interface EditHeaderFromAdminProviderProps {
@@ -44,19 +46,45 @@ interface EditHeaderFromAdminContextData {
   headerItems: HeaderItem[]
   editModalIsOpen: boolean
   addModalIsOpen: boolean
-  closeEditModal: () => void
-  closeAddModal: () => void
+  closeEditHeaderModal: () => void
+  closeAddHeaderModal: () => void
   openEditionModal: (id: string) => void
+  openSubHeaderEditionModal: (headerSubItem: SubHeaderItem) => void
   isHoverdImage: boolean
   selectedImage: string | null
   headerItemToEdit: HeaderItem
-  openAddModal: () => void
+  subHeaderItemToEdit: SubHeaderItem
+  openHeaderAddModal: () => void
   removeFeaturedImage: () => void
+  addHeaderItem: (newHeaderItem: HeaderItem) => void
   updateHeaderItem: (headerItem: HeaderItem) => void
+  openSubHeaderAddModal: (id: string) => void
+  closeSubHeaderAddModal: () => void
+  updateSubHeaderItem: (
+    subHeaderItem: SubHeaderItem,
+    headerItemId: string,
+  ) => void
   deleteHeaderItem: (id: string) => void
+  deleteSubHeaderItem: (id: string, headerItemId: string) => void
   updateSelectedImage: (imgSrc: string | null) => void
   updateHoveredImage: (isHovered: boolean) => void
+  headerItemIdToAddIn: string
+  closeSubHeaderEditionModal: () => void
+  subHeaderModalOpen: boolean
+  addSubHeaderItem: (
+    newSubHeaderItem: SubHeaderItem,
+    headerItemId: string,
+  ) => void
+  addSubHeaderModalIsOpen: boolean
+  getHighlightItemDefaultValue: (isHighlighted: boolean) => {
+    label: string
+    value: string
+  }
   getCategoryOption: (id: string) => {
+    label: string
+    value: string
+  }
+  getColumnPositionDefaultValue: (columnPosition: number) => {
     label: string
     value: string
   }
@@ -76,20 +104,20 @@ export function EditHeaderFromAdminProvider({
   value: { allCategories, headerItemsFromAPI },
 }: EditHeaderFromAdminProviderProps) {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
+  const [subHeaderModalOpen, setSubHeaderModalOpen] = useState(false)
   const [addModalIsOpen, setAddModalIsOpen] = useState(false)
-  const [headerItems, setHeaderItems] = useState(headerItemsFromAPI)
+  const [addSubHeaderModalIsOpen, setAddSubHeaderModalIsOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isHoverdImage, setIsHoveredImage] = useState(false)
+  const [headerItems, setHeaderItems] = useState(headerItemsFromAPI)
   const [headerItemToEdit, setHeaderItemToEdit] = useState<HeaderItem>(
     {} as HeaderItem,
   )
+  const [subHeaderItemToEdit, setSubHeaderItemToEdit] = useState<SubHeaderItem>(
+    {} as SubHeaderItem,
+  )
+  const [headerItemIdToAddIn, setHeaderItemToAddInId] = useState('')
 
-  const closeEditModal = () => {
-    setEditModalIsOpen(false)
-  }
-  const closeAddModal = () => {
-    setAddModalIsOpen(false)
-  }
   const openEditionModal = (id: string) => {
     const selectedHeader = headerItems.find((item) => item.id === id)
     if (!selectedHeader) return
@@ -97,12 +125,42 @@ export function EditHeaderFromAdminProvider({
     setEditModalIsOpen(true)
   }
 
-  const allCategoriesOptions = allCategories
-    .map((item) => ({
-      value: item.id,
-      label: item.name,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label))
+  const closeEditHeaderModal = () => {
+    setEditModalIsOpen(false)
+  }
+
+  const openHeaderAddModal = () => {
+    setAddModalIsOpen(true)
+  }
+
+  const closeAddHeaderModal = () => {
+    setAddModalIsOpen(false)
+  }
+  const openSubHeaderAddModal = (id: string) => {
+    setAddSubHeaderModalIsOpen(true)
+    setHeaderItemToAddInId(id)
+  }
+
+  const closeSubHeaderAddModal = () => {
+    setAddSubHeaderModalIsOpen(false)
+  }
+  const closeSubHeaderEditionModal = () => {
+    setSubHeaderModalOpen(false)
+  }
+
+  const openSubHeaderEditionModal = (subHeaderItem: SubHeaderItem) => {
+    setSubHeaderItemToEdit(subHeaderItem)
+    setSubHeaderModalOpen(true)
+  }
+
+  const allCategoriesOptions = [
+    ...allCategories
+      .map((item) => ({
+        value: item.id,
+        label: item.name,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label)),
+  ]
 
   const getCategoryOption = (id: string) => {
     const category = allCategories.find((item) => item.id === id)
@@ -119,9 +177,25 @@ export function EditHeaderFromAdminProvider({
     }
   }
 
-  const openAddModal = () => {
-    setAddModalIsOpen(true)
+  const getHighlightItemDefaultValue = (isHighlighted: boolean) => {
+    if (isHighlighted)
+      return {
+        label: 'Sim',
+        value: 'true',
+      }
+
+    return {
+      label: 'Não',
+      value: 'false',
+    }
   }
+  const getColumnPositionDefaultValue = (columnPosition: number) => {
+    return {
+      label: String(columnPosition + 1),
+      value: String(columnPosition + 1),
+    }
+  }
+
   const updateHeaderItem = useCallback(
     (headerItem: HeaderItem) => {
       setHeaderItems(
@@ -133,10 +207,74 @@ export function EditHeaderFromAdminProvider({
     },
     [headerItems],
   )
+  const updateSubHeaderItem = useCallback(
+    (newSubHeaderItem: SubHeaderItem, headerItemId: string) => {
+      setHeaderItems(
+        headerItems.map((headerItem) => {
+          if (headerItem.id === headerItemId) {
+            return {
+              ...headerItem,
+              headerSubItems: headerItem.headerSubItems.map((subHeaderItem) => {
+                if (subHeaderItem.id === newSubHeaderItem.id) {
+                  return newSubHeaderItem
+                }
+
+                return subHeaderItem
+              }),
+            }
+          }
+          return headerItem
+        }),
+      )
+    },
+    [headerItems],
+  )
+
+  const deleteSubHeaderItem = useCallback(
+    (id: string, headerItemId: string) => {
+      setHeaderItems(
+        headerItems.map((headerItem) => {
+          if (headerItem.id === headerItemId) {
+            return {
+              ...headerItem,
+              headerSubItems: headerItem.headerSubItems.filter(
+                (subHeaederItem) => subHeaederItem.id !== id,
+              ),
+            }
+          }
+          return headerItem
+        }),
+      )
+    },
+    [headerItems],
+  )
 
   const deleteHeaderItem = useCallback(
     (id: string) => {
       setHeaderItems(headerItems.filter((item) => item.id !== id))
+    },
+    [headerItems],
+  )
+
+  const addHeaderItem = useCallback(
+    (newHeaderItem: HeaderItem) => {
+      setHeaderItems([newHeaderItem, ...headerItems])
+    },
+    [headerItems],
+  )
+  const addSubHeaderItem = useCallback(
+    (newSubHeaderItem: SubHeaderItem, headerItemId: string) => {
+      setHeaderItems(
+        headerItems.map((headerItem) => {
+          if (headerItem.id === headerItemId) {
+            return {
+              ...headerItem,
+              headerSubItems: [...headerItem.headerSubItems, newSubHeaderItem],
+            }
+          }
+          return headerItem
+        }),
+      )
     },
     [headerItems],
   )
@@ -163,24 +301,38 @@ export function EditHeaderFromAdminProvider({
   return (
     <EditHeaderFromAdminContext.Provider
       value={{
+        closeSubHeaderEditionModal,
         updateSelectedImage,
         updateHoveredImage,
         isHoverdImage,
+        addHeaderItem,
+        closeSubHeaderAddModal,
+        addSubHeaderItem,
+        openSubHeaderAddModal,
         allCategories,
         headerItems,
-        closeAddModal,
-        closeEditModal,
+        addSubHeaderModalIsOpen,
+        closeAddHeaderModal,
+        getColumnPositionDefaultValue,
+        subHeaderModalOpen,
+        subHeaderItemToEdit,
+        closeEditHeaderModal,
         getCategoryOption,
-        openAddModal,
+        headerItemIdToAddIn,
+        openHeaderAddModal,
         openEditionModal,
         addModalIsOpen,
         editModalIsOpen,
         headerItemToEdit,
         allCategoriesOptions,
+        updateSubHeaderItem,
         removeFeaturedImage,
         updateHeaderItem,
         deleteHeaderItem,
+        deleteSubHeaderItem,
+        getHighlightItemDefaultValue,
         selectedImage,
+        openSubHeaderEditionModal,
       }}
     >
       {children}

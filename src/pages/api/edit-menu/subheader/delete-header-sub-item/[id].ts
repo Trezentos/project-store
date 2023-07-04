@@ -24,16 +24,16 @@ export default async function handler(
       query: { id },
     } = req
 
-    const headerItem = await prisma.headerItem.delete({
+    const headerSubItem = await prisma.headerSubItem.delete({
       where: {
         id: String(id),
       },
     })
 
-    if (!headerItem)
+    if (!headerSubItem)
       return res.status(404).json({
         message:
-          'Houve um erro ao tentar encontrar o item do cabeçalho para remover...',
+          'Houve um erro ao tentar encontrar o subitem do cabeçalho para remover...',
       })
 
     return res.status(204).end()

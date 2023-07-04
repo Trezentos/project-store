@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "file-type": "^18.4.0",
     "formidable": "^2.1.1",
+    "immer": "^10.0.2",
     "keen-slider": "^6.8.5",
     "next": "13.1.6",
     "next-auth": "^4.22.0",

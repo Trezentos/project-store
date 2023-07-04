@@ -121,7 +121,9 @@ export default function RowAddForm() {
           values={[{ value: 'option2', label: 'Preço' }]}
         />
 
-        <ConfirmButton isSubmitting={isSubmitting} />
+        <ConfirmButton isSubmitting={isSubmitting}>
+          Adicionar nova categoria
+        </ConfirmButton>
       </div>
     </AddForm>
   )

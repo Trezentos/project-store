@@ -112,8 +112,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     const fields = 'media_url,media_type,caption,timestamp'
     const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
 
-    console.log(url)
-
     const {
       data: { data },
     } = await axios.get(url)

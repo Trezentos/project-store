@@ -13,6 +13,10 @@ const nextConfig = {
       'store-project-commerce.s3.amazonaws.com',
     ],
   },
+  compiler: {
+    // Enables the styled-components SWC transform
+    styledComponents: true,
+  },
 }
 
 module.exports = nextConfig

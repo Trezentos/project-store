@@ -23,8 +23,7 @@ export default function RowEditForm() {
     allCategoriesOptions,
     updateHeaderItem,
     getCategoryOption,
-    closeEditModal,
-    removeFeaturedImage,
+    closeEditHeaderModal: closeEditModal,
   } = useContext(EditHeaderFromAdminContext)
 
   const categoryDefaultValue = getCategoryOption(headerItemToEdit.categoryId)
@@ -135,20 +134,19 @@ export default function RowEditForm() {
         <FeaturedImagePreview thereIsFeaturedImage={thereIsFeaturedImage}>
           <strong>{featuredImg.name}</strong>
         </FeaturedImagePreview>
-        <>
-          <InputFile
-            id={'imageFile'}
-            register={register('imageFile')}
-            className={`labelImageFile ${
-              thereIsFeaturedImage ? 'invisible' : ''
-            }`}
-            title={'Imagem de fundo:'}
-            disabled={isSubmitting}
-            file={imageFile}
-            onChange={(e) => setImageFile(e.target?.files)}
-          />
-          {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
-        </>
+
+        <InputFile
+          id={'imageFile'}
+          register={register('imageFile')}
+          className={`labelImageFile ${
+            thereIsFeaturedImage ? 'invisible' : ''
+          }`}
+          title={'Imagem de fundo:'}
+          disabled={isSubmitting}
+          file={imageFile}
+          onChange={(e) => setImageFile(e.target?.files)}
+        />
+        {errors.imageFile && <p>{`${errors.imageFile.message}`}</p>}
 
         <div>
           <p>Categoria</p>

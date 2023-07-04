@@ -40,10 +40,15 @@ export default function formatHeaderItemsArray(
       categoryId: headerItem.category_id,
       headerSubItems: headerItem.HeaderSubItem.map((subHeaderItem) => {
         return {
+          id: subHeaderItem.id,
           name: subHeaderItem.name,
           linkTo: getPropertyValueFrom(categories, {
             categoryId: subHeaderItem.category_id,
             property: 'hifen',
+          }),
+          linkName: getPropertyValueFrom(categories, {
+            categoryId: subHeaderItem.category_id,
+            property: 'name',
           }),
           isHighlighted: subHeaderItem.isHighlightedSubItem,
           columnPosition: subHeaderItem.columnPosition,
@@ -99,5 +104,20 @@ export function formatHeaderItemObject(
       // Manter a ordem original para valores iguais
       return 0
     }),
+  }
+}
+
+export function formatSubHeaderItemObject(
+  headerSubItem: HeaderSubItem,
+  category: ProductCategory,
+) {
+  return {
+    id: headerSubItem.id,
+    name: headerSubItem.name,
+    linkTo: category.hifen,
+    linkName: category.name,
+    categoryId: headerSubItem.category_id,
+    columnPosition: headerSubItem.columnPosition,
+    isHighlighted: headerSubItem.isHighlightedSubItem,
   }
 }

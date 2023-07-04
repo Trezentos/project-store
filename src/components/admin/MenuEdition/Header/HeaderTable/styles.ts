@@ -15,10 +15,8 @@ export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 
-  thead {
+  > thead {
     background-color: #f8f8f8;
-    position: sticky;
-    top: 0px;
 
     tr {
       th {
@@ -29,9 +27,9 @@ export const StyledTable = styled.table`
       }
     }
   }
-  tbody {
-    tr {
-      td {
+  > tbody {
+    > tr {
+      > td {
         transition: padding 0.2s;
         padding: 35px;
         text-align: center;
@@ -55,6 +53,12 @@ export const StyledTable = styled.table`
           cursor: pointer;
           width: 20px;
           height: 20px;
+        }
+
+        > div {
+          width: 100%;
+          padding-left: 2rem;
+          background-color: #f8f8f8;
         }
       }
     }

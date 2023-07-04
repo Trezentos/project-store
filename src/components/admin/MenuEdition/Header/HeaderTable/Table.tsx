@@ -8,6 +8,8 @@ import { EditHeaderFromAdminContext } from '@/contexts/pages/admin/EditHeaderFro
 import Modal from '../../../components/Modal'
 import RowEditForm from '../RowEditForm'
 import AddNewRowModal from '../AddNewRowModal'
+import RowEditSubHeaderForm from '../SubHeaderTable/RowEditSubHeaderForm'
+import RowAddSubHeaderForm from '../SubHeaderTable/RowAddSubHeaderForm'
 
 export default function HeaderTable() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
@@ -17,9 +19,15 @@ export default function HeaderTable() {
     allCategories,
     headerItems,
     editModalIsOpen,
-    closeEditModal,
+    closeEditHeaderModal,
     openEditionModal,
     deleteHeaderItem,
+    updateHeaderItem,
+    subHeaderModalOpen,
+    addSubHeaderModalIsOpen,
+    closeSubHeaderEditionModal,
+    closeSubHeaderAddModal,
+    openSubHeaderEditionModal,
   } = useContext(EditHeaderFromAdminContext)
 
   const handleExpandRow = useCallback(
@@ -38,88 +46,80 @@ export default function HeaderTable() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       try {
-        // await api.delete(`/edit-menu/header/delete-header-item/${id}`)
+        await api.delete(`/edit-menu/header/delete-header-item/${id}`)
         deleteHeaderItem(id)
       } catch (error: any) {
         const { data } = error.response
-        if (!data) errorToast('Houve algum erro ao remover a categoria...')
+        if (!data)
+          errorToast('Houve algum erro ao remover o item do cabeçalho...')
         errorToast(data)
       }
     },
     [deleteHeaderItem],
   )
   const handleEditRow = useCallback(
-    async (id: string) => {
+    (id: string) => {
       openEditionModal(id)
     },
     [openEditionModal],
   )
 
-  const handleShowHideRow = useCallback(async (id: string, active: boolean) => {
-    try {
-      const { data } = await api.put<ProductCategory>(
-        `/edit-menu/categories/hide-categorie`,
-        {
-          id,
-          active: !active,
-        },
-      )
-
-      // updateSingleCategorie(data)
-    } catch (error: any) {
-      const { data } = error.response
-      if (!data) errorToast('Houve algum erro ao esconder a categoria...')
-      errorToast(data)
-    }
-  }, [])
-
-  useEffect(() => {
-    console.log('headerItems: ', headerItems)
-  }, [headerItems])
-
   return (
-    <Container>
-      {
-        <SuspendedImage
-          width={400}
-          height={250}
-          src={selectedImage ?? allCategories[0].imageBackgroundLink}
-          alt=""
-          style={{
-            top: isHoverdImage ? '5px' : '-300px',
-          }}
-        />
-      }
-      <StyledTable>
-        <thead>
-          <tr>
-            <th>Nome do item</th>
-            <th>Imagem de destaque</th>
-            <th>Categoria do item</th>
-            <th>Expandir</th>
-            <th>Editar</th>
-            <th>Apagar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {headerItems.map((row, index) => (
-            <TableRow
-              key={row.id}
-              data={row}
-              isExpanded={expandedRows.includes(row.id)}
-              onExpand={handleExpandRow}
-              onDelete={handleDeleteRow}
-              onShowHide={handleShowHideRow}
-              onEdit={handleEditRow}
-              index={index}
-            />
-          ))}
-        </tbody>
-      </StyledTable>
-      <Modal isOpen={editModalIsOpen} closeModal={closeEditModal}>
+    <>
+      <Container>
+        {
+          <SuspendedImage
+            width={400}
+            height={250}
+            src={selectedImage ?? allCategories[0].imageBackgroundLink}
+            alt=""
+            style={{
+              top: isHoverdImage ? '5px' : '-300px',
+            }}
+          />
+        }
+        <StyledTable>
+          <thead>
+            <tr>
+              <th>Nome do item</th>
+              <th>Imagem de destaque</th>
+              <th>Categoria</th>
+              <th>Expandir</th>
+              <th>Editar</th>
+              <th>Apagar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {headerItems.map((row, index) => (
+              <TableRow
+                key={row.id}
+                data={row}
+                isExpanded={expandedRows.includes(row.id)}
+                onExpand={handleExpandRow}
+                onDelete={handleDeleteRow}
+                onEdit={handleEditRow}
+                index={index}
+              />
+            ))}
+          </tbody>
+        </StyledTable>
+      </Container>
+      <Modal isOpen={editModalIsOpen} closeModal={closeEditHeaderModal}>
         <RowEditForm />
       </Modal>
       <AddNewRowModal />
-    </Container>
+      <Modal
+        isOpen={subHeaderModalOpen}
+        closeModal={closeSubHeaderEditionModal}
+      >
+        <RowEditSubHeaderForm />
+      </Modal>
+      <Modal
+        isOpen={addSubHeaderModalIsOpen}
+        closeModal={closeSubHeaderAddModal}
+      >
+        <RowAddSubHeaderForm />
+      </Modal>
+    </>
   )
 }

@@ -29,11 +29,12 @@ export default function InstaModal({ isOpen, closeModal }: InstaModalProps) {
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       width: '70%',
-      height: '80%',
+      height: '95%',
       zIndex: '99999',
+      padding: '0px',
+      border: '0px',
     },
   }
-  Modal.setAppElement('#__next')
 
   return (
     <Modal
@@ -45,7 +46,6 @@ export default function InstaModal({ isOpen, closeModal }: InstaModalProps) {
       <Container>
         {/* <Image src={selectedIntaMedia.imageSrc} alt="" fill /> */}
         <div>
-          <Skeleton width={240} height={240} />
           <Image src={selectedIntaMedia.imageSrc} alt="" fill />
         </div>
         <ModalContent>
@@ -54,7 +54,7 @@ export default function InstaModal({ isOpen, closeModal }: InstaModalProps) {
               <CaretLeft size={48} onClick={goPreviousSelectedMediaInsta} />
               <CaretRight size={48} onClick={goNextSelectedMediaInsta} />
             </div>
-            <X size={48} onClick={closeModal} />
+            <X size={48} strokeWidth={1} onClick={closeModal} />
           </HeaderContainer>
           <BodyContent>
             <h3>{selectedIntaMedia.description}</h3>

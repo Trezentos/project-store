@@ -9,7 +9,7 @@ export interface InstagramPostProps {
 
 interface InstagramContextType {
   goNextSelectedMediaInsta: () => void
-  goPreviousSelectedMediaInsta: () => void
+  goPreviousSelectedMediaInsta: (e: any) => void
   updatesInstagramMedias: (instaMedias: InstagramPostProps[]) => void
   instagramMedias: InstagramPostProps[]
   selectedIntaMedia: InstagramPostProps
@@ -52,7 +52,9 @@ export function InstagramContextProvider({
     setSelectedIntaMedia(instagramMedias[indexMedia + 1])
   }
 
-  function goPreviousSelectedMediaInsta() {
+  function goPreviousSelectedMediaInsta(e: any) {
+    e.stopPropagation()
+
     const indexMedia = instagramMedias.findIndex(
       (item) => item.id === selectedIntaMedia.id,
     )

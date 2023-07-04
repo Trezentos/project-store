@@ -6,9 +6,11 @@ import { Plus } from 'phosphor-react'
 import RowAddForm from '../RowAddForm'
 
 export default function AddNewRowModal() {
-  const { addModalIsOpen, closeAddModal, openAddModal } = useContext(
-    EditHeaderFromAdminContext,
-  )
+  const {
+    addModalIsOpen,
+    closeAddHeaderModal: closeAddModal,
+    openHeaderAddModal: openAddModal,
+  } = useContext(EditHeaderFromAdminContext)
 
   return (
     <Container>

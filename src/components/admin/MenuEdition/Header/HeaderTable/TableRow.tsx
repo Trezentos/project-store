@@ -12,6 +12,11 @@ import {
   EditHeaderFromAdminContext,
   HeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
+import {
+  cleanAllContentFromRowTable,
+  removeRowFromTable,
+} from '@/components/admin/utils/DOMFunctions'
+import SubHeaderTable from '../SubHeaderTable'
 
 interface TableRowProps {
   data: HeaderItem
@@ -19,7 +24,6 @@ interface TableRowProps {
   onExpand: (id: string) => void
   onDelete: (id: string) => void
   onEdit: (id: string) => void
-  onShowHide: (id: string, active: boolean) => void
   index: number
 }
 
@@ -28,7 +32,6 @@ const TableRow: React.FC<TableRowProps> = ({
   isExpanded,
   onExpand,
   onDelete,
-  onShowHide,
   onEdit,
   index,
 }) => {
@@ -36,7 +39,7 @@ const TableRow: React.FC<TableRowProps> = ({
   const textHoverToImageRef = useRef<HTMLElement>(null)
   const trRef = useRef<HTMLTableRowElement | null>(null)
   const { imageUrl, linkTo, name: ImageName } = data.featuredImg
-  const { updateHoveredImage, updateSelectedImage } = useContext(
+  const { updateHoveredImage, updateSelectedImage, headerItems } = useContext(
     EditHeaderFromAdminContext,
   )
 
@@ -53,16 +56,11 @@ const TableRow: React.FC<TableRowProps> = ({
   }, [data.id])
 
   const handleDeleteRow = useCallback(() => {
-    Array.from(trRef.current?.children as ArrayLike<Element>).forEach(
-      (item) => {
-        item.innerHTML = ''
-        // @ts-ignore
-        item.style.padding = '0px'
-      },
-    )
+    cleanAllContentFromRowTable(trRef.current?.children)
 
     setTimeout(() => {
       onDelete(data.id)
+      removeRowFromTable(trRef.current?.children)
       // 200 must be equal on styles: transition: padding 0.2s;
     }, 200)
   }, [data.id, onDelete])
@@ -103,14 +101,12 @@ const TableRow: React.FC<TableRowProps> = ({
       <tr>
         <td colSpan={7} style={{ padding: 0 }}>
           <animated.div style={rowAnimation} id={`animated-div-${data.id}`}>
-            <>
-              <h3>Produtos:</h3>
-              {/* <ul>
-                {data.products.map((product, index) => (
-                  <li key={index}>{product}</li>
-                ))}
-              </ul> */}
-            </>
+            {headerItems && (
+              <SubHeaderTable
+                headerSubItems={data.headerSubItems}
+                headerItemId={data.id}
+              />
+            )}
           </animated.div>
         </td>
       </tr>

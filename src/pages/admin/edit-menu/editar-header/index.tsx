@@ -5,6 +5,7 @@ import { Container } from './styles'
 import {
   EditHeaderFromAdminProvider,
   HeaderItem,
+  SubHeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import { api } from '@/lib/api'
 import { ProductCategory } from '@/contexts/pages/admin/EditCategoriesContext'
@@ -14,15 +15,23 @@ import requestHeaderData from '@/services/admin/menu/getHeaderContent'
 interface EditHeaderProps {
   allCategories: ProductCategory[]
   headerItems: HeaderItem[]
+  headerSubItemsPerHeaderItemId: {
+    subHeaderItems: SubHeaderItem[]
+    headerItemId: string
+  }[]
 }
 export default function EditHeader({
   allCategories,
   headerItems,
+  headerSubItemsPerHeaderItemId,
 }: EditHeaderProps) {
   return (
     <Container>
       <EditHeaderFromAdminProvider
-        value={{ allCategories, headerItemsFromAPI: headerItems }}
+        value={{
+          allCategories,
+          headerItemsFromAPI: headerItems,
+        }}
       >
         <HeaderTable />
       </EditHeaderFromAdminProvider>
@@ -46,9 +55,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const { allCategories, headerItems } = await requestHeaderData()
+  const { allCategories, headerItems, headerSubItemsPerHeaderItemId } =
+    await requestHeaderData()
 
   return {
-    props: { allCategories, headerItems },
+    props: {
+      allCategories,
+      headerItems,
+      headerSubItemsPerHeaderItemId,
+    },
   }
 }

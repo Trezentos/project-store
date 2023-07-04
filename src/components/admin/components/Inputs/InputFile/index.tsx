@@ -30,7 +30,7 @@ export default function InputFile({
   const isFilled = (file?.length ?? 0) > 0 ? 'file-selected' : ''
 
   return (
-    <Container>
+    <Container className={className}>
       <label htmlFor={id} className={`${className} ${isFilled}`}>
         {title}
         {file?.[0]?.name ? <strong>{file[0].name}</strong> : <Plus size={40} />}

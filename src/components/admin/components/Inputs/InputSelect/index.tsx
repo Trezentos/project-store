@@ -48,7 +48,7 @@ export default function InputSelect({
       value={value}
       isDisabled={isDisabled}
       isLoading={isLoading}
-      isClearable={isClearable}
+      // isClearable={isClearable}
       isRtl={isRtl}
       isSearchable={isSearchable}
       options={options}

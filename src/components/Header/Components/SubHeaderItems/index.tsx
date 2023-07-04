@@ -29,7 +29,7 @@ export default function SubHeaderItems({
     <SubUlsNavigationsContainer className="sub-header">
       <SubItemsHighlightImage
         imageUrl={featuredImg?.imageUrl}
-        linkTo={headerItem.linkTo}
+        linkTo={encodeURI(headerItem.linkTo ?? '')}
         name={headerItem.name}
       />
 
@@ -54,7 +54,7 @@ export default function SubHeaderItems({
           {headerSubItemColum.map((subItem) => (
             <li key={subItem.name}>
               <Link
-                href={`/categories/${subItem.linkTo}`}
+                href={`/categories/${encodeURI(subItem.linkTo)}`}
                 onClick={() => toggleMobileHeader()}
                 className={subItem.isHighlighted ? 'highlighted-item' : ''}
               >

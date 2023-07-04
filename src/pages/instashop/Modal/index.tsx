@@ -28,7 +28,6 @@ const customStyles = {
     zIndex: '99999',
   },
 }
-Modal.setAppElement('#__next')
 
 export default function InstaModal({
   isOpen,

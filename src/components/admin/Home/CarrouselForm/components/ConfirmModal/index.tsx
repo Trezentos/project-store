@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react'
 import Modal from 'react-modal'
+
 import { Container } from './styles'
 
 interface InstaModalProps {
@@ -28,7 +29,6 @@ export default function ConfirmModal({
       zIndex: '99999',
     },
   }
-  Modal.setAppElement('#__next')
 
   return (
     <Modal

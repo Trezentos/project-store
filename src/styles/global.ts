@@ -25,6 +25,10 @@ export const GlobalStyle = createGlobalStyle`
         outline: 0;
     }
 
+    html{
+        scroll-behavior: smooth;
+    }
+
     body {
         padding-top: 80px;
     }

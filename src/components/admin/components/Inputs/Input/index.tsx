@@ -11,7 +11,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input: React.FC<InputProps> = ({
   type,
   label,
-  value,
+  value = '',
   inputError,
   register,
   ...rest

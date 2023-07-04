@@ -13,11 +13,14 @@ import {
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
 import ConfirmButton from '@/components/admin/components/ConfirmButton'
 import InputFile from '@/components/admin/components/Inputs/InputFile'
+import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
 export default function RowAddForm() {
-  const { allCategoriesOptions, updateHeaderItem, closeEditModal } = useContext(
-    EditHeaderFromAdminContext,
-  )
+  const {
+    allCategoriesOptions,
+    addHeaderItem,
+    closeAddHeaderModal: closeAddModal,
+  } = useContext(EditHeaderFromAdminContext)
 
   const [imageFile, setImageFile] = useState<any>(null)
 
@@ -34,10 +37,12 @@ export default function RowAddForm() {
       ),
     category: z
       .object({
-        value: z.string(),
-        label: z.string(),
+        value: z.enum(['', ...allCategoriesOptions.map((item) => item.value)]),
+        label: z.enum(['', ...allCategoriesOptions.map((item) => item.label)]),
       })
-      .refine((item) => console.log(item), '0pa'),
+      .refine((item) => {
+        return item.value !== ''
+      }, 'Selecione uma categoria'),
   })
 
   type RegisterFormData = z.infer<typeof schema>
@@ -54,32 +59,22 @@ export default function RowAddForm() {
   })
 
   const onSubmit = useCallback(
-    async (editFormData: RegisterFormData) => {
+    async (addFormData: RegisterFormData) => {
       try {
-        const { headerItemName, category, imageFile } = editFormData
-        const changeImage = false
+        const { headerItemName, category, imageFile } = addFormData
         const formData = new FormData()
 
-        if (
-          !allCategoriesOptions.find((item) => item.value === category.value)
-        ) {
-          setError('category', { message: 'Categoria inválida' })
-          return
-        }
-
         formData.append('headerItemName', headerItemName)
-        formData.append('newCategoryId', category.value)
-        formData.append('changeImageBoolean', String(changeImage))
+        formData.append('categoryId', category.value)
+        formData.append('imageFile', imageFile[0])
 
-        const { data } = await api.put<HeaderItem>(
-          `edit-menu/header/update-header-item`,
+        const { data } = await api.post(
+          'edit-menu/header/add-new-header-item',
           formData,
         )
 
-        console.log(data)
-
-        updateHeaderItem(data)
-        closeEditModal()
+        addHeaderItem(data)
+        closeAddModal()
       } catch (error: any) {
         const { data } = error.response
         if (!data)
@@ -87,17 +82,12 @@ export default function RowAddForm() {
         errorToast(data)
       }
     },
-    [allCategoriesOptions, closeEditModal, setError, updateHeaderItem],
+    [addHeaderItem, closeAddModal],
   )
 
-  useEffect(() => {
-    watch('category')
-    console.log(errors)
-  }, [watch, errors])
-
   return (
-    <EditForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
-      <h3>Editar item da Header</h3>
+    <EditForm onSubmit={handleSubmit(onSubmit)} className="add-form">
+      <h3>Adicionar novo item no cabeçalho</h3>
 
       <div>
         <div>
@@ -125,15 +115,11 @@ export default function RowAddForm() {
 
         <div>
           <p>Categoria</p>
-          <Controller
+          <InputSelectControlled
             control={control}
             name="category"
-            render={({ field }) => (
-              <InputSelect
-                options={allCategoriesOptions}
-                onChange={(item) => field.onChange(item)}
-              />
-            )}
+            options={allCategoriesOptions}
+            defaultValue={{ label: '', value: '' }}
           />
           {errors.category && (
             <ErrorMessage>{`${errors.category.message}`}</ErrorMessage>

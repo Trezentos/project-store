@@ -134,7 +134,9 @@ export default function RowEditForm() {
           }))}
         />
 
-        <ConfirmButton isSubmitting={isSubmitting} />
+        <ConfirmButton isSubmitting={isSubmitting}>
+          Confirmar edição
+        </ConfirmButton>
       </div>
     </EditForm>
   )

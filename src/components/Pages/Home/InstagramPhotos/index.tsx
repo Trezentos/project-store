@@ -143,7 +143,9 @@ export default function InstagramSession(props: HomeProps) {
           </ArrowContainer>
         )}
       </CarrouselWrapper>
-      <InstaModal isOpen={modalIsOpen} closeModal={closeModal} />
+      {modalIsOpen && (
+        <InstaModal isOpen={modalIsOpen} closeModal={closeModal} />
+      )}
     </InstagramContainer>
   )
 }
