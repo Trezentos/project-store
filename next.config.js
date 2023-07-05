@@ -11,6 +11,7 @@ const nextConfig = {
       'scontent-gru2-2.cdninstagram.com',
       'scontent-gru2-1.cdninstagram.com',
       'store-project-commerce.s3.amazonaws.com',
+      's3.console.aws.amazon.com',
     ],
   },
   compiler: {

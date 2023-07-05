@@ -10,7 +10,8 @@ interface CarrouselCardProps {
 
 function CarrouselCard() {
   const { updateCarrouselCard, carrouselCard } = useContext(CarrouselContext)
-  const { desktopLink, desktopKey, id, mobileKey, mobileLink } = carrouselCard
+  const { desktopLink, id, mobileLink, desktopImageName, mobileImageName } =
+    carrouselCard
 
   useEffect(() => {
     if (!carrouselCard.id) updateCarrouselCard(carrouselCard)
@@ -25,7 +26,7 @@ function CarrouselCard() {
             {id && <Image width={300} height={120} src={desktopLink} alt="" />}
           </div>
           <p>Carrousel Desktop</p>
-          <strong>{desktopKey}</strong>
+          <strong>{desktopImageName}</strong>
         </ImageTooltip>
       </div>
       <div>
@@ -34,7 +35,7 @@ function CarrouselCard() {
             {id && <Image width={160} height={280} src={mobileLink} alt="" />}
           </div>
           <p>Carrousel Mobile</p>
-          <strong>{mobileKey}</strong>
+          <strong>{mobileImageName}</strong>
         </ImageTooltip>
       </div>
     </Container>

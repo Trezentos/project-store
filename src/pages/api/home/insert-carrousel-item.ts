@@ -10,6 +10,7 @@ import { CarrousselImage } from '@prisma/client'
 import fs from 'fs'
 import { fileTypeFromFile } from 'file-type'
 import verifyFileType from './utils/verifyImageFileType'
+import createNewImageAWS from '@/utils/createNewImageAws'
 
 export const config = {
   api: {
@@ -29,28 +30,21 @@ export default async function handler(
     const { files } = await formToDataFormatter(req)
     const { desktopImage, mobileImage } = files
 
-    const desktopImageFile = desktopImage as formidable.File
-    const mobileImageFile = mobileImage as formidable.File
+    const returnedDesktopS3 = await createNewImageAWS(desktopImage)
+    const returnedMobileS3 = await createNewImageAWS(mobileImage)
 
-    await verifyFileType(String(desktopImageFile.filepath))
-    await verifyFileType(String(mobileImageFile.filepath))
-
-    if (desktopImageFile.size > 3500000 || mobileImageFile.size > 3500000) {
-      return res.status(400).json('As imagens não podem passar de 3 megabytes')
+    if (!returnedDesktopS3 || !returnedMobileS3) {
+      return res.status(400).json('Houve algum erro ao criar as imagens...')
     }
-
-    const desktopParamsS3 = s3ParamsToUpload(desktopImageFile)
-    const mobileParamsS3 = s3ParamsToUpload(mobileImageFile)
-
-    const returnedDesktopS3 = await s3.upload(desktopParamsS3).promise()
-    const returnedMobileS3 = await s3.upload(mobileParamsS3).promise()
 
     const newCarrousel = await prisma.carrousselImage.create({
       data: {
         desktopKey: returnedDesktopS3.Key,
         desktopLink: returnedDesktopS3.Location,
+        desktopImageName: returnedDesktopS3.originalName,
         mobileKey: returnedMobileS3.Key,
         mobileLink: returnedMobileS3.Location,
+        mobileImageName: returnedMobileS3.originalName,
       },
     })
 

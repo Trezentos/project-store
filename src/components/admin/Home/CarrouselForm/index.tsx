@@ -16,6 +16,8 @@ export interface CarrouselItem {
   desktopKey: string
   mobileKey: string
   active: boolean
+  desktopImageName: string
+  mobileImageName: string
 }
 
 interface ImageFormProps {

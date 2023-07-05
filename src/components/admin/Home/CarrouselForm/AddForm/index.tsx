@@ -7,6 +7,7 @@ import { api } from '@/lib/api'
 import { AddFormContainer, ErrorMessage } from './styles'
 import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
+import ConfirmButton from '@/components/admin/components/ConfirmButton'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
@@ -14,6 +15,7 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/jpg',
   'image/png',
   'image/webp',
+  'image/avif',
 ]
 
 const schema = z.object({
@@ -151,13 +153,9 @@ export default function AddForm() {
         {errors.addMobileImage && <p>{errors.addMobileImage.message}</p>}
       </ErrorMessage>
 
-      <button disabled={isSubmiting} type="submit">
-        {isSubmiting ? (
-          <div className="loader active"></div>
-        ) : (
-          'Enviar imagens selecionadas'
-        )}
-      </button>
+      <ConfirmButton isSubmitting={isSubmitting}>
+        Enviar imagens selecionadas
+      </ConfirmButton>
     </AddFormContainer>
   )
 }

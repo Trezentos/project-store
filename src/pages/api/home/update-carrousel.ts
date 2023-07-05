@@ -69,6 +69,8 @@ export default async function handler(
 
       const dataToUpdate = carrouselToUpdate(device, returnedS3Upload)
 
+      console.log(dataToUpdate)
+
       const updatedData = await prisma.carrousselImage.update({
         where: {
           id: String(carrouselItemId),

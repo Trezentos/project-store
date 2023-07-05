@@ -15,15 +15,10 @@ import requestHeaderData from '@/services/admin/menu/getHeaderContent'
 interface EditHeaderProps {
   allCategories: ProductCategory[]
   headerItems: HeaderItem[]
-  headerSubItemsPerHeaderItemId: {
-    subHeaderItems: SubHeaderItem[]
-    headerItemId: string
-  }[]
 }
 export default function EditHeader({
   allCategories,
   headerItems,
-  headerSubItemsPerHeaderItemId,
 }: EditHeaderProps) {
   return (
     <Container>
@@ -55,14 +50,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const { allCategories, headerItems, headerSubItemsPerHeaderItemId } =
-    await requestHeaderData()
+  const { allCategories, headerItems } = await requestHeaderData()
 
   return {
     props: {
       allCategories,
       headerItems,
-      headerSubItemsPerHeaderItemId,
     },
   }
 }

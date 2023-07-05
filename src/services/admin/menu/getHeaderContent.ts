@@ -15,25 +15,9 @@ export default async function requestHeaderData() {
       'edit-menu/header/get-header-items',
     )
 
-    const headerSubItemsPerHeaderItemId = headerItems
-      .map((headerItem) => {
-        if (headerItem.headerSubItems.length < 1) return undefined
-
-        return headerItem.headerSubItems.map((headerSubItem) => {
-          return {
-            ...headerSubItem,
-            headerItemId: headerItem.id,
-          }
-        }) as SubHeaderItem[]
-      })
-      .filter((item) => item)
-
-    console.log(headerSubItemsPerHeaderItemId)
-
     return {
       allCategories,
       headerItems,
-      headerSubItemsPerHeaderItemId,
     }
   } catch (error: any) {
     return {

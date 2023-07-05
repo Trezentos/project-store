@@ -7,12 +7,16 @@ import CarrouselForm, {
 import { api } from '@/lib/api'
 import { CarrouselContextProvider } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { parseCookies } from 'nookies'
+import { generateKey } from 'node:crypto'
+import generateRandomString from '@/utils/generateHash'
 
 // Estrita tipagem para a resposta da API
 interface CarrouselAPIResponse {
   id: string
   desktopLink: string
   mobileLink: string
+  desktopImageName: string
+  mobileImageName: string
   desktopKey: string
   mobileKey: string
   active: boolean
@@ -77,12 +81,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Map the server data to the local data structure
   const carrouselImages = data.map((item) => ({
     id: item.id,
+    desktopImageName: item.desktopImageName,
     desktopLink: item.desktopLink,
     mobileLink: item.mobileLink,
     desktopKey: item.desktopKey,
+    mobileImageName: item.mobileImageName,
     mobileKey: item.mobileKey,
     active: item.active,
   }))
+
+  console.log(carrouselImages)
 
   return {
     props: {

@@ -2,21 +2,6 @@ import { EditHeaderFromAdminContext } from '@/contexts/pages/admin/EditHeaderFro
 import React, { useContext, useState } from 'react'
 import { StyledSelect } from './styles'
 
-const colourOptions = [
-  {
-    value: 'ocean',
-    label: 'Ocean',
-    color: '#00B8D9',
-    isFixed: true,
-  },
-  {
-    value: 'blue',
-    label: 'Blue',
-    color: '#0052CC',
-    // isDisabled: true,
-  },
-]
-
 interface InputSelectProps {
   onChange: (item: { value: string; label: string }) => void
   options: {

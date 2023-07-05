@@ -8,6 +8,8 @@ export interface ICarrouselContent {
   mobileKey: string
   mobileLink: string
   active: boolean
+  desktopImageName: string
+  mobileImageName: string
 }
 
 interface CarrouselContextType {

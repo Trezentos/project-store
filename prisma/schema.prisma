@@ -8,14 +8,13 @@ generator client {
 }
 
 model Product {
-    id           String         @id @default(uuid())
-    name         String
-    description  String?        @db.Text
-    createdAt    DateTime       @default(now())
-    ProductColor ProductColor[]
+    id               String             @id @default(uuid())
+    name             String
+    createdAt        DateTime           @default(now())
+    ProductVariation ProductVariation[]
 }
 
-model ProductColor {
+model ProductVariation {
     id             String   @id @default(uuid())
     price          Float
     colorHex       String
@@ -25,6 +24,16 @@ model ProductColor {
     Image          Image[]
     createdAt      DateTime @default(now())
     availableSizes String?
+    description    String?  @db.Text
+
+    @@map("ProductVariation")
+}
+
+model Image {
+    id               String             @id @default(uuid())
+    imageSrc         String?
+    ProductVariation ProductVariation[]
+    createdAt        DateTime           @default(now())
 }
 
 model ProductCategory {
@@ -65,14 +74,6 @@ model ProductFilter {
     name            String
     hifen           String
     productCategory ProductCategory[]
-}
-
-model Image {
-    id               String       @id @default(uuid())
-    imageSrc         String?
-    product_color_id String
-    productColor     ProductColor @relation(fields: [product_color_id], references: [id], onDelete: Cascade)
-    createdAt        DateTime     @default(now())
 }
 
 model Account {
@@ -130,12 +131,14 @@ model VerificationToken {
 }
 
 model CarrousselImage {
-    id          String  @id @default(uuid())
-    desktopLink String
-    desktopKey  String
-    mobileLink  String
-    mobileKey   String
-    active      Boolean @default(true)
+    id               String  @id @default(uuid())
+    desktopImageName String?
+    desktopLink      String
+    desktopKey       String
+    mobileImageName  String?
+    mobileLink       String
+    mobileKey        String
+    active           Boolean @default(true)
 }
 
 model HighlightHomeImages {

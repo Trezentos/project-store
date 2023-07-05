@@ -33,8 +33,6 @@ export default async function handler(
       headerItemId,
     } = fields
 
-    console.log(subHeaderItemName, categoryId, columnPosition, highlightItem)
-
     const category = await prisma.productCategory.findFirst({
       where: {
         id: String(categoryId),

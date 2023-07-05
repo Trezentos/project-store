@@ -1,6 +1,6 @@
 import { AddForm, ErrorMessage } from './styles'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Input from '@/components/admin/components/Inputs/Input'
