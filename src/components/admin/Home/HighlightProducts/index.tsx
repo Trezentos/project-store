@@ -9,17 +9,11 @@ import {
   HighlightProductsContext,
 } from '@/contexts/pages/admin/Home/HighlightProductsContext'
 
-interface HighlightProductsProps {
-  highlightItemFromApi: HighlightItem
-}
+interface HighlightProductsProps {}
 
-function HighlightProducts({ highlightItemFromApi }: HighlightProductsProps) {
+function HighlightProducts() {
   const { toggleEditMode, editMode, updateHighlightItem, highlightItem } =
     useContext(HighlightProductsContext)
-
-  useEffect(() => {
-    if (!highlightItem.id) updateHighlightItem(highlightItemFromApi)
-  }, [highlightItem, highlightItemFromApi, updateHighlightItem])
 
   return (
     <Container>

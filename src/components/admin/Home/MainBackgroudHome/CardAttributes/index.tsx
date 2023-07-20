@@ -10,36 +10,38 @@ function HighlightCardProperties() {
   const { backgroundItem } = useContext(MainBackgroundHomeContext)
 
   return (
-    <>
-      <div>
-        <ImageTooltip>
-          <div className="tooltip">
-            <Image
-              width={200}
-              height={250}
-              src={backgroundItem.desktopLink}
-              alt=""
-            />
-          </div>
-          <p>Imagem desktop</p>
-          <strong>{backgroundItem.desktopKey}</strong>
-        </ImageTooltip>
-      </div>
-      <div>
-        <ImageTooltip>
-          <div className="tooltip">
-            <Image
-              width={200}
-              height={250}
-              src={backgroundItem.mobileLink}
-              alt=""
-            />
-          </div>
-          <p>Imagem mobile</p>
-          <strong>{backgroundItem.mobileKey}</strong>
-        </ImageTooltip>
-      </div>
-    </>
+    backgroundItem && (
+      <>
+        <div>
+          <ImageTooltip>
+            <div className="tooltip">
+              <Image
+                width={200}
+                height={250}
+                src={backgroundItem.desktopLink}
+                alt=""
+              />
+            </div>
+            <p>Imagem desktop</p>
+            <strong>{backgroundItem.desktopImageName}</strong>
+          </ImageTooltip>
+        </div>
+        <div>
+          <ImageTooltip>
+            <div className="tooltip">
+              <Image
+                width={200}
+                height={250}
+                src={backgroundItem.mobileLink}
+                alt=""
+              />
+            </div>
+            <p>Imagem mobile</p>
+            <strong>{backgroundItem.mobileImageName}</strong>
+          </ImageTooltip>
+        </div>
+      </>
+    )
   )
 }
 

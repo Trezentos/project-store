@@ -87,7 +87,7 @@ export default function Table() {
         <SuspendedImage
           width={400}
           height={250}
-          src={selectedImage ?? allCategories[0].imageBackgroundLink}
+          src={selectedImage ?? allCategories[0]?.imageBackgroundLink}
           alt=""
           style={{
             top: isHoverdImage ? '5px' : '-300px',

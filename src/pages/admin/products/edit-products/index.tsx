@@ -1,12 +1,38 @@
 import { GetServerSideProps } from 'next'
 import { Container } from './styles'
 import { ReactNode } from 'react'
-import { parseCookies } from 'nookies'
+import { ModalAdminProvider } from '@/contexts/pages/admin/ModalAdminContext'
+import Table from '@/components/admin/MenuEdition/Products/ProductsTable/Table'
 
-export default function Products() {
+import { parseCookies } from 'nookies'
+import {
+  Product,
+  ProductsAdminProvider,
+} from '@/contexts/pages/admin/ProductsAdminContext'
+import { api } from '@/lib/api'
+
+interface ProductsProps {
+  allProducts: Product[]
+  allCategoriesOptions: {
+    label: string
+    value: string
+  }[]
+}
+
+export default function Products({
+  allProducts,
+  allCategoriesOptions,
+}: ProductsProps) {
   return (
     <Container>
-      <h1>Products</h1>
+      <ModalAdminProvider>
+        <ProductsAdminProvider
+          productsFromAPI={allProducts}
+          categoriesOptionsFromAPI={allCategoriesOptions}
+        >
+          <Table />
+        </ProductsAdminProvider>
+      </ModalAdminProvider>
     </Container>
   )
 }
@@ -27,7 +53,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
+  const { data: allProducts } = await api.get('/products/get-all-products')
+  const { data: allCategoriesOptions } = await api.get(
+    '/edit-menu/categories/get-categories-options',
+  )
+
+  console.log(allCategoriesOptions)
+
   return {
-    props: {},
+    props: {
+      allProducts,
+      allCategoriesOptions,
+    },
   }
 }

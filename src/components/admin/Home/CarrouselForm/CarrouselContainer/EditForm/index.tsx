@@ -8,6 +8,7 @@ import { InputForm } from './styles'
 import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 import InputFile from '../../../../components/Inputs/InputFile'
+import ConfirmButton from '@/components/admin/components/ConfirmButton'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
@@ -16,29 +17,6 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
 ]
-
-const schema2 = z.object({
-  desktopImage: z
-    .any()
-    .refine(
-      (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
-      `A imagem não pode passar de 5 mb.`,
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.',
-    ),
-  mobileImage: z
-    .any()
-    .refine(
-      (files) => (files[0]?.size ?? 0) <= MAX_FILE_SIZE,
-      `A imagem não pode passar de 5 mb.`,
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.',
-    ),
-})
 
 const ImageSchema = z
   .any()
@@ -140,13 +118,9 @@ function EditForm() {
 
       {errors.mobileImage && <p>{errors.mobileImage.message}</p>}
 
-      <button disabled={isSubmiting} type="submit">
-        {isSubmiting ? (
-          <div className="loader active"></div>
-        ) : (
-          'Enviar imagens selecionadas'
-        )}
-      </button>
+      <ConfirmButton isSubmitting={isSubmiting}>
+        Enviar imagens selecionadas
+      </ConfirmButton>
       <ToastContainer />
     </InputForm>
   )

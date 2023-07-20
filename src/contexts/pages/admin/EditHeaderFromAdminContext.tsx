@@ -28,6 +28,7 @@ export interface HeaderItem {
     imageUrl: string | null
     linkTo: string | null
     name: string | null
+    originalName: string | null
   }
   categoryId: string
   headerSubItems: SubHeaderItem[]
@@ -50,7 +51,7 @@ interface EditHeaderFromAdminContextData {
   closeAddHeaderModal: () => void
   openEditionModal: (id: string) => void
   openSubHeaderEditionModal: (headerSubItem: SubHeaderItem) => void
-  isHoverdImage: boolean
+  isHoveredImage: boolean
   selectedImage: string | null
   headerItemToEdit: HeaderItem
   subHeaderItemToEdit: SubHeaderItem
@@ -108,7 +109,7 @@ export function EditHeaderFromAdminProvider({
   const [addModalIsOpen, setAddModalIsOpen] = useState(false)
   const [addSubHeaderModalIsOpen, setAddSubHeaderModalIsOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [isHoverdImage, setIsHoveredImage] = useState(false)
+  const [isHoveredImage, setIsHoveredImage] = useState(false)
   const [headerItems, setHeaderItems] = useState(headerItemsFromAPI)
   const [headerItemToEdit, setHeaderItemToEdit] = useState<HeaderItem>(
     {} as HeaderItem,
@@ -294,6 +295,7 @@ export function EditHeaderFromAdminProvider({
         imageUrl: null,
         linkTo: null,
         name: null,
+        originalName: null,
       },
     })
   }, [headerItemToEdit])
@@ -304,7 +306,7 @@ export function EditHeaderFromAdminProvider({
         closeSubHeaderEditionModal,
         updateSelectedImage,
         updateHoveredImage,
-        isHoverdImage,
+        isHoveredImage,
         addHeaderItem,
         closeSubHeaderAddModal,
         addSubHeaderItem,

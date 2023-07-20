@@ -12,9 +12,8 @@ export const Container = styled.div`
 export const PhotosContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: 22rem;
   grid-gap: 0.1rem;
-
+  padding: 0.05rem;
   @media (max-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -25,7 +24,13 @@ export const ImageContainer = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  overflow: hidden;
+
+  img {
+    position: relative !important;
+    cursor: pointer;
+    object-fit: cover !important;
+    aspect-ratio: 1/1;
+  }
 
   &:after {
     width: 100%;
@@ -58,11 +63,5 @@ export const ImageContainer = styled.div`
     color: white;
     z-index: 4;
     transition: 0.3s;
-  }
-
-  img {
-    position: relative !important;
-    cursor: pointer;
-    height: fit-content !important;
   }
 `

@@ -28,9 +28,6 @@ export default function RowEditForm() {
     categoryName: z.string().min(1, {
       message: 'Digite algum nome para a categoria',
     }),
-    hifen: z.string().min(1, {
-      message: 'Digite algum nome para o hifen',
-    }),
     filtersOptions: z.array(z.string()).refine((values) => values.length > 0, {
       message: 'Selecione pelo menos uma opção.',
     }),
@@ -52,12 +49,11 @@ export default function RowEditForm() {
   const onSubmit = useCallback(
     async (data: RegisterFormData) => {
       try {
-        const { categoryName, filtersOptions, imageFile, hifen } = data
+        const { categoryName, filtersOptions, imageFile } = data
         const formData = new FormData()
 
         formData.append('id', categoryToEdit.id)
         formData.append('categoryName', categoryName)
-        formData.append('hifen', hifen)
 
         filtersOptions.forEach((item, index) => {
           formData.append(`filter[${index}]`, item)
@@ -97,18 +93,6 @@ export default function RowEditForm() {
           />
           {errors.categoryName && (
             <ErrorMessage>{`${errors.categoryName.message}`}</ErrorMessage>
-          )}
-        </div>
-        <div>
-          <Input
-            id={'hifen'}
-            register={register('hifen')}
-            label="Editar hifen"
-            value={categoryToEdit.hifen}
-            type="text"
-          />
-          {errors.hifen && (
-            <ErrorMessage>{`${errors.hifen.message}`}</ErrorMessage>
           )}
         </div>
 

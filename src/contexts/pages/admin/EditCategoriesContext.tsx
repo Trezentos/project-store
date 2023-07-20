@@ -8,6 +8,7 @@ export interface ProductFilter {
 export interface ProductCategory {
   id: string
   imageBackgroundName: string
+  imageBackgroundOriginalName: string
   imageBackgroundLink: string
   name: string
   hifen: string

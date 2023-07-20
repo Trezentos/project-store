@@ -90,8 +90,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     active: item.active,
   }))
 
-  console.log(carrouselImages)
-
   return {
     props: {
       carrouselImages,

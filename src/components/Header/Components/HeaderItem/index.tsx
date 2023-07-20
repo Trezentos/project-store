@@ -11,17 +11,20 @@ import {
 interface HeaderItemProps {
   linkTo?: string
   children: string
+  isNotCategory?: boolean
 }
 
 export default function HeaderItem({
   linkTo,
   children: headerNameItem,
+  isNotCategory = false,
 }: HeaderItemProps) {
   const {
     openSubItems,
     toggleMobileHeader,
     isExpansibleHeaderItem: isExpansible,
   } = useContext(HeaderContext)
+  const hrefLink = isNotCategory ? `/${linkTo}` : `/categories/${linkTo}`
 
   const MobileLink = () => {
     // There are two kind of button in this header
@@ -38,10 +41,7 @@ export default function HeaderItem({
         <CaretRight size={24} />
       </MobileItemButtonExpandItems>
     ) : (
-      <MobileLinkTo
-        onClick={() => toggleMobileHeader()}
-        href={`/categories/${linkTo}`}
-      >
+      <MobileLinkTo onClick={() => toggleMobileHeader()} href={hrefLink}>
         {headerNameItem}
       </MobileLinkTo>
     )
@@ -52,7 +52,7 @@ export default function HeaderItem({
       <MobileLink />
       <DesktopLink
         onClick={() => toggleMobileHeader()}
-        href={`/categories/${linkTo}`}
+        href={hrefLink}
         className="desktop"
       >
         {headerNameItem}

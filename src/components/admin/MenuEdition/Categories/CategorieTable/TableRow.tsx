@@ -92,7 +92,9 @@ const TableRow: React.FC<TableRowProps> = ({
       <tr ref={trRef}>
         <td>{data.name}</td>
         <td>
-          <strong ref={textHoverToImageRef}>{data.imageBackgroundName}</strong>
+          <strong ref={textHoverToImageRef}>
+            {data.imageBackgroundOriginalName}
+          </strong>
         </td>
         <td>{data.filters.map((item) => item.name).join(', ')}</td>
         <td onClick={() => onExpand(data.id)}>

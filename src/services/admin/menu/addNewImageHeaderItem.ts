@@ -26,5 +26,6 @@ export async function addNewImageHeaderItem({
     backgroundImageLink: newImage.Location,
     backgroundImageName: newImage.Key,
     backgroundImageLinkTo: category.hifen,
+    backgroundImageOriginalName: newImage.originalName,
   }
 }

@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { StyledSelect } from './styles'
 
 interface InputSelectProps {
+  isMulti: boolean
   onChange: (item: { value: string; label: string }) => void
   options: {
     value: string
@@ -11,13 +12,14 @@ interface InputSelectProps {
   defaultValue?: {
     value: string
     label: string
-  }
+  }[]
 }
 
 export default function InputSelect({
   options,
   defaultValue,
   onChange,
+  isMulti = false,
 }: InputSelectProps) {
   const [value, setValue] = useState(defaultValue)
   const [isClearable, setIsClearable] = useState(true)
@@ -33,6 +35,7 @@ export default function InputSelect({
       value={value}
       isDisabled={isDisabled}
       isLoading={isLoading}
+      isMulti={isMulti}
       // isClearable={isClearable}
       isRtl={isRtl}
       isSearchable={isSearchable}

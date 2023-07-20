@@ -15,6 +15,7 @@ import ConfirmButton from '@/components/admin/components/ConfirmButton'
 import InputFile from '@/components/admin/components/Inputs/InputFile'
 import { X } from 'phosphor-react'
 import FeaturedImagePreview from './FeaturedImagePreview'
+import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
 export default function RowEditForm() {
   const {
@@ -132,7 +133,7 @@ export default function RowEditForm() {
         </div>
 
         <FeaturedImagePreview thereIsFeaturedImage={thereIsFeaturedImage}>
-          <strong>{featuredImg.name}</strong>
+          <strong>{featuredImg.originalName}</strong>
         </FeaturedImagePreview>
 
         <InputFile
@@ -150,18 +151,14 @@ export default function RowEditForm() {
 
         <div>
           <p>Categoria</p>
-          <Controller
+
+          <InputSelectControlled
             control={control}
             name="category"
-            defaultValue={categoryDefaultValue}
-            render={({ field }) => (
-              <InputSelect
-                options={allCategoriesOptions}
-                defaultValue={categoryDefaultValue}
-                onChange={(item) => field.onChange(item)}
-              />
-            )}
+            options={allCategoriesOptions}
+            defaultValue={[categoryDefaultValue]}
           />
+
           {errors.category && (
             <ErrorMessage>{`${errors.category.message}`}</ErrorMessage>
           )}

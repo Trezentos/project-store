@@ -14,7 +14,7 @@ import RowAddSubHeaderForm from '../SubHeaderTable/RowAddSubHeaderForm'
 export default function HeaderTable() {
   const [expandedRows, setExpandedRows] = useState<string[]>([])
   const {
-    isHoverdImage,
+    isHoveredImage: isHoverdImage,
     selectedImage,
     allCategories,
     headerItems,
@@ -22,12 +22,10 @@ export default function HeaderTable() {
     closeEditHeaderModal,
     openEditionModal,
     deleteHeaderItem,
-    updateHeaderItem,
     subHeaderModalOpen,
     addSubHeaderModalIsOpen,
     closeSubHeaderEditionModal,
     closeSubHeaderAddModal,
-    openSubHeaderEditionModal,
   } = useContext(EditHeaderFromAdminContext)
 
   const handleExpandRow = useCallback(
@@ -71,7 +69,7 @@ export default function HeaderTable() {
           <SuspendedImage
             width={400}
             height={250}
-            src={selectedImage ?? allCategories[0].imageBackgroundLink}
+            src={selectedImage ?? allCategories[0]?.imageBackgroundLink}
             alt=""
             style={{
               top: isHoverdImage ? '5px' : '-300px',

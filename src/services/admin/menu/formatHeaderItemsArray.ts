@@ -34,6 +34,7 @@ export default function formatHeaderItemsArray(
       }),
       featuredImg: {
         name: headerItem.backgroundImageName,
+        originalName: headerItem.backgroundImageOriginalName,
         imageUrl: headerItem.backgroundImageLink,
         linkTo: headerItem.backgroundImageLinkTo,
       },
@@ -83,6 +84,7 @@ export function formatHeaderItemObject(
       name: headerItem.backgroundImageName,
       imageUrl: headerItem.backgroundImageLink,
       linkTo: headerItem.backgroundImageLinkTo,
+      originalName: headerItem.backgroundImageOriginalName,
     },
     categoryId: headerItem.category_id,
     headerSubItems: headerItem.HeaderSubItem.map((subHeaderItem) => {

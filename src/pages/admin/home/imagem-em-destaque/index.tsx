@@ -25,11 +25,11 @@ export default function FeaturedWallpaper({
 }: FeaturedWallpaperProps) {
   return (
     <Container>
-      <HighlightProductsContextProvider>
-        <HighlightProducts highlightItemFromApi={highlightItem} />
+      <HighlightProductsContextProvider value={highlightItem}>
+        <HighlightProducts />
       </HighlightProductsContextProvider>
-      <MainBackgroundHomeContextProvider>
-        <MainBackgroundHome mainBackgroundItemFromApi={backgroundItem} />
+      <MainBackgroundHomeContextProvider value={backgroundItem}>
+        <MainBackgroundHome />
       </MainBackgroundHomeContextProvider>
     </Container>
   )

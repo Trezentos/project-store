@@ -38,7 +38,7 @@ const TableRow: React.FC<TableRowProps> = ({
   const [divHeight, setDivHeight] = useState('0')
   const textHoverToImageRef = useRef<HTMLElement>(null)
   const trRef = useRef<HTMLTableRowElement | null>(null)
-  const { imageUrl, linkTo, name: ImageName } = data.featuredImg
+  const { imageUrl, linkTo, name: ImageName, originalName } = data.featuredImg
   const { updateHoveredImage, updateSelectedImage, headerItems } = useContext(
     EditHeaderFromAdminContext,
   )
@@ -85,7 +85,7 @@ const TableRow: React.FC<TableRowProps> = ({
       <tr ref={trRef}>
         <td>{data.name}</td>
         <td>
-          <strong ref={textHoverToImageRef}>{ImageName}</strong>
+          <strong ref={textHoverToImageRef}>{originalName}</strong>
         </td>
         <td>{data.linkName}</td>
         <td onClick={() => onExpand(data.id)}>

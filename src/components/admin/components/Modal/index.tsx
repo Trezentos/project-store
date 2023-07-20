@@ -25,7 +25,7 @@ export default function EditRowModal({
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width: '20%',
+      // width: '20%',
       zIndex: '99999',
       transition: `${transitionTime}ms`,
       display: 'flex',

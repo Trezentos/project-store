@@ -19,7 +19,6 @@ export default function LinksNavigation() {
 
       {headerContent.map((headerItem) => {
         const { headerSubItems } = headerItem
-
         return (
           <li key={headerItem.id}>
             <HeaderItem linkTo={encodeURI(headerItem.linkTo ?? '')}>
@@ -34,6 +33,11 @@ export default function LinksNavigation() {
           </li>
         )
       })}
+      <li>
+        <HeaderItem isNotCategory linkTo={'instashop'}>
+          Instashop
+        </HeaderItem>
+      </li>
     </ULNavigation>
   )
 }

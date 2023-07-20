@@ -50,6 +50,7 @@ export default async function handler(
       data: {
         imageBackgroundLink: newImage.Location,
         imageBackgroundName: newImage.Key,
+        imageBackgroundOriginalName: newImage.originalName,
         hifen: encodeURI(String(categoryName)),
         name: String(categoryName),
         filters: { connect: filtersToConnect },

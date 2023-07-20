@@ -15,16 +15,18 @@ model Product {
 }
 
 model ProductVariation {
-    id             String   @id @default(uuid())
+    id             String            @id @default(uuid())
     price          Float
     colorHex       String
     colorName      String
     product_id     String
-    Product        Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    product        Product           @relation(fields: [product_id], references: [id], onDelete: Cascade)
     Image          Image[]
-    createdAt      DateTime @default(now())
+    createdAt      DateTime          @default(now())
     availableSizes String?
-    description    String?  @db.Text
+    description    String?           @db.Text
+    quantity       Int               @default(1)
+    category       ProductCategory[]
 
     @@map("ProductVariation")
 }
@@ -32,31 +34,37 @@ model ProductVariation {
 model Image {
     id               String             @id @default(uuid())
     imageSrc         String?
+    name             String?
+    originalName     String?
     ProductVariation ProductVariation[]
     createdAt        DateTime           @default(now())
 }
 
 model ProductCategory {
-    id                  String          @id @default(uuid())
-    imageBackgroundName String
-    imageBackgroundLink String
-    name                String
-    hifen               String
-    active              Boolean         @default(true)
-    filters             ProductFilter[]
-    HeaderItem          HeaderItem[]
-    HeaderSubItem       HeaderSubItem[]
+    id                          String          @id @default(uuid())
+    imageBackgroundOriginalName String?
+    imageBackgroundName         String
+    imageBackgroundLink         String
+    name                        String
+    hifen                       String
+    active                      Boolean         @default(true)
+    filters                     ProductFilter[]
+    headerItem                  HeaderItem[]
+    headerSubItem               HeaderSubItem[]
+
+    productVariation ProductVariation[]
 }
 
 model HeaderItem {
-    id                    String           @id @default(uuid())
-    name                  String
-    backgroundImageLink   String?
-    backgroundImageName   String?
-    backgroundImageLinkTo String?
-    category_id           String?
-    ProductCategory       ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
-    HeaderSubItem         HeaderSubItem[]
+    id                          String           @id @default(uuid())
+    name                        String
+    backgroundImageLink         String?
+    backgroundImageName         String?
+    backgroundImageOriginalName String?
+    backgroundImageLinkTo       String?
+    category_id                 String?
+    ProductCategory             ProductCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
+    HeaderSubItem               HeaderSubItem[]
 }
 
 model HeaderSubItem {
@@ -142,17 +150,21 @@ model CarrousselImage {
 }
 
 model HighlightHomeImages {
-    id         String @id @default(uuid())
+    id         String  @id @default(uuid())
+    image1Name String?
     image1Link String
     image1Key  String
+    image2Name String?
     image2Link String
     image2Key  String
 }
 
 model MainBackgroundHome {
-    id          String @id @default(uuid())
-    desktopLink String
-    desktopKey  String
-    mobileLink  String
-    mobileKey   String
+    id               String  @id @default(uuid())
+    desktopLink      String
+    desktopKey       String
+    desktopImageName String?
+    mobileLink       String
+    mobileKey        String
+    mobileImageName  String?
 }

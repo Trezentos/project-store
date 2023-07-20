@@ -7,8 +7,10 @@ export interface MainBackgroundItem {
   id: string
   mobileLink: string
   mobileKey: string
+  mobileImageName: string
   desktopLink: string
   desktopKey: string
+  desktopImageName: string
 }
 interface MainBackgroundHomeContextType {
   editMode: boolean
@@ -19,6 +21,7 @@ interface MainBackgroundHomeContextType {
 
 interface MainBackgroundHomeContextProviderProps {
   children: ReactNode
+  value: MainBackgroundItem
 }
 
 export const MainBackgroundHomeContext = createContext(
@@ -27,11 +30,10 @@ export const MainBackgroundHomeContext = createContext(
 
 export function MainBackgroundHomeContextProvider({
   children,
+  value,
 }: MainBackgroundHomeContextProviderProps) {
   const [editMode, setEditMode] = useState(false)
-  const [highlightItem, setHighlightItem] = useState<MainBackgroundItem>(
-    {} as MainBackgroundItem,
-  )
+  const [highlightItem, setHighlightItem] = useState<MainBackgroundItem>(value)
 
   function toggleEditMode(option?: boolean) {
     if (!option) {

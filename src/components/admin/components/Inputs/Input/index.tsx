@@ -1,6 +1,7 @@
 import React, { ChangeEvent, InputHTMLAttributes, useState } from 'react'
 import { FieldError } from 'react-hook-form'
 import { Container } from './styles'
+import formatToCurrency from './formattersFunctions'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -13,13 +14,19 @@ const Input: React.FC<InputProps> = ({
   label,
   value = '',
   inputError,
+  id,
   register,
   ...rest
 }) => {
   const [changeValue, setChangeValue] = useState(value)
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    if (id === 'price') {
+      setChangeValue(formatToCurrency(value))
+      return
+    }
+
     setChangeValue(value)
     return value
   }
@@ -29,6 +36,7 @@ const Input: React.FC<InputProps> = ({
       <label>{label}</label>
       <input
         {...register}
+        id={id}
         value={changeValue}
         onChange={handleChange}
         {...rest}

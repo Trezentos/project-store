@@ -34,16 +34,18 @@ export default function InstaShop({ instagramPhotos }: InstaShopProps) {
     <Container>
       <h1>Nosso Instagram!</h1>
       <PhotosContainer>
-        {instagramPhotos.map((instaImage) => (
-          <ImageContainer
-            className="imagecontainer"
-            key={instaImage.id}
-            onClick={() => openModal(instaImage)}
-          >
-            <Image src={instaImage.imageSrc} alt="" fill />
-            <InstagramLogo size={24} />
-          </ImageContainer>
-        ))}
+        {instagramPhotos.map((instaImage, index) => {
+          return (
+            <ImageContainer
+              className="imagecontainer"
+              key={instaImage.id}
+              onClick={() => openModal(instaImage)}
+            >
+              <Image src={instaImage.imageSrc} alt="" fill />
+              <InstagramLogo size={24} />
+            </ImageContainer>
+          )
+        })}
       </PhotosContainer>
       <InstaModal
         isOpen={modalIsOpen}

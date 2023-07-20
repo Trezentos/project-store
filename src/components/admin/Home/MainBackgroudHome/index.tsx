@@ -9,19 +9,9 @@ import {
   MainBackgroundHomeContext,
 } from '@/contexts/pages/admin/Home/MainBackgroundHomeContext'
 
-interface HighlightProductsProps {
-  mainBackgroundItemFromApi: MainBackgroundItem
-}
-
-function MainBackgroundHome({
-  mainBackgroundItemFromApi,
-}: HighlightProductsProps) {
+function MainBackgroundHome() {
   const { backgroundItem, updateBackgroundItem, editMode, toggleEditMode } =
     useContext(MainBackgroundHomeContext)
-
-  useEffect(() => {
-    if (!backgroundItem.id) updateBackgroundItem(mainBackgroundItemFromApi)
-  }, [backgroundItem, mainBackgroundItemFromApi, updateBackgroundItem])
 
   return (
     <Container>

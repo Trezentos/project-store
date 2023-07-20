@@ -9,11 +9,33 @@ import { object } from 'zod'
 import { CarrousselImage } from '@prisma/client'
 import fs from 'fs'
 import verifyFileType from './utils/verifyImageFileType'
+import createNewImageAWS from '@/utils/createNewImageAws'
+import deleteOldImageAWS from '@/utils/deleteOldImageAws'
 
 export const config = {
   api: {
     bodyParser: false,
   },
+}
+
+const formatToDatabase = (dataToBase: any, device: string) => {
+  if (device === 'desktop') {
+    return dataToBase
+      ? {
+          desktopLink: dataToBase.Location,
+          desktopKey: dataToBase.Key,
+          desktopImageName: dataToBase.originalName,
+        }
+      : {}
+  }
+
+  return dataToBase
+    ? {
+        mobileLink: dataToBase.Location,
+        mobileKey: dataToBase.Key,
+        mobileImageName: dataToBase.originalName,
+      }
+    : {}
 }
 
 export default async function handler(
@@ -27,75 +49,38 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { newDesktopImage, newMobileImage } = files
-
-    const toVeriFyDesktop = newDesktopImage as formidable.File
-    const toVeriFyMobile = newMobileImage as formidable.File
-
-    if (newDesktopImage) await verifyFileType(String(toVeriFyDesktop.filepath))
-    if (newMobileImage) await verifyFileType(String(toVeriFyMobile.filepath))
-
-    // @ts-ignore
-    if (newDesktopImage?.size > 3500000 || newMobileImage?.size > 3500000) {
-      return res.status(400).json('As imagens não podem passar de 3 megabytes')
-    }
-
     const { carrouselItemId } = fields
 
-    const newFiles = [
-      {
-        newImage: newMobileImage,
-        device: 'mobile',
+    const oldCarrousel = await prisma.carrousselImage.findFirst({
+      where: {
+        id: String(carrouselItemId),
       },
-      {
-        newImage: newDesktopImage,
-        device: 'desktop',
-      },
-    ]
-
-    const updatedCarrousel = newFiles.map(async (fileItem, index) => {
-      const { newImage, device } = fileItem
-
-      if (!newImage) return
-
-      const paramsToUpload = s3ParamsToUpload(newImage as formidable.File)
-
-      const returnedS3Upload = await s3.upload(paramsToUpload).promise()
-
-      const oldCarrousel = await prisma.carrousselImage.findFirst({
-        where: {
-          id: String(carrouselItemId),
-        },
-      })
-
-      const dataToUpdate = carrouselToUpdate(device, returnedS3Upload)
-
-      console.log(dataToUpdate)
-
-      const updatedData = await prisma.carrousselImage.update({
-        where: {
-          id: String(carrouselItemId),
-        },
-        data: dataToUpdate,
-      })
-
-      const paramsToDelete = s3ParamsToDelete(
-        device === 'desktop'
-          ? oldCarrousel?.desktopKey
-          : oldCarrousel?.mobileKey,
-      )
-
-      await s3.deleteObject(paramsToDelete).promise()
-
-      return updatedData
     })
 
-    const newCarrousel = await Promise.all(updatedCarrousel)
+    if (!oldCarrousel) {
+      return res.status(400).json('Não foi possível encontrar a imagem antiga')
+    }
 
-    if (!newCarrousel[0]) return res.json(newCarrousel[1])
+    const desktopAWSImage = await createNewImageAWS(newDesktopImage)
+    const mobileAWSImage = await createNewImageAWS(newMobileImage)
 
-    if (!newCarrousel[1]) return res.json(newCarrousel[0])
+    const desktopToUpdate = formatToDatabase(desktopAWSImage, 'desktop')
+    const mobileToUpdate = formatToDatabase(mobileAWSImage, 'mobile')
 
-    return res.json(newCarrousel[1])
+    const updatedCarrousel = await prisma.carrousselImage.update({
+      where: {
+        id: String(carrouselItemId),
+      },
+      data: {
+        ...desktopToUpdate, // can be {content} || {}
+        ...mobileToUpdate,
+      },
+    })
+
+    if (desktopAWSImage) await deleteOldImageAWS(oldCarrousel.desktopKey)
+    if (mobileAWSImage) await deleteOldImageAWS(oldCarrousel.mobileKey)
+
+    return res.status(200).json(updatedCarrousel)
   } catch (error: any) {
     return res.status(400).json(error.message)
   }

@@ -7,10 +7,11 @@ import InputSelect from '../InputSelect'
 interface InputSelectControlledProps {
   name: string
   control: any
+  isMulti?: boolean
   defaultValue?: {
     label: string
     value: string
-  }
+  }[]
   options: {
     value: string
     label: string
@@ -22,6 +23,7 @@ export default function InputSelectControlled({
   control,
   defaultValue,
   options,
+  isMulti = false,
 }: InputSelectControlledProps) {
   return (
     <Controller
@@ -33,6 +35,7 @@ export default function InputSelectControlled({
           options={options}
           defaultValue={defaultValue}
           onChange={(item) => field.onChange(item)}
+          isMulti={isMulti}
         />
       )}
     />

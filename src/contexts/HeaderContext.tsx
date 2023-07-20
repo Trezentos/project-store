@@ -6,10 +6,7 @@ import {
   useEffect,
   useCallback,
 } from 'react'
-import FeaturedImage from '../assets/pretty-woman.png'
-import FeaturedImage2 from '../assets/pretty-woman-2.png'
 import { api } from '@/lib/api'
-import { HeaderItem } from '@prisma/client'
 
 export interface ISubHeaderContent {
   name: string
@@ -21,11 +18,14 @@ export interface ISubHeaderContent {
 export interface IHeaderContent {
   id: string
   name: string
+  categoryId: string
   linkTo?: string
+  linkName: string
   featuredImg?: {
     name: string
     imageUrl: StaticImageData
     linkTo?: string
+    originalName: string
   }
   headerSubItems?: ISubHeaderContent[]
 }
@@ -57,7 +57,7 @@ export function HeaderContextProvider({
 
   const getHeaderData = useCallback(async () => {
     try {
-      const { data } = await api.get<HeaderItem[]>(
+      const { data } = await api.get<IHeaderContent[]>(
         '/edit-menu/header/get-header-items',
       )
 

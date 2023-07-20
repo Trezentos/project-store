@@ -6,20 +6,12 @@ import {
 } from '@/styles/home'
 import Image from 'next/image'
 import Carrousel from '../components/Pages/Home/Carrousel'
-import FImage3 from '../assets/home/bikini-girl-desktop.jpg'
-import FImage4 from '../assets/home/bikini-girl-mobile.jpg'
-import FeaturedProducts from '@/components/Pages/Home/FeaturedProducts'
-import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
 import 'react-toastify/dist/ReactToastify.css'
-import { toast } from 'react-toastify'
 import InstagramSession, {
   InstagramPostProps,
 } from '@/components/Pages/Home/InstagramPhotos'
-import {
-  InstagramContext,
-  InstagramContextProvider,
-} from '@/contexts/pages/home/InstagramContext'
+import { InstagramContextProvider } from '@/contexts/pages/home/InstagramContext'
 import Newsletter from '@/components/Pages/Home/Newsletter'
 import SiteAdvantageBlock from '@/components/Pages/Home/SiteAdvantagesBlock'
 import { api } from '@/lib/api'
@@ -109,21 +101,21 @@ export default function Home({
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   try {
-    const fields = 'media_url,media_type,caption,timestamp'
-    const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
+    // const fields = 'media_url,media_type,caption,timestamp'
+    // const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
 
-    const {
-      data: { data },
-    } = await axios.get(url)
+    // const {
+    //   data: { data },
+    // } = await axios.get(url)
 
-    const instagramPhotos = data
-      .map((item: any) => ({
-        imageSrc: item.media_url,
-        description: item.caption,
-        id: item.id,
-        timestamp: item.timestamp,
-      }))
-      .filter((item: any) => !String(item.imageSrc).includes('video'))
+    // const instagramPhotos = data
+    //   .map((item: any) => ({
+    //     imageSrc: item.media_url,
+    //     description: item.caption,
+    //     id: item.id,
+    //     timestamp: item.timestamp,
+    //   }))
+    //   .filter((item: any) => !String(item.imageSrc).includes('video'))
 
     const { data: carrousselData } = await api.get<CarrouselItem[]>(
       '/home/get-carrousel',
@@ -148,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
     return {
       props: {
-        instagramPhotos,
+        instagramPhotos: [],
         carrousselsFromApi,
         HighLightItem,
         backgroundHome,

@@ -1,6 +1,6 @@
 import Product, { IProduct } from '@/components/Product'
 import { api } from '@/lib/api'
-import getManyProducts from '@/services/get-all-products'
+import getPageContent from '@/services/get-all-products'
 import { ProductCategory } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { Filter } from '@/components/Pages/Products/components/Filter'
@@ -169,18 +169,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const hifen = params?.hifen as string
 
-    const { data } = await api.get<ProductCategory>(
+    const { data: categoryResponse } = await api.get<ProductCategory>(
       `/edit-menu/categories/get-single-category/${hifen}`,
     )
 
-    const { allProducts, colorContent, activeFilters } = await getManyProducts(
-      data,
+    const { colorContent, activeFilters } = await getPageContent(
+      categoryResponse,
     )
 
     return {
       props: {
-        category: data,
-        products: allProducts,
+        category: categoryResponse,
+        products: [],
         colorContent,
         activeFilters,
       },

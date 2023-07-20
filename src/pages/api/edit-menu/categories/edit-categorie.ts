@@ -22,7 +22,7 @@ export default async function handler(
 
     const { files, fields } = await formToDataFormatter(req)
     const { imageFile } = files
-    const { id, categoryName, hifen, ...allFiltersIds } = fields
+    const { id, categoryName, ...allFiltersIds } = fields
 
     const oldCategory = await prisma.productCategory.findFirst({
       where: {
@@ -58,7 +58,7 @@ export default async function handler(
       },
       data: {
         name: String(categoryName),
-        hifen: String(hifen),
+        hifen: encodeURIComponent(String(categoryName)),
         filters: {
           connect: filtersToConnect,
           disconnect: filtersToDisconnect,

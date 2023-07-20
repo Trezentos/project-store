@@ -7,8 +7,10 @@ export interface HighlightItem {
   id: string
   image1Link: string
   image1Key: string
+  image1Name: string
   image2Link: string
   image2Key: string
+  image2Name: string
 }
 interface HighlightProductsContextType {
   editMode: boolean
@@ -19,6 +21,7 @@ interface HighlightProductsContextType {
 
 interface HightlightContextProviderProps {
   children: ReactNode
+  value: HighlightItem
 }
 
 export const HighlightProductsContext = createContext(
@@ -27,11 +30,10 @@ export const HighlightProductsContext = createContext(
 
 export function HighlightProductsContextProvider({
   children,
+  value,
 }: HightlightContextProviderProps) {
   const [editMode, setEditMode] = useState(false)
-  const [highlightItem, setHighlightItem] = useState<HighlightItem>(
-    {} as HighlightItem,
-  )
+  const [highlightItem, setHighlightItem] = useState<HighlightItem>(value)
 
   function toggleEditMode(option?: boolean) {
     if (!option) {
