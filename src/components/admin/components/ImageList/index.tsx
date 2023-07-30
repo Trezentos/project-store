@@ -1,17 +1,20 @@
-import { ImageProduct } from '@/contexts/pages/admin/ProductsAdminContext'
+import {
+  ImageProduct,
+  ProductsAdminContext,
+} from '@/contexts/pages/admin/ProductsAdminContext'
 import { Container, InputFileContainer } from './styles'
 import { Upload, X } from 'phosphor-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { api } from '@/lib/api'
+import { errorToast } from '@/utils/toast/sucessToast'
 
 interface ImageListProps {
-  images: ImageProduct[]
   register: any
   disabled?: boolean
   id: string
 }
 
 export default function ImagesInput({
-  images,
   register,
   id,
   disabled,
@@ -24,17 +27,8 @@ export default function ImagesInput({
 
   return (
     <Container>
-      <p>Imagens</p>
-      <div>
-        {images.map((image) => (
-          <strong key={image.id}>
-            {image.originalName} <X size={24} />
-          </strong>
-        ))}
-      </div>
-
       <InputFileContainer>
-        <p>Imagens selecionadas</p>
+        <p>Clique no icone abaixo para enviar novas imagens</p>
         <label htmlFor={id}>
           {files ? (
             Array.from(files).map((item: any) => (
@@ -52,7 +46,6 @@ export default function ImagesInput({
           accept="image/*"
           onChange={onChange}
           multiple
-          {...images}
         />
       </InputFileContainer>
     </Container>

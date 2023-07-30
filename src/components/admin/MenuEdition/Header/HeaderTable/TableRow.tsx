@@ -78,7 +78,7 @@ const TableRow: React.FC<TableRowProps> = ({
   useEffect(() => {
     animateRowExpansion()
     showHoveredImage()
-  }, [animateRowExpansion, data.id, showHoveredImage])
+  }, [animateRowExpansion, data.id, showHoveredImage, headerItems])
 
   return (
     <>

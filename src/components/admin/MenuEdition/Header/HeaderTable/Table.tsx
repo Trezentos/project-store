@@ -62,6 +62,10 @@ export default function HeaderTable() {
     [openEditionModal],
   )
 
+  useEffect(() => {
+    console.log(headerItems)
+  }, [headerItems])
+
   return (
     <>
       <Container>

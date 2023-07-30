@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Product, ProductVariation } from '@prisma/client'
+import { Image, Product, ProductVariation } from '@prisma/client'
 
 export default async function formatProduct(
   product: Product & {

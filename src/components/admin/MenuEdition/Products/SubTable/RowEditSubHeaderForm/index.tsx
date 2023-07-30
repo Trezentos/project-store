@@ -11,7 +11,7 @@ import {
   EditHeaderFromAdminContext,
   HeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
 export default function RowEditSubHeaderForm() {
@@ -110,7 +110,7 @@ export default function RowEditSubHeaderForm() {
           <InputSelectControlled
             control={control}
             name="columnPosition"
-            defaultValue={columnPositionDefaultValue}
+            defaultValue={[columnPositionDefaultValue]}
             options={[
               { label: '1', value: '1' },
               { label: '2', value: '2' },
@@ -127,7 +127,7 @@ export default function RowEditSubHeaderForm() {
           <InputSelectControlled
             control={control}
             name="highlightItem"
-            defaultValue={highlightItemDefaultValue}
+            defaultValue={[highlightItemDefaultValue]}
             options={[
               { label: 'Sim', value: 'true' },
               { label: 'Não', value: 'false' },
@@ -143,7 +143,7 @@ export default function RowEditSubHeaderForm() {
           <InputSelectControlled
             control={control}
             name="category"
-            defaultValue={categoryDefaultValue}
+            defaultValue={[categoryDefaultValue]}
             options={allCategoriesOptions}
           />
           {errors.category && (
@@ -151,9 +151,9 @@ export default function RowEditSubHeaderForm() {
           )}
         </div>
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Confirmar edição
-        </ConfirmButton>
+        </Button>
       </div>
     </EditForm>
   )

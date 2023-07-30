@@ -17,32 +17,24 @@ export default async function handler(
       },
     })
 
-    const formattedProducts = allProductsVariations.map((productV) => {
-      const mainProduct = allProducts.find(
-        (product) => product.id === productV.product_id,
-      )
-      return {
-        ...mainProduct,
-        productVariationId: productV.id,
-        images: productV.Image,
-        price: productV.price / 100,
-        colorHex: productV.colorHex,
-        colorName: productV.colorName,
-        availableSizes: productV.availableSizes,
-        description: productV.description,
-        quantity: productV.quantity,
-        categories: productV.category
-          .filter((item) => item.active)
-          .map((item) => {
-            return {
-              name: item.name,
-              id: item.id,
-            }
-          }),
-      }
-    })
+    const formattedProductsVariations = allProductsVariations.map((item) => ({
+      ...item,
+      productId: item.product_id,
+      images: item.Image.map((imageItem) => ({
+        id: imageItem.id,
+        imageSrc: imageItem.imageSrc,
+        originalName: imageItem.originalName,
+        name: imageItem.name,
+      })),
+      categoriesOptions: item.category.map((category) => ({
+        label: category.name,
+        value: category.id,
+      })),
+    }))
 
-    return res.status(201).json(formattedProducts)
+    return res
+      .status(200)
+      .json({ allProducts, allProductsVariations: formattedProductsVariations })
   } catch (err: any) {
     console.log(err.message)
     return res.status(400).json(err.message)

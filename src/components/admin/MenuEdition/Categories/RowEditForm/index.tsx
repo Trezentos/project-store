@@ -9,7 +9,7 @@ import Checkbox from '@/components/admin/components/Inputs/InputCheckbox'
 import { errorToast } from '@/utils/toast/sucessToast'
 import { EditCategoriesContext } from '@/contexts/pages/admin/EditCategoriesContext'
 import { api } from '@/lib/api'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 
 export default function RowEditForm() {
   const { categoryToEdit, updateCategory, closeEditModal, options, filters } =
@@ -118,9 +118,9 @@ export default function RowEditForm() {
           }))}
         />
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Confirmar edição
-        </ConfirmButton>
+        </Button>
       </div>
     </EditForm>
   )

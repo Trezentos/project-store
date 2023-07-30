@@ -13,14 +13,14 @@ export const EditForm = styled.form`
     display: flex;
     justify-content: space-between;
     gap: 1.5rem;
-    width: 440px;
+    width: 530px;
     flex-wrap: wrap;
     p {
       margin-bottom: 0.5rem;
     }
 
     > div {
-      /* flex: 1; */
+      width: 250px;
     }
   }
 
@@ -32,11 +32,12 @@ export const EditForm = styled.form`
 export const SelectsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100% !important;
   gap: 0.2rem;
 `
 
 export const ErrorMessage = styled.p`
   color: tomato;
   text-align: left;
+  width: 180px;
 `

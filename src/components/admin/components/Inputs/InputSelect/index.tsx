@@ -32,7 +32,7 @@ export default function InputSelect({
     <StyledSelect
       className=""
       classNamePrefix="select"
-      value={value}
+      defaultValue={value ?? ''}
       isDisabled={isDisabled}
       isLoading={isLoading}
       isMulti={isMulti}

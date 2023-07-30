@@ -35,7 +35,7 @@ export default function SubHeaderTableRow({
       <tr ref={trRef}>
         <td>{name}</td>
         <td>{linkName}</td>
-        <td>{columnPosition + 1}</td>
+        <td>{columnPosition}</td>
         <td>{isHighlighted ? 'Sim' : 'Não'}</td>
         <td onClick={() => onEdit(data)}>
           <FaRegEdit />

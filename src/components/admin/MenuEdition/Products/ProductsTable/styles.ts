@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 
 export const Container = styled.div`
   border: 1px solid lightgray;
-  width: 75%;
+  width: 90%;
   height: calc(100% - 270px);
   overflow-y: scroll;
   border-radius: 10px;

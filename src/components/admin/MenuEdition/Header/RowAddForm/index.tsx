@@ -11,7 +11,7 @@ import {
   EditHeaderFromAdminContext,
   HeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import InputFile from '@/components/admin/components/Inputs/InputFile'
 import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
@@ -119,16 +119,16 @@ export default function RowAddForm() {
             control={control}
             name="category"
             options={allCategoriesOptions}
-            defaultValue={{ label: '', value: '' }}
+            defaultValue={[{ label: '', value: '' }]}
           />
           {errors.category && (
             <ErrorMessage>{`${errors.category.message}`}</ErrorMessage>
           )}
         </div>
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Criar novo item
-        </ConfirmButton>
+        </Button>
       </div>
     </EditForm>
   )

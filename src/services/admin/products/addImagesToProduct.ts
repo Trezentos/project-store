@@ -1,18 +1,20 @@
 import { prisma } from '@/lib/prisma'
 import createNewImageAWS from '@/utils/createNewImageAws'
+import { Image } from '@prisma/client'
 
 export default async function addImagesToProduct(
-  images: any[],
+  images: Image[],
   productVariationId: string | string[],
 ) {
+  let newImages: Promise<Image>[] = []
   if (images.length > 0) {
-    images.forEach(async (image) => {
-      const newImage = await createNewImageAWS(image)
-      await prisma.image.create({
+    newImages = images.map(async (image) => {
+      const newImageAWS = await createNewImageAWS(image)
+      const newImage = await prisma.image.create({
         data: {
-          name: newImage?.Key,
-          originalName: newImage?.originalName,
-          imageSrc: newImage?.Location,
+          name: newImageAWS?.Key,
+          originalName: newImageAWS?.originalName,
+          imageSrc: newImageAWS?.Location,
           ProductVariation: {
             connect: {
               id: String(productVariationId),
@@ -20,6 +22,10 @@ export default async function addImagesToProduct(
           },
         },
       })
+
+      return newImage
     })
   }
+
+  return await Promise.all(newImages)
 }

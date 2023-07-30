@@ -8,7 +8,7 @@ import { InputForm } from './styles'
 import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
 import InputFile from '../../../../components/Inputs/InputFile'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
@@ -118,9 +118,9 @@ function EditForm() {
 
       {errors.mobileImage && <p>{errors.mobileImage.message}</p>}
 
-      <ConfirmButton isSubmitting={isSubmiting}>
+      <Button isSubmitting={isSubmiting} type="submit">
         Enviar imagens selecionadas
-      </ConfirmButton>
+      </Button>
       <ToastContainer />
     </InputForm>
   )

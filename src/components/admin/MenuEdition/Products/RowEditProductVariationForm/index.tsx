@@ -12,35 +12,33 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Input from '@/components/admin/components/Inputs/Input'
 import { errorToast } from '@/utils/toast/sucessToast'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import { ProductsAdminContext } from '@/contexts/pages/admin/ProductsAdminContext'
 import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 import ImagesInput from '@/components/admin/components/ImageList'
 import { IMaskInput } from 'react-imask'
 import { ModalAdminContext } from '@/contexts/pages/admin/ModalAdminContext'
 import realFormatter from '@/utils/realFormatter'
-import { realToNumber } from '@/components/admin/components/Inputs/Input/formattersFunctions'
+import formatToCurrency, {
+  realToNumber,
+} from '@/components/admin/components/Inputs/Input/formattersFunctions'
 import { api } from '@/lib/api'
+import ColorPicker from '@/components/admin/components/ColorPicker'
 
-export default function RowEditForm() {
+export default function RowEditProductVariationForm() {
   const {
-    productToEdit,
-    getCategoriesOptions,
+    productVariationToEdit,
     categoriesOptionsFromAPI,
-    updateProduct,
+    updateProductVariation,
   } = useContext(ProductsAdminContext)
 
-  const { closeEditModal } = useContext(ModalAdminContext)
-  const defaultCategoriesOptions = getCategoriesOptions(productToEdit)
+  const { closeSubEditModal } = useContext(ModalAdminContext)
 
   const [imageFile, setImageFile] = useState<any>(null)
 
   const schema = z.object({
-    name: z.string().min(1, {
-      message: 'Digite algum nome para o produto',
-    }),
     price: z
-      .string({})
+      .string()
       .min(1, {
         message: 'Digite algum preço para o produto',
       })
@@ -100,23 +98,21 @@ export default function RowEditForm() {
     async (editFormData: RegisterFormData) => {
       try {
         const {
-          color,
           description,
-          name,
           price,
           quantity,
           categories,
           imagesFile,
+          color,
           colorHex,
         } = editFormData
         const formData = new FormData()
 
         formData.append('color', color)
         formData.append('colorHex', colorHex)
-        formData.append('productId', productToEdit.id)
-        formData.append('productVariationId', productToEdit.productVariationId)
+        formData.append('productVariationId', productVariationToEdit.id)
+        formData.append('productId', productVariationToEdit.productId)
         formData.append('description', description)
-        formData.append('name', name)
         formData.append('price', String(price))
         formData.append('quantity', quantity)
 
@@ -129,9 +125,12 @@ export default function RowEditForm() {
             formData.append(`images[${index}]`, image)
           })
         }
-        const { data } = await api.put('products/update-product', formData)
-        updateProduct(data)
-        closeEditModal()
+        const { data } = await api.put(
+          'products/update-product-variation',
+          formData,
+        )
+        updateProductVariation(data)
+        closeSubEditModal()
       } catch (error: any) {
         const { data } = error.response
         if (!data) errorToast('Houve algum erro ao editar o produto...')
@@ -139,33 +138,28 @@ export default function RowEditForm() {
       }
     },
     [
-      closeEditModal,
-      productToEdit.id,
-      productToEdit.productVariationId,
-      updateProduct,
+      closeSubEditModal,
+      productVariationToEdit.id,
+      productVariationToEdit.productId,
+      updateProductVariation,
     ],
   )
+
+  useEffect(() => {
+    console.log(productVariationToEdit.price)
+  }, [productVariationToEdit.price])
 
   return (
     <EditForm onSubmit={handleSubmit(onSubmit)} className="edit-form">
       <h3>Editar Produto</h3>
 
       <div>
-        <Input
-          id={'name'}
-          register={register('name')}
-          label="Nome"
-          value={productToEdit.name}
-          type="text"
-        />
-        {errors.name && <ErrorMessage>{`${errors.name.message}`}</ErrorMessage>}
-
         <div>
           <Input
             id={'price'}
             register={register('price')}
             label="Preço"
-            value={productToEdit.formattedPrice}
+            value={realFormatter(productVariationToEdit.price)}
             type="text"
           />
           {errors.price && (
@@ -174,43 +168,47 @@ export default function RowEditForm() {
         </div>
 
         <Input
-          id={'color'}
-          register={register('color')}
-          label="Cor"
-          value={productToEdit.colorName}
-          type="text"
-        />
-        {errors.color && (
-          <ErrorMessage>{`${errors.color.message}`}</ErrorMessage>
-        )}
-        <Input
-          id={'colorHex'}
-          register={register('colorHex')}
-          label="Cor em hexadecimal"
-          value={productToEdit.colorHex}
-          type="text"
-        />
-        {errors.colorHex && (
-          <ErrorMessage>{`${errors.colorHex.message}`}</ErrorMessage>
-        )}
-        <Input
           id={'description'}
           register={register('description')}
           label="Descrição"
-          value={productToEdit.description}
+          value={productVariationToEdit.description}
           type="text"
         />
-        {errors.name && <ErrorMessage>{`${errors.name.message}`}</ErrorMessage>}
+        {errors.description && (
+          <ErrorMessage>{`${errors.description.message}`}</ErrorMessage>
+        )}
+
+        <div>
+          <Input
+            id={'color'}
+            register={register('color')}
+            label="Apelido para a cor"
+            type="text"
+            value={productVariationToEdit.colorName}
+          />
+          {errors.color && (
+            <ErrorMessage>{`${errors.color.message}`}</ErrorMessage>
+          )}
+        </div>
+
         <Input
           id={'quantity'}
           register={register('quantity')}
           label="Quantidade"
-          value={productToEdit.quantity}
+          value={productVariationToEdit.quantity}
           type="text"
         />
         {errors.quantity && (
           <ErrorMessage>{`${errors.quantity.message}`}</ErrorMessage>
         )}
+
+        <div>
+          <ColorPicker
+            name="colorHex"
+            control={control}
+            defaultColor={productVariationToEdit.colorHex}
+          />
+        </div>
 
         <SelectsContainer>
           <p>Categorias</p>
@@ -218,25 +216,21 @@ export default function RowEditForm() {
             control={control}
             name="categories"
             options={categoriesOptionsFromAPI}
-            defaultValue={defaultCategoriesOptions}
+            defaultValue={productVariationToEdit.categoriesOptions}
             isMulti
           />
           {errors.categories && (
             <ErrorMessage>{`${errors.categories.message}`}</ErrorMessage>
           )}
 
-          <ImagesInput
-            images={productToEdit.images}
-            register={register('imagesFile')}
-            id="imagesFile"
-          />
+          <ImagesInput register={register('imagesFile')} id="imagesFile" />
           {errors.imagesFile && (
             <ErrorMessage>{`${errors.imagesFile.message}`}</ErrorMessage>
           )}
 
-          <ConfirmButton isSubmitting={isSubmitting}>
+          <Button isSubmitting={isSubmitting} type="submit">
             Confirmar edição
-          </ConfirmButton>
+          </Button>
         </SelectsContainer>
       </div>
     </EditForm>

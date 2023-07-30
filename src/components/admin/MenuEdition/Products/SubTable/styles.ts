@@ -59,7 +59,6 @@ export const TDImages = styled.td`
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     margin-bottom: 0.2rem;
 
     div {

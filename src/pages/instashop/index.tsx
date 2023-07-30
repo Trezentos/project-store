@@ -59,25 +59,35 @@ export default function InstaShop({ instagramPhotos }: InstaShopProps) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const fields = 'media_url, media_type, caption, timestamp'
-  const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
+  try {
+    const fields = 'media_url, media_type, caption, timestamp'
+    const url = `https://graph.instagram.com/me/media?access_token=${process.env.NEXT_INSTA_TOKEN}&fields=${fields}`
 
-  const {
-    data: { data },
-  } = await axios.get(url)
+    const {
+      data: { data },
+    } = await axios.get(url)
 
-  const instagramPhotos = data
-    .map((item: any) => ({
-      imageSrc: item.media_url,
-      description: item.caption,
-      id: item.id,
-      timestamp: item.timestamp,
-    }))
-    .filter((item: any) => !String(item.imageSrc).includes('video'))
+    const instagramPhotos = data
+      .map((item: any) => ({
+        imageSrc: item.media_url,
+        description: item.caption,
+        id: item.id,
+        timestamp: item.timestamp,
+      }))
+      .filter((item: any) => !String(item.imageSrc).includes('video'))
 
-  return {
-    props: {
-      instagramPhotos,
-    },
+    return {
+      props: {
+        instagramPhotos,
+      },
+    }
+  } catch (error: any) {
+    console.log(error.message)
+
+    return {
+      props: {
+        instagramPhotos: [],
+      },
+    }
   }
 }

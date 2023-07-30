@@ -18,11 +18,13 @@ export default async function changeNewHeaderItemImage({
         backgroundImageName: newImage.Key,
         backgroundImageLink: newImage.Location,
         backgroundImageLinkTo: linkToImage,
+        backgroundImageOriginalName: newImage.originalName,
       }
     : {
         backgroundImageName: null,
         backgroundImageLink: null,
         backgroundImageLinkTo: null,
+        backgroundImageOriginalName: null,
       }
 
   return newImageFormatted

@@ -11,7 +11,7 @@ interface InputSelectControlledProps {
   defaultValue?: {
     label: string
     value: string
-  }[]
+  }
   options: {
     value: string
     label: string
@@ -33,7 +33,7 @@ export default function InputSelectControlled({
       render={({ field }) => (
         <InputSelect
           options={options}
-          defaultValue={defaultValue}
+          defaultValue={[defaultValue ?? { label: '', value: '' }]}
           onChange={(item) => field.onChange(item)}
           isMulti={isMulti}
         />

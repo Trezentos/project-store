@@ -11,7 +11,7 @@ import {
   EditHeaderFromAdminContext,
   HeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import InputFile from '@/components/admin/components/Inputs/InputFile'
 import { X } from 'phosphor-react'
 import FeaturedImagePreview from './FeaturedImagePreview'
@@ -156,7 +156,7 @@ export default function RowEditForm() {
             control={control}
             name="category"
             options={allCategoriesOptions}
-            defaultValue={[categoryDefaultValue]}
+            defaultValue={categoryDefaultValue}
           />
 
           {errors.category && (
@@ -164,9 +164,9 @@ export default function RowEditForm() {
           )}
         </div>
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Confirmar edição
-        </ConfirmButton>
+        </Button>
       </div>
     </EditForm>
   )

@@ -37,19 +37,12 @@ const TableRow: React.FC<TableRowProps> = ({
   index,
 }) => {
   const [divHeight, setDivHeight] = useState('0')
-  const textHoverToImageRef = useRef<HTMLElement>(null)
   const trRef = useRef<HTMLTableRowElement | null>(null)
-  //   const { imageUrl, linkTo, name: ImageName, originalName } = data.featuredImg
-  //   const {} = useContext(ProductsAdminContext)
+  const divAnimeRef = useRef<HTMLDivElement | null>(null)
+  const { allProductsVariations } = useContext(ProductsAdminContext)
 
   const handleDeleteRow = useCallback(() => {
-    cleanAllContentFromRowTable(trRef.current?.children)
-
-    setTimeout(() => {
-      onDelete(data.id)
-      removeRowFromTable(trRef.current?.children)
-      // 200 must be equal on styles: transition: padding 0.2s;
-    }, 200)
+    onDelete(data.id)
   }, [data.id, onDelete])
 
   const rowAnimation = useSpring({
@@ -57,36 +50,18 @@ const TableRow: React.FC<TableRowProps> = ({
   })
 
   const animateRowExpansion = useCallback(() => {
-    const divToAnimate = document.querySelector(`#animated-div-${data.id}`)
-
-    if (!divToAnimate) return
-
-    setDivHeight(`${divToAnimate.scrollHeight}px`)
-  }, [data.id])
-
-  //   const showHoveredImage = useCallback(() => {
-  //     textHoverToImageRef.current?.addEventListener('mouseover', () => {
-  //       updateHoveredImage(true)
-  //       updateSelectedImage(imageUrl)
-  //     })
-  //     textHoverToImageRef.current?.addEventListener('mouseleave', () => {
-  //       updateHoveredImage(false)
-  //     })
-  //   }, [imageUrl, updateHoveredImage, updateSelectedImage])
+    if (!divAnimeRef.current) return
+    setDivHeight(`${divAnimeRef.current.scrollHeight}px`)
+  }, [])
 
   useEffect(() => {
     animateRowExpansion()
-    // showHoveredImage()
-  }, [animateRowExpansion, data.id])
+  }, [animateRowExpansion, data.id, allProductsVariations])
 
   return (
     <>
       <tr ref={trRef}>
         <td>{data.name}</td>
-        <td>{realFormatter(data.price)}</td>
-        <td>{data.colorName}</td>
-        <td>{data.quantity}</td>
-
         <td onClick={() => onExpand(data.id)}>
           {isExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
         </td>
@@ -99,15 +74,12 @@ const TableRow: React.FC<TableRowProps> = ({
       </tr>
       <tr>
         <td colSpan={7} style={{ padding: 0 }}>
-          <animated.div style={rowAnimation} id={`animated-div-${data.id}`}>
-            <SubTable
-              data={{
-                description: data.description,
-                images: data.images,
-                rowProductId: data.id,
-                categories: data.categories,
-              }}
-            />
+          <animated.div
+            style={rowAnimation}
+            id={`animated-div-${data.id}`}
+            ref={divAnimeRef}
+          >
+            <SubTable productId={data.id} />
           </animated.div>
         </td>
       </tr>

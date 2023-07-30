@@ -9,7 +9,7 @@ import Checkbox from '@/components/admin/components/Inputs/InputCheckbox'
 import { errorToast } from '@/utils/toast/sucessToast'
 import { EditCategoriesContext } from '@/contexts/pages/admin/EditCategoriesContext'
 import { api } from '@/lib/api'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 
 const MAX_FILE_SIZE = 5200000
 
@@ -121,9 +121,9 @@ export default function RowAddForm() {
           values={[{ value: 'option2', label: 'Preço' }]}
         />
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Adicionar nova categoria
-        </ConfirmButton>
+        </Button>
       </div>
     </AddForm>
   )

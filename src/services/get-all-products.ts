@@ -58,6 +58,23 @@ export default async function getManyProducts(category: ProductCategory) {
     },
   })
 
+  const allProducts = await prisma.productVariation.findMany({
+    include: {
+      category: true,
+      Image: true,
+      product: true,
+    },
+    where: {
+      category: {
+        some: {
+          id: category.id,
+        },
+      },
+    },
+  })
+
+  console.log(allProducts)
+
   return {
     colorContent,
     activeFilters,

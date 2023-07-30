@@ -11,7 +11,7 @@ import {
   HeaderItem,
   SubHeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
 export default function RowAddSubHeaderForm() {
@@ -120,7 +120,7 @@ export default function RowAddSubHeaderForm() {
               { label: '2', value: '2' },
               { label: '3', value: '3' },
             ]}
-            defaultValue={{ label: '', value: '' }}
+            defaultValue={[{ label: '', value: '' }]}
           />
           {errors.columnPosition && (
             <ErrorMessage>{`${errors.columnPosition.message}`}</ErrorMessage>
@@ -132,7 +132,7 @@ export default function RowAddSubHeaderForm() {
           <InputSelectControlled
             control={control}
             name="highlightItem"
-            defaultValue={{ label: '', value: '' }}
+            defaultValue={[{ label: '', value: '' }]}
             options={[
               { label: 'Não', value: 'false' },
               { label: 'Sim', value: 'true' },
@@ -149,16 +149,16 @@ export default function RowAddSubHeaderForm() {
             control={control}
             name="category"
             options={allCategoriesOptions}
-            defaultValue={{ label: '', value: '' }}
+            defaultValue={[{ label: '', value: '' }]}
           />
           {errors.category && (
             <ErrorMessage>{`${errors.category.message}`}</ErrorMessage>
           )}
         </div>
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Adicionar novo subitem
-        </ConfirmButton>
+        </Button>
       </div>
     </AddForm>
   )

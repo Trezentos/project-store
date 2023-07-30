@@ -7,7 +7,7 @@ import { api } from '@/lib/api'
 import { AddFormContainer, ErrorMessage } from './styles'
 import { CarrouselContext } from '@/contexts/pages/admin/Home/CarrouselEditionContext'
 import { errorToast, successToast } from '@/utils/toast/sucessToast'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 
 const MAX_FILE_SIZE = 5200000
 const ACCEPTED_IMAGE_TYPES = [
@@ -153,9 +153,9 @@ export default function AddForm() {
         {errors.addMobileImage && <p>{errors.addMobileImage.message}</p>}
       </ErrorMessage>
 
-      <ConfirmButton isSubmitting={isSubmitting}>
+      <Button isSubmitting={isSubmitting} type="submit">
         Enviar imagens selecionadas
-      </ConfirmButton>
+      </Button>
     </AddFormContainer>
   )
 }

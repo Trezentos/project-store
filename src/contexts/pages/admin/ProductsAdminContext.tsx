@@ -16,25 +16,27 @@ export interface ImageProduct {
 
 export interface Product {
   id: string
+  name: string
+}
+export interface ProductVariation {
+  id: string
+  productId: string
   price: number
   formattedPrice?: string
-  name: string
-  productVariationId: string
   colorHex: string
   colorName: string
   description: string
   quantity: number
   images: ImageProduct[]
-  categories: {
-    name: string
-    id: string
-  }[]
-  categoriesOptions?: { label: string; value: string }[]
+  categoriesOptions: { label: string; value: string }[]
 }
 
 interface ProductsAdminProviderProps {
   children: ReactNode
-  productsFromAPI: Product[]
+  productsFromAPI: {
+    allProducts: Product[]
+    allProductsVariations: ProductVariation[]
+  }
   categoriesOptionsFromAPI: { label: string; value: string }[]
 }
 
@@ -42,16 +44,25 @@ interface ProductsAdminContextDatas {
   allProducts: Product[]
   selectedImage: string | null
   isHoveredImage: boolean
+  addProductVariation: (newProductVariation: ProductVariation) => void
   updateSelectedImage: (imgSrc: string | null) => void
   updateHoveredImage: (isHovered: boolean) => void
-  updateProductToEdit: (id: string) => void
   updateProduct: (updatedProduct: Product) => void
-  getCategoriesOptions: (product: Product) => {
-    label: string
-    value: string
-  }[]
+  updateProductToEdit: (id: string) => void
+  updateProductVariation: (updatedProduct: ProductVariation) => void
+  deleteProductVariation: (id: string) => void
+  updateProductVariationToEdit: (id: string) => void
+  deleteImageFromProductVariation: (imageId: string, productId: string) => void
+  getProductsVariations: (productId: string) => ProductVariation[]
   productToEdit: Product
   categoriesOptionsFromAPI: { label: string; value: string }[]
+  productVariationToEdit: ProductVariation
+  updateProductIdToAdd: (id: string) => void
+  productIdToAdd: string
+  allProductsVariations: ProductVariation[]
+  addProductMain: (newProduct: Product) => void
+  deleteProductMain: (id: string) => void
+  updateAllMainProducts: (products: Product[]) => void
 }
 
 export const ProductsAdminContext = createContext<ProductsAdminContextDatas>(
@@ -61,20 +72,39 @@ export const ProductsAdminContext = createContext<ProductsAdminContextDatas>(
 export function ProductsAdminProvider({
   children,
   categoriesOptionsFromAPI,
-  productsFromAPI,
+  productsFromAPI: {
+    allProducts: productsFromAPI,
+    allProductsVariations: allProductsVariationsFromAPI,
+  },
 }: ProductsAdminProviderProps) {
   const [allProducts, setAllProducts] = useState<Product[]>(productsFromAPI)
+  const [allProductsVariations, setAllProductsVariations] = useState<
+    ProductVariation[]
+  >(allProductsVariationsFromAPI)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isHoveredImage, setIsHoveredImage] = useState(false)
   const [productToEdit, setProductToEdit] = useState({} as Product)
+  const [productVariationToEdit, setProductVariationToEdit] = useState(
+    {} as ProductVariation,
+  )
+  const [productIdToAdd, setProductIdToAdd] = useState('')
 
-  const updateSelectedImage = useCallback((imgSrc: string | null) => {
-    setSelectedImage(imgSrc)
+  const updateAllMainProducts = useCallback((products: Product[]) => {
+    setAllProducts(products)
   }, [])
 
-  const updateHoveredImage = useCallback((isHovered: boolean) => {
-    setIsHoveredImage(isHovered)
-  }, [])
+  const addProductVariation = useCallback(
+    (newProductVariation: ProductVariation) => {
+      setAllProductsVariations([newProductVariation, ...allProductsVariations])
+    },
+    [allProductsVariations],
+  )
+  const addProductMain = useCallback(
+    (newProduct: Product) => {
+      setAllProducts([newProduct, ...allProducts])
+    },
+    [allProducts],
+  )
 
   const updateProductToEdit = useCallback(
     (id: string) => {
@@ -85,20 +115,22 @@ export function ProductsAdminProvider({
         return
       }
 
-      const categoriesOptions = product.categories.map((item) => ({
-        label: item.name,
-        value: item.id,
-      }))
-
-      console.log(categoriesOptions)
-
-      setProductToEdit({
-        ...product,
-        categoriesOptions,
-        formattedPrice: formatToCurrency(product.price),
-      })
+      setProductToEdit(product)
     },
     [allProducts],
+  )
+  const updateProductVariationToEdit = useCallback(
+    (id: string) => {
+      const product = allProductsVariations.find((item) => item.id === id)
+
+      if (!product) {
+        setProductVariationToEdit({} as ProductVariation)
+        return
+      }
+
+      setProductVariationToEdit(product)
+    },
+    [allProductsVariations],
   )
 
   const updateProduct = useCallback(
@@ -116,30 +148,112 @@ export function ProductsAdminProvider({
     [allProducts],
   )
 
-  const getCategoriesOptions = (product: Product) => {
-    return product.categories.map((item) => ({
-      label: item.name,
-      value: item.id,
-    }))
-  }
+  const updateProductVariation = useCallback(
+    (updatedProduct: ProductVariation) => {
+      setAllProductsVariations(
+        allProductsVariations.map((product) => {
+          if (updatedProduct.id === product.id) {
+            return updatedProduct
+          }
 
-  useEffect(() => {
-    console.log(categoriesOptionsFromAPI)
-  }, [categoriesOptionsFromAPI])
+          return product
+        }),
+      )
+    },
+    [allProductsVariations],
+  )
+  const deleteProductVariation = useCallback(
+    (id: string) => {
+      setAllProductsVariations(
+        allProductsVariations.filter(
+          (productVariation) => productVariation.id !== id,
+        ),
+      )
+    },
+    [allProductsVariations],
+  )
+  const deleteProductMain = useCallback(
+    (id: string) => {
+      setAllProducts(allProducts.filter((product) => product.id !== id))
+      setAllProductsVariations(
+        allProductsVariations.filter(
+          (productVariation) => productVariation.productId !== id,
+        ),
+      )
+    },
+    [allProducts, allProductsVariations],
+  )
+
+  const deleteImageFromProductVariation = useCallback(
+    (imageId: string, productVariationId: string) => {
+      setAllProductsVariations(
+        allProductsVariations.map((productVariation) => {
+          if (productVariation.id === productVariationId) {
+            return {
+              ...productVariation,
+              images: productVariation.images.filter(
+                (image) => image.id !== imageId,
+              ),
+            }
+          }
+
+          return productVariation
+        }),
+      )
+    },
+    [allProductsVariations],
+  )
+
+  const getProductsVariations = useCallback(
+    (productId: string) => {
+      const productsVariations = allProductsVariations.filter(
+        (item) => item.productId === productId,
+      )
+
+      return productsVariations
+    },
+    [allProductsVariations],
+  )
+
+  // Function that updates a state string which informs what main product
+  // the product variation will be added
+  const updateProductIdToAdd = useCallback((id: string) => {
+    setProductIdToAdd(id)
+  }, [])
+
+  const updateSelectedImage = useCallback((imgSrc: string | null) => {
+    setSelectedImage(imgSrc)
+  }, [])
+
+  const updateHoveredImage = useCallback((isHovered: boolean) => {
+    setIsHoveredImage(isHovered)
+  }, [])
 
   return (
     <ProductsAdminContext.Provider
       value={{
+        deleteImageFromProductVariation,
+        updateProductVariationToEdit,
+        categoriesOptionsFromAPI,
         allProducts,
         selectedImage,
+        updateAllMainProducts,
         updateProductToEdit,
-        getCategoriesOptions,
+        addProductMain,
         isHoveredImage,
+        deleteProductMain,
         updateHoveredImage,
         updateSelectedImage,
         updateProduct,
         productToEdit,
-        categoriesOptionsFromAPI,
+        getProductsVariations,
+        deleteProductVariation,
+        updateProductVariation,
+        productVariationToEdit,
+        updateProductIdToAdd,
+        productIdToAdd,
+        addProductVariation,
+        allProductsVariations,
       }}
     >
       {children}

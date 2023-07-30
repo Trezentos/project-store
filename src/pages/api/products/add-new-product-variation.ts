@@ -21,69 +21,60 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    if (req.method !== 'PUT') {
+    if (req.method !== 'POST') {
       return res.status(405).end()
     }
 
     const { files, fields } = await formToDataFormatter(req)
 
-    const {
-      productId,
-      productVariationId,
-      color,
-      description,
-      name,
-      price,
-      quantity,
-      colorHex,
-    } = fields
+    const { colorName, colorHex, description, price, quantity, productId } =
+      fields
 
     const images = getArrayFrom('images', files)
     const categories = getArrayFrom('categories', fields)
 
-    await addImagesToProduct(images, productVariationId)
+    const { categoriesToConnect } = await connectAndDisconnectCategories(
+      categories,
+    )
 
-    const { categoriesToConnect, categoriesToDisconnect } =
-      await connectAndDisconnectCategories(categories)
-
-    const updatedProduct = await prisma.product.update({
+    const newProductVariation = await prisma.productVariation.create({
       include: {
-        ProductVariation: true,
-      },
-      where: {
-        id: String(productId),
+        product: true,
+        category: true,
+        Image: true,
       },
       data: {
-        name: String(name),
-        ProductVariation: {
-          update: {
-            where: {
-              id: String(productVariationId),
-            },
-            data: {
-              price: Number(price) * 100,
-              colorName: String(color),
-              description: String(description),
-              colorHex: String(colorHex),
-              quantity: Number(quantity),
-              category: {
-                connect: categoriesToConnect,
-                disconnect: categoriesToDisconnect,
-              },
-            },
+        colorHex: String(colorHex),
+        colorName: String(colorName),
+        description: String(description),
+        price: Number(price),
+        quantity: Number(quantity),
+        product: {
+          connect: {
+            id: String(productId),
           },
+        },
+        category: {
+          connect: categoriesToConnect,
         },
       },
     })
 
-    const formattedProduct = await formatProduct(
-      updatedProduct,
-      productVariationId,
-    )
+    const newImages = await addImagesToProduct(images, newProductVariation.id)
 
-    return res.status(200).json(formattedProduct)
+    const formattedProductVariation = {
+      ...newProductVariation,
+      productId: newProductVariation.product_id,
+      categoriesOptions: newProductVariation.category.map((category) => ({
+        label: category.name,
+        value: category.id,
+      })),
+      images: newImages.map((image) => image),
+    }
+
+    return res.status(200).json(formattedProductVariation)
   } catch (error: any) {
     console.log(error.message)
-    return res.json(error.message)
+    return res.status(400).json(error.message)
   }
 }

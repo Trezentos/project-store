@@ -11,7 +11,7 @@ import {
   EditHeaderFromAdminContext,
   HeaderItem,
 } from '@/contexts/pages/admin/EditHeaderFromAdminContext'
-import ConfirmButton from '@/components/admin/components/ConfirmButton'
+import Button from '@/components/admin/components/Button'
 import InputSelectControlled from '@/components/admin/components/Inputs/InputSelectControlled'
 
 export default function RowEditSubHeaderForm() {
@@ -65,7 +65,7 @@ export default function RowEditSubHeaderForm() {
             subHeaderItemName,
             subHeaderItemId: subHeaderItemToEdit.id,
             categoryId: category.value,
-            columnPosition: Number(columnPosition.value) - 1,
+            columnPosition: Number(columnPosition.value),
             highlightItem: highlightItem.value,
           },
         )
@@ -151,9 +151,9 @@ export default function RowEditSubHeaderForm() {
           )}
         </div>
 
-        <ConfirmButton isSubmitting={isSubmitting}>
+        <Button isSubmitting={isSubmitting} type="submit">
           Confirmar edição
-        </ConfirmButton>
+        </Button>
       </div>
     </EditForm>
   )

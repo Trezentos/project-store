@@ -12,5 +12,8 @@ export default function formatToCurrency(value: string | number) {
 export function realToNumber(realValue: string) {
   let sanitizedValue = realValue.replaceAll('.', '')
   sanitizedValue = sanitizedValue.replaceAll(',', '.')
+  sanitizedValue = sanitizedValue.replaceAll('R$ ', '')
+
+  console.log(sanitizedValue)
   return Number(sanitizedValue)
 }
